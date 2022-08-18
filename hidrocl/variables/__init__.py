@@ -2,8 +2,7 @@
 
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mtick
-from . import checkdatabase
-from . import getcatchmentname
+from . import methods
 
 
 class HidroCLVariable:
@@ -39,20 +38,23 @@ Pixel count database path: {self.pcdatabase}.
     def checkindatabase(self):
         """Check IDs in database"""
         if self.observations is None:
-            print('Please, check the database')
+            print('Please, check the database for getting the IDs processed')
             return
         else:
             return self.observations[self.observations.columns[0]].values.tolist()
 
     def checkdatabase(self):
         """Check database in observations"""
-        self.observations = checkdatabase.checkdatabase(self.database)
+        self.observations = methods.checkdatabase(self.database, self.catchment_names)
         self.indatabase = self.checkindatabase()
-        self.catchment_names = self.observations.columns[1:].tolist()
+        try:
+            self.catchment_names = self.observations.columns[1:].tolist()
+        except AttributeError:
+            print('Could not load dataframe, perhaps the database has not been created yet')
 
     def checkpcdatabase(self):
         """Check database in observations"""
-        self.pcobservations = checkdatabase.checkdatabase(self.pcdatabase)
+        self.pcobservations = methods.checkdatabase(self.pcdatabase, self.catchment_names)
 
     def add_catchment_names(self, catchment_names_list):
         """add catchment names to the variable"""
@@ -81,7 +83,7 @@ Pixel count database path: {self.pcdatabase}.
         """plot valid data"""
         observations = self.observations
 
-        catchment = getcatchmentname.get_catchment_name(catchment, self.catchment_names)
+        catchment = methods.get_catchment_name(catchment, self.catchment_names)
 
         aim = observations[[catchment]]
         year_ = aim.index.year
@@ -102,7 +104,7 @@ Pixel count database path: {self.pcdatabase}.
         """plot valid data"""
         observations = self.observations
 
-        catchment = getcatchmentname.get_catchment_name(catchment, self.catchment_names)
+        catchment = methods.get_catchment_name(catchment, self.catchment_names)
 
         aim = observations[[catchment]]
         year_ = aim.index.year

@@ -13,9 +13,6 @@ def checkdatabase(database, catchment_names=None):
         observations.date = pd.to_datetime(observations.date, format='%Y-%m-%d')
         observations.set_index(['date'], inplace=True)
         return observations
-        #indatabase = self.observations[self.observations.columns[0]].values.tolist()
-        #catchment_names = self.observations.columns[1:].tolist()
-        print('Observations and catchment names added!')
     else:  # create db
         if catchment_names is None:
             print('Database not found. Please, add catchment names before creating the database')
@@ -28,3 +25,26 @@ def checkdatabase(database, catchment_names=None):
             with open(database, 'w') as the_file:
                 the_file.write(header_line)
             print('Database created!')
+            observations = pd.read_csv(database)
+            observations.date = pd.to_datetime(observations.date, format='%Y-%m-%d')
+            observations.set_index(['date'], inplace=True)
+            return observations
+
+def get_catchment_name(catchment, catchment_names):
+    """Get catchment name"""
+    match catchment:
+        case str():
+            if catchment in catchment_names:
+                return catchment
+            else:
+                print('Catchment not found')
+                return
+        case int():
+            if catchment < len(catchment_names):
+                return catchment_names[catchment]
+            else:
+                print('Catchment index out of range')
+                return
+        case _:
+            print('Catchment not found')
+            return
