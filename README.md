@@ -18,7 +18,7 @@
 ## To do list
 
 - [ ] complete README.md
-- [ ] hidrocl basic variable
+- [x] hidrocl basic variable
   - [x] add old code
   - [x] adapt code to modules approach
   - [X] test locally
@@ -50,6 +50,7 @@
 
 ## Changelog
 
-### [0.0.1] - 2022-08-XX
+### [0.0.1] - 2022-08-18
 #### Added
 - HidroCLVariable object refactored from [hidroclabc.py](https://github.com/aldotapia/HidroCL-DBCreation/blob/main/Class%20tests/hidroclabc.py)
+- [local](https://github.com/aldotapia/HidroCL-OOP/blob/main/local_tests.ipynb) and [nas](https://github.com/aldotapia/HidroCL-OOP/blob/main/nas_tests.ipynb) tests for HidroCLVariable object
