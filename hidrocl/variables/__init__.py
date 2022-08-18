@@ -81,10 +81,13 @@ Pixel count database path: {self.pcdatabase}.
 
     def plot_valid_data_individual(self, catchment):
         """plot valid data"""
-        observations = self.observations
+        #observations = self.observations
 
         catchment = methods.get_catchment_name(catchment, self.catchment_names)
 
+        methods.plot_variable(catchment, self.observations, what='valid')
+
+        """
         aim = observations[[catchment]]
         year_ = aim.index.year
         doy_ = aim.index.dayofyear
@@ -98,14 +101,16 @@ Pixel count database path: {self.pcdatabase}.
         plt.xticks(range(0, len(aim.columns), 3), aim.columns[::3])
         plt.yticks(range(0, len(aim.index), 3), aim.index.get_level_values(1)[::3])
 
-        plt.show()
+        plt.show()"""
 
     def plot_pixel_count(self, catchment):
         """plot valid data"""
-        observations = self.observations
+        #observations = self.observations
 
         catchment = methods.get_catchment_name(catchment, self.catchment_names)
 
+        methods.plot_variable(catchment, self.pcobservations, what='count')
+"""
         aim = observations[[catchment]]
         year_ = aim.index.year
         doy_ = aim.index.dayofyear
@@ -119,4 +124,4 @@ Pixel count database path: {self.pcdatabase}.
         plt.xticks(range(0, len(aim.columns), 3), aim.columns[::3])
         plt.yticks(range(0, len(aim.index), 3), aim.index.get_level_values(1)[::3])
 
-        plt.show()
+        plt.show()"""
