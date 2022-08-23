@@ -137,6 +137,7 @@ Pixel count database path: {self.pcdatabase}.
     def plot_valid_data_individual(self, catchment):
         """
         Plot valid data for individual catchments
+
         :param catchment: str (catchment name) or int (catchment index)
         :return: plot with valid data for individual catchments with date index
         """

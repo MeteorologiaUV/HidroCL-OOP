@@ -7,7 +7,12 @@ from ..variables import HidroCLVariable
 
 
 def compare_indatabase(*args):
-    """compare indatabase and return elements that are equal"""
+    """
+    Function to compare if a variable is in a database.
+
+    :param args: lists of indatabase to compare
+    :return: list
+    """
     for arg in args:
         if isinstance(arg, list):
             arg.sort()
@@ -24,7 +29,13 @@ def compare_indatabase(*args):
 
 
 def read_product_files(productpath, what="modis"):
-    """read product files"""
+    """
+    Read remote sensing/modeling product files
+
+    :param productpath: str with product path
+    :param what: str with product type
+    :return: list with file names for asked product
+    """
     match what:
         case "modis":
             return [value for value in os.listdir(productpath) if ".hdf" in value]
@@ -34,7 +45,13 @@ def read_product_files(productpath, what="modis"):
 
 
 def get_product_ids(product_files, what="modis"):
-    """get product ids"""
+    """
+    Get product IDs from product files
+
+    :param product_files: list with product files
+    :param what: str with product type
+    :return: list with product IDs
+    """
     match what:
         case "modis":
             return [value.split(".")[1] for value in product_files]
@@ -44,27 +61,37 @@ def get_product_ids(product_files, what="modis"):
 
 
 def check_product_files(product_ids):
-    """extract uniqu names from product files"""
-    files_id = []
-    for product_id in product_ids:
-        if product_id not in files_id:
-            files_id.append(product_id)
-    files_id.sort()
-    return files_id
+    """
+    Extract unique product IDs from product files
+
+    :param product_ids:
+    :return: list with unique product IDs
+    """
+    return list(set(product_ids))
 
 
 def count_scenes_occurrences(all_scenes, product_ids):
-    """count self.all_scenes in self.product_ids returning a dictionary"""
-    count_scenes = {}
-    for scene in all_scenes:
-        count_scenes[scene] = product_ids.count(scene)
-    return count_scenes
+    """
+    Count all_scenes in product_ids returning a dictionary
+    with product IDs and number of occurrences
+
+    :param all_scenes: list with name of all scenes
+    :param product_ids: list with product IDs
+    :return: dictionary with product IDs and number of occurrences
+    """
+    return {value: product_ids.count(value) for value in all_scenes}
 
 
-def classify_ocurrences(scenes_occurrences, what="modis"):
-    """classify count_scenes based on ocurrences
-    :param what: product type
-    :type scenes_occurrences: dictionary
+def classify_occurrences(scenes_occurrences, what="modis"):
+    """
+    classify count_scenes based on occurrences
+
+    :param scenes_occurrences: dict with product occurrences
+    :param what: str with product type
+    :return:
+       - list - overpopulated scenes
+       - list - complete scenes
+       - list - incomplete scenes
     """
 
     overpopulated_scenes = []
@@ -90,39 +117,53 @@ def classify_ocurrences(scenes_occurrences, what="modis"):
 
 
 def get_scenes_out_of_db(complete_scenes, common_elements):
-    """compare scenes that are not in the database
-    :type common_elements: list
-    :type complete_scenes: list
     """
-    scenes_out_of_db = []
-    for scene in complete_scenes:
-        if scene not in common_elements:
-            scenes_out_of_db.append(scene)
-    return scenes_out_of_db
+    Get scenes out of database
+
+    :param complete_scenes: list with complete scenes
+    :param common_elements: list with common elements
+    :return: list with scenes out of database
+    """
+    return list(set(complete_scenes) - set(common_elements))
 
 
 class HiddenPrints:
-    """hide print statements"""
+    """
+    Context manager to suppress stdout and stderr.
+    """
     def __enter__(self):
         self._original_stdout = sys.stdout
+        self._original_stderr = sys.stderr
         sys.stdout = open(os.devnull, 'w')
+        sys.stderr = open(os.devnull, 'w')
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         sys.stdout.close()
+        sys.stderr.close()
         sys.stdout = self._original_stdout
+        sys.stderr = self._original_stderr
 
 
 def get_scenes_path(product_files, productpath):
-    """get scenes path"""
+    """
+    Get scenes path from product files
+
+    :param product_files: list with product files
+    :param productpath: str with product path
+    :return: list with scenes path
+    """
     return [os.path.join(productpath, value) for value in product_files]
 
 
 def check_instance(*args):
-    """Function to check instance of inputs"""
+    """
+    Check if arguments are instances of HidroCLVariable
 
-    results = []
-
+    :param args: list with arguments
+    :return: list with arguments
+    """
     for arg in args:
-        results.append(isinstance(arg, HidroCLVariable))
+        if not isinstance(arg, HidroCLVariable):
+            raise TypeError("Argument should be an instance of HidroCLVariable")
 
-    return all(results)
+    return args

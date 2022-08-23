@@ -14,7 +14,13 @@ from rioxarray.merge import merge_arrays
 
 
 def mosaic_raster(raster_list, layer):
-    """function to mosaic files with rioxarray library"""
+    """
+    Function to compute mosaic files with rioxarray library
+
+    :param raster_list: list with raster paths
+    :param layer: str with layer to extract
+    :return: rioxarray.Dataset with mosaic
+    """
     raster_single = []
 
     for raster in raster_list:
@@ -26,7 +32,16 @@ def mosaic_raster(raster_list, layer):
 
 
 def mosaic_nd_raster(raster_list, layer1, layer2):
-    """function to compute normalized difference and mosaic files with rioxarray library"""
+    """
+    Function to compute normalized difference and mosaic files with rioxarray library.
+    The normalized difference is computed as:
+    normalized_difference = 1000 * (layer1 - layer2) / (layer1 + layer2)
+
+    :param raster_list: list with raster paths
+    :param layer1: str with layer1 to compute normalized difference
+    :param layer2: str with layer2 to compute normalized difference
+    :return: rioxarray.Dataset with normalized difference's mosaic
+    """
     raster_single = []
 
     for raster in raster_list:
@@ -42,15 +57,25 @@ def mosaic_nd_raster(raster_list, layer1, layer2):
     return raster_mosaic
 
 
-def write_line(database, result, catchment_names, file_id, file_date, nrow=1):
-    """Write line in database"""
+def write_line(database, result, catchment_names, file_id, file_date, ncol=1):
+    """
+    Write line to database
+    
+    :param database: str with database path 
+    :param result: pandas.DataFrame with result
+    :param catchment_names: list with catchment names
+    :param file_id: str with file ID
+    :param file_date: str with file date
+    :param ncol: int with number of column to extract values
+    :return: None
+    """
     with open(result) as csv_file:
         csvreader = csv.reader(csv_file, delimiter=',')
         gauge_id_result = []
         value_result = []
         for row in csvreader:
             gauge_id_result.append(row[0])
-            value_result.append(row[nrow])
+            value_result.append(row[ncol])
     gauge_id_result = [value for value in gauge_id_result[1:]]
     value_result = [str(ceil(float(value))) if value.replace('.', '', 1).isdigit() else 'NA' for value in
                     value_result[1:] if value]
@@ -66,16 +91,48 @@ def write_line(database, result, catchment_names, file_id, file_date, nrow=1):
 
 
 def write_log(log_file, file_id, currenttime, time_dif, database):
-    """write log file"""
+    """
+    Write log file
+
+    :param log_file: str with log file path
+    :param file_id: str with file ID
+    :param currenttime: str with current time
+    :param time_dif: str with time difference
+    :param database: str with database path
+    :return: None
+    """
     with open(log_file, 'a') as txt_file:
         txt_file.write(f'ID {file_id}. Date: {currenttime}. Process time: {time_dif} s. Database: {database}. \n')
 
 
-def weighted_mean_modis(scene, scenes_path, tempfolder,
-                        name, vector_path,
-                        database, pcdatabase,
+def weighted_mean_modis(scene, scenes_path, tempfolder, name,
                         catchment_names, log_file, **kwargs):
-    """function to calculate weighted mean of scenes"""
+    r"""
+    Function to compute weighted mean MODIS products
+
+    :param scene: str with scene name
+    :param scenes_path: str with scenes path
+    :param tempfolder: str with temp folder path
+    :param name: str with product name
+    :param catchment_names: list with catchment names
+    :param log_file: str with log file path
+    :param \**kwargs:
+        See below
+    :Keword Arguments:
+        - **database** (str) -- Database path
+        - **pcdatabase** (str) -- pcdatabase path
+        - **north_database** (str) -- North database path
+        - **south_database** (str) -- South database path
+        - **north_pcdatabase** (str) -- North pcdatabase path
+        - **south_pcdatabase** (str) -- South pcdatabase path
+        - **vector_path**: str with vector path
+        - **north_vector_path**: str with north vector path
+        - **south_vector_path**: str with south vector path
+        - **layer**: str with layer to extract
+        - **layer1**: str with layer1 to compute normalized difference
+        - **layer2**: str with layer2 to compute normalized difference
+    :return: Print
+    """
 
     print(f'Processing scene {scene} for {name}')
     r = re.compile('.*' + scene + '.*')
@@ -87,6 +144,13 @@ def weighted_mean_modis(scene, scenes_path, tempfolder,
         case 'nbr':
             try:
                 mos = mosaic_nd_raster(selected_files, kwargs.get("layer1"), kwargs.get("layer2"))
+            except rxre.RioXarrayError:
+                return print(f"Error in scene {scene}")
+
+        case 'snow':
+            try:
+                mos = mosaic_raster(selected_files, kwargs.get("layer"))
+                mos = (mos.where(mos == 200) / 200).fillna(0)
             except rxre.RioXarrayError:
                 return print(f"Error in scene {scene}")
 
@@ -102,20 +166,44 @@ def weighted_mean_modis(scene, scenes_path, tempfolder,
     result_file = os.path.join("/Users/aldotapia/hidrocl_test/", name + "_" + scene + ".csv")
     # result_file = os.path.join(tempfolder, name + "_" + scene + ".csv")
     mos.rio.to_raster(temporal_raster, compress="LZW")
-    subprocess.call(["RScript",
-                     "--vanilla",
-                     "./hidrocl/products/Rfiles/WeightedMeanExtraction.R",
-                     vector_path,
-                     temporal_raster,
-                     result_file])
+    match name:
+        case 'snow':
+            subprocess.call(["RScript",
+                             "--vanilla",
+                             "./hidrocl/products/Rfiles/WeightedPercExtraction.R",
+                             kwargs.get("north_vector_path"),
+                             temporal_raster,
+                             result_file])
 
-    write_line(database, result_file, catchment_names, scene, file_date, nrow=1)
-    write_line(pcdatabase, result_file, catchment_names, scene, file_date, nrow=2)
+            write_line(kwargs.get("north_database"), result_file, catchment_names, scene, file_date, ncol=1)
+            write_line(kwargs.get("north_pcdatabase"), result_file, catchment_names, scene, file_date, ncol=2)
+
+            subprocess.call(["RScript",
+                             "--vanilla",
+                             "./hidrocl/products/Rfiles/WeightedPercExtraction.R",
+                             kwargs.get("south_vector_path"),
+                             temporal_raster,
+                             result_file])
+
+            write_line(kwargs.get("south_database"), result_file, catchment_names, scene, file_date, ncol=1)
+            write_line(kwargs.get("south_pcdatabase"), result_file, catchment_names, scene, file_date, ncol=2)
+
+        case _:
+            subprocess.call(["RScript",
+                             "--vanilla",
+                             "./hidrocl/products/Rfiles/WeightedMeanExtraction.R",
+                             kwargs.get("vector_path"),
+                             temporal_raster,
+                             result_file])
+
+            write_line(kwargs.get("database"), result_file, catchment_names, scene, file_date, ncol=1)
+            write_line(kwargs.get("pcdatabase"), result_file, catchment_names, scene, file_date, ncol=2)
+
     end = time.time()
     time_dif = str(round(end - start))
     currenttime = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
     print(f"Time elapsed for {scene}: {str(round(end - start))} seconds")
-    write_log(log_file, scene, currenttime, time_dif, database)
+    write_log(log_file, scene, currenttime, time_dif, kwargs.get("database"))
     # os.remove(temporal_raster)
     # os.remove(result_file)
     gc.collect()
