@@ -81,47 +81,13 @@ Pixel count database path: {self.pcdatabase}.
 
     def plot_valid_data_individual(self, catchment):
         """plot valid data"""
-        #observations = self.observations
 
         catchment = methods.get_catchment_name(catchment, self.catchment_names)
-
         methods.plot_variable(catchment, self.observations, what='valid')
-
-        """
-        aim = observations[[catchment]]
-        year_ = aim.index.year
-        doy_ = aim.index.dayofyear
-
-        aim = aim.notnull().groupby([year_, doy_]).sum()
-        aim = aim.unstack(level=0).transpose()
-
-        plt.imshow(aim, cmap=plt.get_cmap('bwr_r', 2), aspect='equal', vmin=-0.5, vmax=1.5)
-        plt.colorbar(ticks=[0, 1], fraction=0.046, pad=0.04).set_ticklabels(['NaN', 'Valid'])
-        plt.title(f'Valid observations for catchment ID {catchment}')
-        plt.xticks(range(0, len(aim.columns), 3), aim.columns[::3])
-        plt.yticks(range(0, len(aim.index), 3), aim.index.get_level_values(1)[::3])
-
-        plt.show()"""
 
     def plot_pixel_count(self, catchment):
         """plot valid data"""
-        #observations = self.observations
 
         catchment = methods.get_catchment_name(catchment, self.catchment_names)
-
         methods.plot_variable(catchment, self.pcobservations, what='count')
-"""
-        aim = observations[[catchment]]
-        year_ = aim.index.year
-        doy_ = aim.index.dayofyear
 
-        aim = aim.groupby([year_, doy_]).sum()
-        aim = aim.unstack(level=0).transpose()
-
-        plt.imshow(aim, cmap=plt.get_cmap('gnuplot_r', 20), aspect='equal', vmin=0, vmax=100)
-        plt.colorbar(ticks=[0, 100], fraction=0.046, pad=0.04)
-        plt.title(f'Valid observations for catchment ID {catchment}')
-        plt.xticks(range(0, len(aim.columns), 3), aim.columns[::3])
-        plt.yticks(range(0, len(aim.index), 3), aim.index.get_level_values(1)[::3])
-
-        plt.show()"""

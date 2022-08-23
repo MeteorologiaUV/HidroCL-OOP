@@ -24,7 +24,7 @@ custom_mean <- function(values, coverage_fractions) {
 }
 
 count_na <- function(values, coverage_fractions) {
-  round((sum(!is.na(values)) / length(values)) * 1000)
+  round((sum(!is.na(values) * coverage_fractions) / sum(coverage_fractions)) * 1000)
 }
 
 result <- try({
