@@ -9,7 +9,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>hidrocl.products.tools module &mdash; HidroCL-Database 0.0.2 documentation</title>
+  <title>hidrocl.products.tools module &mdash; HidroCL-Database 0.0.3 documentation</title>
   
 
   
@@ -174,65 +174,157 @@
 <dt class="sig sig-object py" id="hidrocl.products.tools.HiddenPrints">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hidrocl.products.tools.</span></span><span class="sig-name descname"><span class="pre">HiddenPrints</span></span><a class="reference internal" href="_modules/hidrocl/products/tools.html#HiddenPrints"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidrocl.products.tools.HiddenPrints" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>hide print statements</p>
+<p>Context manager to suppress stdout and stderr.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="hidrocl.products.tools.check_instance">
 <span class="sig-prename descclassname"><span class="pre">hidrocl.products.tools.</span></span><span class="sig-name descname"><span class="pre">check_instance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidrocl/products/tools.html#check_instance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidrocl.products.tools.check_instance" title="Permalink to this definition">¶</a></dt>
-<dd><p>Function to check instance of inputs</p>
+<dd><p>Check if arguments are instances of HidroCLVariable</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>args</strong> – list with arguments</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>list with arguments</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="hidrocl.products.tools.check_product_files">
 <span class="sig-prename descclassname"><span class="pre">hidrocl.products.tools.</span></span><span class="sig-name descname"><span class="pre">check_product_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">product_ids</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidrocl/products/tools.html#check_product_files"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidrocl.products.tools.check_product_files" title="Permalink to this definition">¶</a></dt>
-<dd><p>extract uniqu names from product files</p>
+<dd><p>Extract unique product IDs from product files</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>product_ids</strong> – </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>list with unique product IDs</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="hidrocl.products.tools.classify_ocurrences">
-<span class="sig-prename descclassname"><span class="pre">hidrocl.products.tools.</span></span><span class="sig-name descname"><span class="pre">classify_ocurrences</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenes_occurrences</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">what</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'modis'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidrocl/products/tools.html#classify_ocurrences"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidrocl.products.tools.classify_ocurrences" title="Permalink to this definition">¶</a></dt>
-<dd><p>classify count_scenes based on ocurrences
-:param what: product type
-:type scenes_occurrences: dictionary</p>
+<dt class="sig sig-object py" id="hidrocl.products.tools.classify_occurrences">
+<span class="sig-prename descclassname"><span class="pre">hidrocl.products.tools.</span></span><span class="sig-name descname"><span class="pre">classify_occurrences</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenes_occurrences</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">what</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'modis'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidrocl/products/tools.html#classify_occurrences"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidrocl.products.tools.classify_occurrences" title="Permalink to this definition">¶</a></dt>
+<dd><p>classify count_scenes based on occurrences</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>scenes_occurrences</strong> – dict with product occurrences</p></li>
+<li><p><strong>what</strong> – str with product type</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>list - overpopulated scenes</p></li>
+<li><p>list - complete scenes</p></li>
+<li><p>list - incomplete scenes</p></li>
+</ul>
+</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="hidrocl.products.tools.compare_indatabase">
 <span class="sig-prename descclassname"><span class="pre">hidrocl.products.tools.</span></span><span class="sig-name descname"><span class="pre">compare_indatabase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidrocl/products/tools.html#compare_indatabase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidrocl.products.tools.compare_indatabase" title="Permalink to this definition">¶</a></dt>
-<dd><p>compare indatabase and return elements that are equal</p>
+<dd><p>Function to compare if a variable is in a database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>args</strong> – lists of indatabase to compare</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="hidrocl.products.tools.count_scenes_occurrences">
 <span class="sig-prename descclassname"><span class="pre">hidrocl.products.tools.</span></span><span class="sig-name descname"><span class="pre">count_scenes_occurrences</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">all_scenes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">product_ids</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidrocl/products/tools.html#count_scenes_occurrences"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidrocl.products.tools.count_scenes_occurrences" title="Permalink to this definition">¶</a></dt>
-<dd><p>count self.all_scenes in self.product_ids returning a dictionary</p>
+<dd><p>Count all_scenes in product_ids returning a dictionary
+with product IDs and number of occurrences</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>all_scenes</strong> – list with name of all scenes</p></li>
+<li><p><strong>product_ids</strong> – list with product IDs</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>dictionary with product IDs and number of occurrences</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="hidrocl.products.tools.get_product_ids">
 <span class="sig-prename descclassname"><span class="pre">hidrocl.products.tools.</span></span><span class="sig-name descname"><span class="pre">get_product_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">product_files</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">what</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'modis'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidrocl/products/tools.html#get_product_ids"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidrocl.products.tools.get_product_ids" title="Permalink to this definition">¶</a></dt>
-<dd><p>get product ids</p>
+<dd><p>Get product IDs from product files</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>product_files</strong> – list with product files</p></li>
+<li><p><strong>what</strong> – str with product type</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>list with product IDs</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="hidrocl.products.tools.get_scenes_out_of_db">
 <span class="sig-prename descclassname"><span class="pre">hidrocl.products.tools.</span></span><span class="sig-name descname"><span class="pre">get_scenes_out_of_db</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">complete_scenes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">common_elements</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidrocl/products/tools.html#get_scenes_out_of_db"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidrocl.products.tools.get_scenes_out_of_db" title="Permalink to this definition">¶</a></dt>
-<dd><p>compare scenes that are not in the database
-:type common_elements: list
-:type complete_scenes: list</p>
+<dd><p>Get scenes out of database</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>complete_scenes</strong> – list with complete scenes</p></li>
+<li><p><strong>common_elements</strong> – list with common elements</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>list with scenes out of database</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="hidrocl.products.tools.get_scenes_path">
 <span class="sig-prename descclassname"><span class="pre">hidrocl.products.tools.</span></span><span class="sig-name descname"><span class="pre">get_scenes_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">product_files</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">productpath</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidrocl/products/tools.html#get_scenes_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidrocl.products.tools.get_scenes_path" title="Permalink to this definition">¶</a></dt>
-<dd><p>get scenes path</p>
+<dd><p>Get scenes path from product files</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>product_files</strong> – list with product files</p></li>
+<li><p><strong>productpath</strong> – str with product path</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>list with scenes path</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="hidrocl.products.tools.read_product_files">
 <span class="sig-prename descclassname"><span class="pre">hidrocl.products.tools.</span></span><span class="sig-name descname"><span class="pre">read_product_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">productpath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">what</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'modis'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidrocl/products/tools.html#read_product_files"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidrocl.products.tools.read_product_files" title="Permalink to this definition">¶</a></dt>
-<dd><p>read product files</p>
+<dd><p>Read remote sensing/modeling product files</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>productpath</strong> – str with product path</p></li>
+<li><p><strong>what</strong> – str with product type</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>list with file names for asked product</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>

@@ -9,7 +9,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>hidrocl.products.extractions module &mdash; HidroCL-Database 0.0.2 documentation</title>
+  <title>hidrocl.products.extractions module &mdash; HidroCL-Database 0.0.3 documentation</title>
   
 
   
@@ -173,31 +173,117 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="hidrocl.products.extractions.mosaic_nd_raster">
 <span class="sig-prename descclassname"><span class="pre">hidrocl.products.extractions.</span></span><span class="sig-name descname"><span class="pre">mosaic_nd_raster</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raster_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidrocl/products/extractions.html#mosaic_nd_raster"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidrocl.products.extractions.mosaic_nd_raster" title="Permalink to this definition">¶</a></dt>
-<dd><p>function to compute normalized difference and mosaic files with rioxarray library</p>
+<dd><p>Function to compute normalized difference and mosaic files with rioxarray library.
+The normalized difference is computed as:
+normalized_difference = 1000 * (layer1 - layer2) / (layer1 + layer2)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>raster_list</strong> – list with raster paths</p></li>
+<li><p><strong>layer1</strong> – str with layer1 to compute normalized difference</p></li>
+<li><p><strong>layer2</strong> – str with layer2 to compute normalized difference</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>rioxarray.Dataset with normalized difference’s mosaic</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="hidrocl.products.extractions.mosaic_raster">
 <span class="sig-prename descclassname"><span class="pre">hidrocl.products.extractions.</span></span><span class="sig-name descname"><span class="pre">mosaic_raster</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raster_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidrocl/products/extractions.html#mosaic_raster"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidrocl.products.extractions.mosaic_raster" title="Permalink to this definition">¶</a></dt>
-<dd><p>function to mosaic files with rioxarray library</p>
+<dd><p>Function to compute mosaic files with rioxarray library</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>raster_list</strong> – list with raster paths</p></li>
+<li><p><strong>layer</strong> – str with layer to extract</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>rioxarray.Dataset with mosaic</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="hidrocl.products.extractions.weighted_mean_modis">
-<span class="sig-prename descclassname"><span class="pre">hidrocl.products.extractions.</span></span><span class="sig-name descname"><span class="pre">weighted_mean_modis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scene</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scenes_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tempfolder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vector_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">database</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pcdatabase</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">catchment_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_file</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidrocl/products/extractions.html#weighted_mean_modis"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidrocl.products.extractions.weighted_mean_modis" title="Permalink to this definition">¶</a></dt>
-<dd><p>function to calculate weighted mean of scenes</p>
+<span class="sig-prename descclassname"><span class="pre">hidrocl.products.extractions.</span></span><span class="sig-name descname"><span class="pre">weighted_mean_modis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scene</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scenes_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tempfolder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">catchment_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_file</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidrocl/products/extractions.html#weighted_mean_modis"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidrocl.products.extractions.weighted_mean_modis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to compute weighted mean MODIS products</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>scene</strong> – str with scene name</p></li>
+<li><p><strong>scenes_path</strong> – str with scenes path</p></li>
+<li><p><strong>tempfolder</strong> – str with temp folder path</p></li>
+<li><p><strong>name</strong> – str with product name</p></li>
+<li><p><strong>catchment_names</strong> – list with catchment names</p></li>
+<li><p><strong>log_file</strong> – str with log file path</p></li>
+<li><p><strong>**kwargs</strong> – See below</p></li>
+</ul>
+</dd>
+<dt class="field-even">Keword Arguments<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>database</strong> (str) – Database path</p></li>
+<li><p><strong>pcdatabase</strong> (str) – pcdatabase path</p></li>
+<li><p><strong>north_database</strong> (str) – North database path</p></li>
+<li><p><strong>south_database</strong> (str) – South database path</p></li>
+<li><p><strong>north_pcdatabase</strong> (str) – North pcdatabase path</p></li>
+<li><p><strong>south_pcdatabase</strong> (str) – South pcdatabase path</p></li>
+<li><p><strong>vector_path</strong>: str with vector path</p></li>
+<li><p><strong>north_vector_path</strong>: str with north vector path</p></li>
+<li><p><strong>south_vector_path</strong>: str with south vector path</p></li>
+<li><p><strong>layer</strong>: str with layer to extract</p></li>
+<li><p><strong>layer1</strong>: str with layer1 to compute normalized difference</p></li>
+<li><p><strong>layer2</strong>: str with layer2 to compute normalized difference</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Print</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="hidrocl.products.extractions.write_line">
-<span class="sig-prename descclassname"><span class="pre">hidrocl.products.extractions.</span></span><span class="sig-name descname"><span class="pre">write_line</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">database</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">catchment_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_date</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nrow</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidrocl/products/extractions.html#write_line"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidrocl.products.extractions.write_line" title="Permalink to this definition">¶</a></dt>
-<dd><p>Write line in database</p>
+<span class="sig-prename descclassname"><span class="pre">hidrocl.products.extractions.</span></span><span class="sig-name descname"><span class="pre">write_line</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">database</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">catchment_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_date</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ncol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidrocl/products/extractions.html#write_line"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidrocl.products.extractions.write_line" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write line to database</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>database</strong> – str with database path</p></li>
+<li><p><strong>result</strong> – pandas.DataFrame with result</p></li>
+<li><p><strong>catchment_names</strong> – list with catchment names</p></li>
+<li><p><strong>file_id</strong> – str with file ID</p></li>
+<li><p><strong>file_date</strong> – str with file date</p></li>
+<li><p><strong>ncol</strong> – int with number of column to extract values</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="hidrocl.products.extractions.write_log">
 <span class="sig-prename descclassname"><span class="pre">hidrocl.products.extractions.</span></span><span class="sig-name descname"><span class="pre">write_log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">log_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">currenttime</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_dif</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">database</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidrocl/products/extractions.html#write_log"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidrocl.products.extractions.write_log" title="Permalink to this definition">¶</a></dt>
-<dd><p>write log file</p>
+<dd><p>Write log file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>log_file</strong> – str with log file path</p></li>
+<li><p><strong>file_id</strong> – str with file ID</p></li>
+<li><p><strong>currenttime</strong> – str with current time</p></li>
+<li><p><strong>time_dif</strong> – str with time difference</p></li>
+<li><p><strong>database</strong> – str with database path</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>

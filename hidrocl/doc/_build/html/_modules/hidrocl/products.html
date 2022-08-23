@@ -156,32 +156,77 @@
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">extractions</span> <span class="k">as</span> <span class="n">e</span>
 
 
-<div class="viewcode-block" id="Test"><a class="viewcode-back" href="../../hidrocl.products.html#hidrocl.products.Test">[docs]</a><span class="k">class</span> <span class="nc">Test</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ndvi</span><span class="p">):</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ndvi</span><span class="p">,</span> <span class="n">HidroCLVariable</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">ndvi</span> <span class="o">=</span> <span class="n">ndvi</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;All good&#39;</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;ndvi must be HidroCLVariable object&#39;</span><span class="p">)</span></div>
-
 <span class="sd">&quot;&quot;&quot;&quot;</span>
 <span class="sd">Extraction of MODIS MOD13Q1 product:</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<div class="viewcode-block" id="Mod13q1"><a class="viewcode-back" href="../../hidrocl.products.html#hidrocl.products.Mod13q1">[docs]</a><span class="k">class</span> <span class="nc">Mod13q1</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;class to process MOD13Q1 to hidrocl variables</span>
 
-<span class="sd">    Parameters:</span>
-<span class="sd">    ndvi (HidroCLVariable): ndvi variable</span>
-<span class="sd">    evi (HidroCLVariable): evi variable</span>
-<span class="sd">    nbr (HidroCLVariable): nbr variable</span>
-<span class="sd">    product_path (str): path to the product</span>
-<span class="sd">    vector_path (str): path to the vector</span>
-<span class="sd">    ndvi_log (str): path to the ndvi log file</span>
-<span class="sd">    evi_log (str): path to the evi log file</span>
+
+<div class="viewcode-block" id="Mod13q1"><a class="viewcode-back" href="../../hidrocl.products.html#hidrocl.products.Mod13q1">[docs]</a><span class="k">class</span> <span class="nc">Mod13q1</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A class to process MOD13Q1 to hidrocl variables</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ndvi : HidroCLVariable</span>
+<span class="sd">        HidroCLVariable object with the NDVI data</span>
+<span class="sd">    evi : HidroCLVariable</span>
+<span class="sd">        HidroCLVariable object with the EVI data</span>
+<span class="sd">    nbr : HidroCLVariable</span>
+<span class="sd">        HidroCLVariable object with the NBR data</span>
+<span class="sd">    ndvi_log : str</span>
+<span class="sd">        Path to the log file for the NDVI extraction</span>
+<span class="sd">    evi_log : str</span>
+<span class="sd">        Path to the log file for the EVI extraction</span>
+<span class="sd">    nbr_log : str</span>
+<span class="sd">        Path to the log file for the NBR extraction</span>
+<span class="sd">    productname : str</span>
+<span class="sd">        Name of the remote sensing product to be processed</span>
+<span class="sd">    productpath : str</span>
+<span class="sd">        Path to the product folder where the product files are located</span>
+<span class="sd">    vectorpath : str</span>
+<span class="sd">        Path to the vector folder with Shapefile with areas to be processed</span>
+<span class="sd">    common_elements : list</span>
+<span class="sd">        List of common elements between the NDVI, EVI and NBR databases</span>
+<span class="sd">    product_files : list</span>
+<span class="sd">        List of product files in the product folder</span>
+<span class="sd">    product_ids : list</span>
+<span class="sd">        List of product ids. Each product id is str with common tag by date</span>
+<span class="sd">    all_scenes : list</span>
+<span class="sd">        List of all scenes (no matter the product id here)</span>
+<span class="sd">    scenes_occurrences : list</span>
+<span class="sd">        List of scenes occurrences for each product id</span>
+<span class="sd">    overpopulated_scenes : list</span>
+<span class="sd">        List of overpopulated scenes (more than 9 scenes for modis)</span>
+<span class="sd">    complete_scenes : list</span>
+<span class="sd">        List of complete scenes (9 scenes for modis)</span>
+<span class="sd">    incomplete_scenes : list</span>
+<span class="sd">        List of incomplete scenes (less than 9 scenes for modis)</span>
+<span class="sd">    scenes_to_process : list</span>
+<span class="sd">        List of scenes to process (complete scenes no processed)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ndvi</span><span class="p">,</span> <span class="n">evi</span><span class="p">,</span> <span class="n">nbr</span><span class="p">,</span> <span class="n">product_path</span><span class="p">,</span> <span class="n">vector_path</span><span class="p">,</span>
                  <span class="n">ndvi_log</span><span class="p">,</span> <span class="n">evi_log</span><span class="p">,</span> <span class="n">nbr_log</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        :param ndvi: HidroCLVariable</span>
+<span class="sd">            Object with the NDVI data</span>
+<span class="sd">        :param evi: HidroCLVariable</span>
+<span class="sd">            Object with the EVI data</span>
+<span class="sd">        :param nbr: HidroCLVariable</span>
+<span class="sd">            Object with the NBR data</span>
+<span class="sd">        :param product_path: str</span>
+<span class="sd">            Path to the product folder</span>
+<span class="sd">        :param vector_path: str</span>
+<span class="sd">            Path to the vector folder</span>
+<span class="sd">        :param ndvi_log: str</span>
+<span class="sd">            Path to the log file for the NDVI extraction</span>
+<span class="sd">        :param evi_log: str</span>
+<span class="sd">            Path to the log file for the EVI extraction</span>
+<span class="sd">        :param nbr_log: str</span>
+<span class="sd">            Path to the log file for the NBR extraction</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">t</span><span class="o">.</span><span class="n">check_instance</span><span class="p">(</span><span class="n">ndvi</span><span class="p">,</span> <span class="n">evi</span><span class="p">,</span> <span class="n">nbr</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">ndvi</span> <span class="o">=</span> <span class="n">ndvi</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">evi</span> <span class="o">=</span> <span class="n">evi</span>
@@ -201,15 +246,25 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">scenes_occurrences</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">count_scenes_occurrences</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">all_scenes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">product_ids</span><span class="p">)</span>
             <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">overpopulated_scenes</span><span class="p">,</span>
              <span class="bp">self</span><span class="o">.</span><span class="n">complete_scenes</span><span class="p">,</span>
-             <span class="bp">self</span><span class="o">.</span><span class="n">incomplete_scenes</span><span class="p">)</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">classify_ocurrences</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scenes_occurrences</span><span class="p">,</span> <span class="s2">&quot;modis&quot;</span><span class="p">)</span>
+             <span class="bp">self</span><span class="o">.</span><span class="n">incomplete_scenes</span><span class="p">)</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">classify_occurrences</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scenes_occurrences</span><span class="p">,</span> <span class="s2">&quot;modis&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">scenes_to_process</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">get_scenes_out_of_db</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">complete_scenes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">common_elements</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;ndvi, evi and nbr must be HidroCLVariable objects&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return a string representation of the object</span>
+
+<span class="sd">        :return: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;Class to extract </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">productname</span><span class="si">}</span><span class="s1">&#39;</span>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return a string representation of the object</span>
+
+<span class="sd">        :return: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;&#39;&#39;</span>
 <span class="s1">Product: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">productname</span><span class="si">}</span><span class="s1"></span>
 
@@ -224,7 +279,14 @@
 <span class="s1">        &#39;&#39;&#39;</span>
 
 <div class="viewcode-block" id="Mod13q1.run_extraction"><a class="viewcode-back" href="../../hidrocl.products.html#hidrocl.products.Mod13q1.run_extraction">[docs]</a>    <span class="k">def</span> <span class="nf">run_extraction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;run extraction&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Run the extraction of the product.</span>
+<span class="sd">        If limit is None, all scenes will be processed.</span>
+<span class="sd">        If limit is a number, only the first limit scenes will be processed.</span>
+
+<span class="sd">        :param limit: int (length of the scenes_to_process)</span>
+<span class="sd">        :return: Print</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">with</span> <span class="n">t</span><span class="o">.</span><span class="n">HiddenPrints</span><span class="p">():</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">ndvi</span><span class="o">.</span><span class="n">checkdatabase</span><span class="p">()</span>
@@ -250,44 +312,96 @@
             <span class="k">for</span> <span class="n">scene</span> <span class="ow">in</span> <span class="n">scenes_to_process</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">scene</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ndvi</span><span class="o">.</span><span class="n">indatabase</span><span class="p">:</span>
                     <span class="n">e</span><span class="o">.</span><span class="n">weighted_mean_modis</span><span class="p">(</span><span class="n">scene</span><span class="p">,</span> <span class="n">scenes_path</span><span class="p">,</span>
-                                          <span class="n">temp_dir</span><span class="p">,</span> <span class="s1">&#39;ndvi&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vectorpath</span><span class="p">,</span>
-                                          <span class="bp">self</span><span class="o">.</span><span class="n">ndvi</span><span class="o">.</span><span class="n">database</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ndvi</span><span class="o">.</span><span class="n">pcdatabase</span><span class="p">,</span>
+                                          <span class="n">temp_dir</span><span class="p">,</span> <span class="s1">&#39;ndvi&#39;</span><span class="p">,</span>
                                           <span class="bp">self</span><span class="o">.</span><span class="n">ndvi</span><span class="o">.</span><span class="n">catchment_names</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ndvi_log</span><span class="p">,</span>
+                                          <span class="n">database</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ndvi</span><span class="o">.</span><span class="n">database</span><span class="p">,</span>
+                                          <span class="n">pcdatabase</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ndvi</span><span class="o">.</span><span class="n">pcdatabase</span><span class="p">,</span>
+                                          <span class="n">vector_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">vectorpath</span><span class="p">,</span>
                                           <span class="n">layer</span><span class="o">=</span><span class="s2">&quot;250m 16 days NDVI&quot;</span><span class="p">,)</span>
 
                 <span class="k">if</span> <span class="n">scene</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">evi</span><span class="o">.</span><span class="n">indatabase</span><span class="p">:</span>
                     <span class="n">e</span><span class="o">.</span><span class="n">weighted_mean_modis</span><span class="p">(</span><span class="n">scene</span><span class="p">,</span> <span class="n">scenes_path</span><span class="p">,</span>
-                                          <span class="n">temp_dir</span><span class="p">,</span> <span class="s1">&#39;evi&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vectorpath</span><span class="p">,</span>
-                                          <span class="bp">self</span><span class="o">.</span><span class="n">evi</span><span class="o">.</span><span class="n">database</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">evi</span><span class="o">.</span><span class="n">pcdatabase</span><span class="p">,</span>
+                                          <span class="n">temp_dir</span><span class="p">,</span> <span class="s1">&#39;evi&#39;</span><span class="p">,</span>
                                           <span class="bp">self</span><span class="o">.</span><span class="n">evi</span><span class="o">.</span><span class="n">catchment_names</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">evi_log</span><span class="p">,</span>
+                                          <span class="n">database</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">evi</span><span class="o">.</span><span class="n">database</span><span class="p">,</span>
+                                          <span class="n">pcdatabase</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">evi</span><span class="o">.</span><span class="n">pcdatabase</span><span class="p">,</span>
+                                          <span class="n">vector_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">vectorpath</span><span class="p">,</span>
                                           <span class="n">layer</span><span class="o">=</span><span class="s2">&quot;250m 16 days EVI&quot;</span><span class="p">,)</span>
 
                 <span class="k">if</span> <span class="n">scene</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">evi</span><span class="o">.</span><span class="n">indatabase</span><span class="p">:</span>
                     <span class="n">e</span><span class="o">.</span><span class="n">weighted_mean_modis</span><span class="p">(</span><span class="n">scene</span><span class="p">,</span> <span class="n">scenes_path</span><span class="p">,</span>
-                                          <span class="n">temp_dir</span><span class="p">,</span> <span class="s1">&#39;nbr&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vectorpath</span><span class="p">,</span>
-                                          <span class="bp">self</span><span class="o">.</span><span class="n">nbr</span><span class="o">.</span><span class="n">database</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nbr</span><span class="o">.</span><span class="n">pcdatabase</span><span class="p">,</span>
+                                          <span class="n">temp_dir</span><span class="p">,</span> <span class="s1">&#39;nbr&#39;</span><span class="p">,</span>
                                           <span class="bp">self</span><span class="o">.</span><span class="n">nbr</span><span class="o">.</span><span class="n">catchment_names</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nbr_log</span><span class="p">,</span>
+                                          <span class="n">database</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">nbr</span><span class="o">.</span><span class="n">database</span><span class="p">,</span>
+                                          <span class="n">pcdatabase</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">nbr</span><span class="o">.</span><span class="n">pcdatabase</span><span class="p">,</span>
+                                          <span class="n">vector_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">vectorpath</span><span class="p">,</span>
                                           <span class="n">layer1</span><span class="o">=</span><span class="s2">&quot;250m 16 days NIR reflectance&quot;</span><span class="p">,</span>
                                           <span class="n">layer2</span><span class="o">=</span><span class="s2">&quot;250m 16 days MIR reflectance&quot;</span><span class="p">)</span></div></div>
+
 
 <span class="sd">&quot;&quot;&quot;&quot;</span>
 <span class="sd">Extraction of MODIS MOD10A2 product:</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="Mod10a2"><a class="viewcode-back" href="../../hidrocl.products.html#hidrocl.products.Mod10a2">[docs]</a><span class="k">class</span> <span class="nc">Mod10a2</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;class to process MOD13Q1 to hidrocl variables</span>
 
-<span class="sd">    Parameters:</span>
-<span class="sd">    nsnow (HidroCLVariable): north face snow</span>
-<span class="sd">    ssnow (HidroCLVariable): south face snow</span>
-<span class="sd">    product_path (str): path to the product</span>
-<span class="sd">    north_vector_path (str): path to north face vector</span>
-<span class="sd">    south_vector_path (str): path to south face vector</span>
-<span class="sd">    snow_log (str): path to the snow log file</span>
+<div class="viewcode-block" id="Mod10a2"><a class="viewcode-back" href="../../hidrocl.products.html#hidrocl.products.Mod10a2">[docs]</a><span class="k">class</span> <span class="nc">Mod10a2</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A class to process MOD10A2 to hidrocl variables</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    nsnow : HidroCLVariable</span>
+<span class="sd">        HidroCLVariable with the snow data</span>
+<span class="sd">    ssnow : HidroCLVariable</span>
+<span class="sd">        HidroCLVariable with the snow data</span>
+<span class="sd">    snow_log : str</span>
+<span class="sd">        Path to the log file for the snow extraction</span>
+<span class="sd">    productname : str</span>
+<span class="sd">        Name of the remote sensing product to be processed</span>
+<span class="sd">    productpath : str</span>
+<span class="sd">        Path to the product folder where the product files are located</span>
+<span class="sd">    northvectorpath : str</span>
+<span class="sd">        Path to the vector folder with the north Shapefile with areas to be processed</span>
+<span class="sd">    southvectorpath : str</span>
+<span class="sd">        Path to the vector folder with the south Shapefile with areas to be processed</span>
+<span class="sd">    common_elements : list</span>
+<span class="sd">        List of common elements between the NDVI, EVI and NBR databases</span>
+<span class="sd">    product_files : list</span>
+<span class="sd">        List of product files in the product folder</span>
+<span class="sd">    product_ids : list</span>
+<span class="sd">        List of product ids. Each product id is str with common tag by date</span>
+<span class="sd">    all_scenes : list</span>
+<span class="sd">        List of all scenes (no matter the product id here)</span>
+<span class="sd">    scenes_occurrences : list</span>
+<span class="sd">        List of scenes occurrences for each product id</span>
+<span class="sd">    overpopulated_scenes : list</span>
+<span class="sd">        List of overpopulated scenes (more than 9 scenes for modis)</span>
+<span class="sd">    complete_scenes : list</span>
+<span class="sd">        List of complete scenes (9 scenes for modis)</span>
+<span class="sd">    incomplete_scenes : list</span>
+<span class="sd">        List of incomplete scenes (less than 9 scenes for modis)</span>
+<span class="sd">    scenes_to_process : list</span>
+<span class="sd">        List of scenes to process (complete scenes no processed)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nsnow</span><span class="p">,</span> <span class="n">ssnow</span><span class="p">,</span> <span class="n">product_path</span><span class="p">,</span>
                  <span class="n">north_vector_path</span><span class="p">,</span> <span class="n">south_vector_path</span><span class="p">,</span> <span class="n">snow_log</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        :param nsnow : HidroCLVariable</span>
+<span class="sd">            Object with the north face snow data</span>
+<span class="sd">        :param ssnow: HidroCLVariable</span>
+<span class="sd">            Object with the south face snow data</span>
+<span class="sd">        :param product_path: str</span>
+<span class="sd">            Path to the product folder</span>
+<span class="sd">        :param north_vector_path: str</span>
+<span class="sd">            Path to the north vector folder</span>
+<span class="sd">        :param south_vector_path: str</span>
+<span class="sd">            Path to the south vector folder</span>
+<span class="sd">        :param snow_log: str</span>
+<span class="sd">            Path to the snow log file</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">t</span><span class="o">.</span><span class="n">check_instance</span><span class="p">(</span><span class="n">nsnow</span><span class="p">,</span> <span class="n">ssnow</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">nsnow</span> <span class="o">=</span> <span class="n">nsnow</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">ssnow</span> <span class="o">=</span> <span class="n">ssnow</span>
@@ -304,15 +418,25 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">scenes_occurrences</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">count_scenes_occurrences</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">all_scenes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">product_ids</span><span class="p">)</span>
             <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">overpopulated_scenes</span><span class="p">,</span>
              <span class="bp">self</span><span class="o">.</span><span class="n">complete_scenes</span><span class="p">,</span>
-             <span class="bp">self</span><span class="o">.</span><span class="n">incomplete_scenes</span><span class="p">)</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">classify_ocurrences</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scenes_occurrences</span><span class="p">,</span> <span class="s2">&quot;modis&quot;</span><span class="p">)</span>
+             <span class="bp">self</span><span class="o">.</span><span class="n">incomplete_scenes</span><span class="p">)</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">classify_occurrences</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scenes_occurrences</span><span class="p">,</span> <span class="s2">&quot;modis&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">scenes_to_process</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">get_scenes_out_of_db</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">complete_scenes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">common_elements</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;nsnow and ssnow must be HidroCLVariable objects&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return a string representation of the object</span>
+
+<span class="sd">        :return: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;Class to extract </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">productname</span><span class="si">}</span><span class="s1">&#39;</span>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return a string representation of the object</span>
+
+<span class="sd">        :return: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;&#39;&#39;</span>
 <span class="s1">Product: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">productname</span><span class="si">}</span><span class="s1"></span>
 
@@ -337,7 +461,6 @@
 
         <span class="n">scenes_path</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">get_scenes_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">product_files</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">productpath</span><span class="p">)</span>
 
-
         <span class="k">with</span> <span class="n">TemporaryDirectory</span><span class="p">()</span> <span class="k">as</span> <span class="n">tempdirname</span><span class="p">:</span>
             <span class="n">temp_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">tempdirname</span><span class="p">)</span>
 
@@ -347,14 +470,17 @@
                 <span class="n">scenes_to_process</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenes_to_process</span>
 
             <span class="k">for</span> <span class="n">scene</span> <span class="ow">in</span> <span class="n">scenes_to_process</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">scene</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nsnow</span><span class="o">.</span><span class="n">indatabase</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">scene</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nsnow</span><span class="o">.</span><span class="n">indatabase</span><span class="p">:</span>  <span class="c1"># so what about the south one?</span>
                     <span class="n">e</span><span class="o">.</span><span class="n">weighted_mean_modis</span><span class="p">(</span><span class="n">scene</span><span class="p">,</span> <span class="n">scenes_path</span><span class="p">,</span>
-                                          <span class="n">temp_dir</span><span class="p">,</span> <span class="s1">&#39;nsnow&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">northvectorpath</span><span class="p">,</span>
-                                          <span class="bp">self</span><span class="o">.</span><span class="n">nsnow</span><span class="o">.</span><span class="n">database</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nsnow</span><span class="o">.</span><span class="n">pcdatabase</span><span class="p">,</span>
-                                          <span class="bp">self</span><span class="o">.</span><span class="n">nsnow</span><span class="o">.</span><span class="n">catchment_names</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nsnow_log</span><span class="p">,</span>
-                                          <span class="n">layer</span><span class="o">=</span><span class="s2">&quot;Maximum_Snow_Extent&quot;</span><span class="p">,)</span></div></div>
-
-
+                                          <span class="n">temp_dir</span><span class="p">,</span> <span class="s1">&#39;snow&#39;</span><span class="p">,</span>
+                                          <span class="bp">self</span><span class="o">.</span><span class="n">nsnow</span><span class="o">.</span><span class="n">catchment_names</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">snow_log</span><span class="p">,</span>
+                                          <span class="n">north_database</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">nsnow</span><span class="o">.</span><span class="n">database</span><span class="p">,</span>
+                                          <span class="n">north_pcdatabase</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">nsnow</span><span class="o">.</span><span class="n">pcdatabase</span><span class="p">,</span>
+                                          <span class="n">south_database</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ssnow</span><span class="o">.</span><span class="n">database</span><span class="p">,</span>
+                                          <span class="n">south_pcdatabase</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ssnow</span><span class="o">.</span><span class="n">pcdatabase</span><span class="p">,</span>
+                                          <span class="n">north_vector_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">northvectorpath</span><span class="p">,</span>
+                                          <span class="n">south_vector_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">southvectorpath</span><span class="p">,</span>
+                                          <span class="n">layer</span><span class="o">=</span><span class="s2">&quot;Maximum_Snow_Extent&quot;</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>
