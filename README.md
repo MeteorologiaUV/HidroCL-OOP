@@ -4,7 +4,7 @@
 
 [![pythonversion](https://img.shields.io/badge/python-v3.10-blue?style=plastic&logo=python&logoColor=yellow)](https://www.python.org/downloads/release/python-3100/)
 [![packageversion](https://img.shields.io/badge/r-v4.1.2-blue?style=plastic&logo=r&logoColor=9cf)](https://anaconda.org/conda-forge/r-base?version=4.2.1)
-![packageversion](https://img.shields.io/badge/version-v0.0.2-blue?style=plastic)
+![packageversion](https://img.shields.io/badge/version-v0.0.3-blue?style=plastic)
 
 ## Data download
 
@@ -13,6 +13,8 @@
 ## Data extraction
 
 *to do: add description about data extraction*
+
+**Access to documentation [here](https://aldotapia.github.io/HidroCL-OOP/)**
 
 ----
 
@@ -34,6 +36,8 @@
 - [ ] MCD43A3 processing
 - [ ] MOD09A1 processing
 - [ ] MOD10A2 processing
+  - [ ] test locally
+  - [x] test on nas
 - [x] MOD13Q1 processing
   - [x] test locally
   - [x] test on nas
@@ -47,6 +51,8 @@
 - [ ] Add documentation
   - [x] add variables documentation
   - [ ] add products documentation
+    - [x] MOD13Q1
+    - [x] MOD10A2
 - [ ] Add tests
 - [ ] Add examples
 - [ ] Add flowcharts
@@ -107,6 +113,19 @@ install.packages("codetools", dependencies = TRUE)
 ----
 
 ## Changelog
+
+### [0.0.3] - 2022-08-23
+#### Added
+- **MOD10A2 processing**: processing for north and south face snow cover extension extraction.
+- **Documentation**: added documentation which can be accessed from [here](https://aldotapia.github.io/HidroCL-OOP/). Although the documentation is not complete, it is a good starting point.
+
+#### Changed
+- **run_extraction**: function refactored. Looking foward for changing names and adding more options.
+- **Check `NA`s**: check if `NA`s values in database are coherent with raster images.
+
+#### To do
+- **run_extraction**: run function with sorted files from later to recent.
+
 
 ### [0.0.2] - 2022-08-22
 #### Added
