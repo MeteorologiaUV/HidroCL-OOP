@@ -1,0 +1,2 @@
+ID A2022097. Date: 2022-08-22 21:44:13. Process time: 65 s. Database: ./testfiles/ndvi_extraction.csv. 
+ID A2022113. Date: 2022-08-22 21:47:50. Process time: 67 s. Database: ./testfiles/ndvi_extraction.csv. 

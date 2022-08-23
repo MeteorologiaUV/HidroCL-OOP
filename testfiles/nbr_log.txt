@@ -1,0 +1,2 @@
+ID A2022097. Date: 2022-08-22 21:46:42. Process time: 82 s. Database: ./testfiles/nbr_extraction.csv. 
+ID A2022113. Date: 2022-08-22 21:50:22. Process time: 84 s. Database: ./testfiles/nbr_extraction.csv. 

@@ -1,0 +1,2 @@
+ID A2022097. Date: 2022-08-22 21:45:20. Process time: 67 s. Database: ./testfiles/evi_extraction.csv. 
+ID A2022113. Date: 2022-08-22 21:48:57. Process time: 67 s. Database: ./testfiles/evi_extraction.csv. 
