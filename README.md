@@ -79,7 +79,8 @@ Installation commands:
 **Environment creation and first steps:**
 ```bash
 # installing Python and R
-conda create -n hidrocl python=3.10 r-base=4.1.2
+conda create -n hidrocl python=3.10  # R is installed with the r-sf package
+conda activate hidrocl
 # installing needed R packages
 conda install -c conda-forge r-sf r-terra r-exactextractr r-tibble
 # for running tests
