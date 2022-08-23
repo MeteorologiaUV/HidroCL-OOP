@@ -39,7 +39,7 @@ Pixel count database path: {self.pcdatabase}.
         """Check IDs in database"""
         if self.observations is None:
             print('Please, check the database for getting the IDs processed')
-            return
+            return ''
         else:
             return self.observations[self.observations.columns[0]].values.tolist()
 
