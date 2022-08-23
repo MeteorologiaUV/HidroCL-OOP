@@ -1,0 +1,348 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>hidrocl.variables &mdash; HidroCL-Database 0.0.2 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> HidroCL-Database
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">hidrocl</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">HidroCL-Database</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>hidrocl.variables</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for hidrocl.variables</h1><div class="highlight"><pre>
+<span></span><span class="c1"># coding=utf-8</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">matplotlib.ticker</span> <span class="k">as</span> <span class="nn">mtick</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">methods</span>
+
+
+<div class="viewcode-block" id="HidroCLVariable"><a class="viewcode-back" href="../../hidrocl.variables.html#hidrocl.variables.HidroCLVariable">[docs]</a><span class="k">class</span> <span class="nc">HidroCLVariable</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;A class to hold information about a hidrocl variable</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name : str</span>
+<span class="sd">        Name of the variable</span>
+<span class="sd">    database : str</span>
+<span class="sd">        Path to the database</span>
+<span class="sd">    pcdatabase : str</span>
+<span class="sd">        Path to the database with pixel count</span>
+<span class="sd">    indatabase : list</span>
+<span class="sd">        List of IDs in the database</span>
+<span class="sd">    observations : pandas.DataFrame</span>
+<span class="sd">        Dataframe with the observations</span>
+<span class="sd">    pcobservations : pandas.DataFrame</span>
+<span class="sd">        Dataframe with the pixel count</span>
+<span class="sd">    catchment_names : list</span>
+<span class="sd">        List of catchment names</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">database</span><span class="p">,</span> <span class="n">pcdatabase</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        :param name: str</span>
+<span class="sd">            Name of the variable</span>
+<span class="sd">        :param database: str</span>
+<span class="sd">            Path to the database</span>
+<span class="sd">        :param pcdatabase: str</span>
+<span class="sd">            Path to the database with pixel count</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">database</span> <span class="o">=</span> <span class="n">database</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pcdatabase</span> <span class="o">=</span> <span class="n">pcdatabase</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">indatabase</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">observations</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pcobservations</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">catchment_names</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">checkdatabase</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">checkpcdatabase</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Representation of the object</span>
+<span class="sd">        :return: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;Variable: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">. Records: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">indatabase</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        String representation of the object</span>
+<span class="sd">        :return: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">Variable </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">.</span>
+<span class="s1">Records: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">indatabase</span><span class="p">)</span><span class="si">}</span><span class="s1">.</span>
+<span class="s1">Database path: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="si">}</span><span class="s1">.</span>
+<span class="s1">Pixel count database path: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pcdatabase</span><span class="si">}</span><span class="s1">.</span>
+<span class="s1">        &#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="HidroCLVariable.checkindatabase"><a class="viewcode-back" href="../../hidrocl.variables.html#hidrocl.variables.HidroCLVariable.checkindatabase">[docs]</a>    <span class="k">def</span> <span class="nf">checkindatabase</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check IDs in database</span>
+<span class="sd">        :return: list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">observations</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Please, check the database for getting the IDs processed&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="s1">&#39;&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">observations</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">observations</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="HidroCLVariable.checkdatabase"><a class="viewcode-back" href="../../hidrocl.variables.html#hidrocl.variables.HidroCLVariable.checkdatabase">[docs]</a>    <span class="k">def</span> <span class="nf">checkdatabase</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check database</span>
+
+<span class="sd">        :return: pandas.DataFrame</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">observations</span> <span class="o">=</span> <span class="n">methods</span><span class="o">.</span><span class="n">checkdatabase</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">catchment_names</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">indatabase</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">checkindatabase</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">catchment_names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">observations</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Could not load dataframe, perhaps the database has not been created yet&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="HidroCLVariable.checkpcdatabase"><a class="viewcode-back" href="../../hidrocl.variables.html#hidrocl.variables.HidroCLVariable.checkpcdatabase">[docs]</a>    <span class="k">def</span> <span class="nf">checkpcdatabase</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check database with pixel count</span>
+
+<span class="sd">        :return: pandas.DataFrame</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pcobservations</span> <span class="o">=</span> <span class="n">methods</span><span class="o">.</span><span class="n">checkdatabase</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pcdatabase</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">catchment_names</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="HidroCLVariable.add_catchment_names"><a class="viewcode-back" href="../../hidrocl.variables.html#hidrocl.variables.HidroCLVariable.add_catchment_names">[docs]</a>    <span class="k">def</span> <span class="nf">add_catchment_names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">catchment_names_list</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add catchment names to the variable using cathment_names from database</span>
+
+<span class="sd">        :param catchment_names_list: list of catchment names</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">catchment_names</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">catchment_names_list</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">catchment_names</span> <span class="o">=</span> <span class="n">catchment_names_list</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Catchment names added. I recommend you to check the database&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Catchments names can&#39;t be None type&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Catchment names already added!&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="HidroCLVariable.valid_data"><a class="viewcode-back" href="../../hidrocl.variables.html#hidrocl.variables.HidroCLVariable.valid_data">[docs]</a>    <span class="k">def</span> <span class="nf">valid_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return valid data for all catchments</span>
+
+<span class="sd">        :return: list with valid data with date index</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">observations</span><span class="o">.</span><span class="n">notnull</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()[</span><span class="mi">1</span><span class="p">:]</span></div>
+
+<div class="viewcode-block" id="HidroCLVariable.plot_valid_data_all"><a class="viewcode-back" href="../../hidrocl.variables.html#hidrocl.variables.HidroCLVariable.plot_valid_data_all">[docs]</a>    <span class="k">def</span> <span class="nf">plot_valid_data_all</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plot valid data for all catchments</span>
+
+<span class="sd">        :return: plot with valid data for all catchments with date index</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">observations</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">observations</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">notnull</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span>
+            <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">observations</span><span class="o">.</span><span class="n">index</span><span class="p">))</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;Valid observations by catchment&#39;</span><span class="p">,</span> <span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">105</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;lightseagreen&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_major_formatter</span><span class="p">(</span><span class="n">mtick</span><span class="o">.</span><span class="n">PercentFormatter</span><span class="p">())</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="HidroCLVariable.plot_valid_data_individual"><a class="viewcode-back" href="../../hidrocl.variables.html#hidrocl.variables.HidroCLVariable.plot_valid_data_individual">[docs]</a>    <span class="k">def</span> <span class="nf">plot_valid_data_individual</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">catchment</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plot valid data for individual catchments</span>
+<span class="sd">        :param catchment: str (catchment name) or int (catchment index)</span>
+<span class="sd">        :return: plot with valid data for individual catchments with date index</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">catchment</span> <span class="o">=</span> <span class="n">methods</span><span class="o">.</span><span class="n">get_catchment_name</span><span class="p">(</span><span class="n">catchment</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">catchment_names</span><span class="p">)</span>
+        <span class="n">methods</span><span class="o">.</span><span class="n">plot_variable</span><span class="p">(</span><span class="n">catchment</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">observations</span><span class="p">,</span> <span class="n">what</span><span class="o">=</span><span class="s1">&#39;valid&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="HidroCLVariable.plot_pixel_count"><a class="viewcode-back" href="../../hidrocl.variables.html#hidrocl.variables.HidroCLVariable.plot_pixel_count">[docs]</a>    <span class="k">def</span> <span class="nf">plot_pixel_count</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">catchment</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plot pixel count for individual catchments</span>
+
+<span class="sd">        :param catchment: str (catchment name) or int (catchment index)</span>
+<span class="sd">        :return: plot with pixel count for individual catchments with date index</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">catchment</span> <span class="o">=</span> <span class="n">methods</span><span class="o">.</span><span class="n">get_catchment_name</span><span class="p">(</span><span class="n">catchment</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">catchment_names</span><span class="p">)</span>
+        <span class="n">methods</span><span class="o">.</span><span class="n">plot_variable</span><span class="p">(</span><span class="n">catchment</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pcobservations</span><span class="p">,</span> <span class="n">what</span><span class="o">=</span><span class="s1">&#39;count&#39;</span><span class="p">)</span></div></div>
+
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2022, Aldo Tapia
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

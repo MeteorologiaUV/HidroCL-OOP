@@ -3,6 +3,7 @@
 ----
 
 [![pythonversion](https://img.shields.io/badge/python-v3.10-blue?style=plastic&logo=python&logoColor=yellow)](https://www.python.org/downloads/release/python-3100/)
+[![packageversion](https://img.shields.io/badge/r-v4.1.2-blue?style=plastic&logo=r&logoColor=9cf)](https://anaconda.org/conda-forge/r-base?version=4.2.1)
 ![packageversion](https://img.shields.io/badge/version-v0.0.2-blue?style=plastic)
 
 ## Data download
@@ -33,9 +34,9 @@
 - [ ] MCD43A3 processing
 - [ ] MOD09A1 processing
 - [ ] MOD10A2 processing
-- [ ] MOD13Q1 processing
+- [x] MOD13Q1 processing
   - [x] test locally
-  - [ ] test on nas
+  - [x] test on nas
 - [ ] MOD16A2 processing
 - [ ] PERSIANN processing
 - [ ] Download functions refactoring
@@ -44,6 +45,8 @@
   - [ ] MODIS web scraping (include?)
   - [ ] test download functions  
 - [ ] Add documentation
+  - [x] add variables documentation
+  - [ ] add products documentation
 - [ ] Add tests
 - [ ] Add examples
 - [ ] Add flowcharts
@@ -57,7 +60,7 @@
 
 *R Libraries*
 
-[![packageversion](https://img.shields.io/badge/r-v4.1.2-green?style=plastic)](https://anaconda.org/conda-forge/r-base?version=4.2.1)
+
 [![packageversion](https://img.shields.io/badge/r--terra-v1.5.21-green?style=plastic)](https://anaconda.org/conda-forge/r-terra)
 [![packageversion](https://img.shields.io/badge/r--sf-v1.0.6-green?style=plastic)](https://anaconda.org/conda-forge/r-sf)
 [![packageversion](https://img.shields.io/badge/r--exactextractr-v0.7.2-green?style=plastic)](https://anaconda.org/conda-forge/r-exactextractr)
@@ -74,6 +77,10 @@
 [![packageversion](https://img.shields.io/badge/matplotlib-v3.5.3-green?style=plastic)](https://anaconda.org/conda-forge/matplotlib)
 [![packageversion](https://img.shields.io/badge/geopandas-v0.11.1-green?style=plastic)](https://anaconda.org/conda-forge/geopandas)
 
+*Documentation*
+
+[![packageversion](https://img.shields.io/badge/sphinx-v5.1.1-green?style=plastic)](https://anaconda.org/conda-forge/sphinx)
+[![packageversion](https://img.shields.io/badge/sphinx--rtd--theme-v0.4.3-green?style=plastic)](https://anaconda.org/conda-forge/sphinx_rtd_theme)
 
 Installation commands:
 **Environment creation and first steps:**
@@ -87,6 +94,8 @@ conda install -c conda-forge r-sf r-terra r-exactextractr r-tibble
 conda install -c conda-forge jupyter
 #  installing python libraries
 conda install -c conda-forge pandas rioxarray matplotlib geopandas
+#  installing python documentation tool
+conda install -c conda-forge sphinx sphinx_rtd_theme
 ```
 
 **R package needed for sf/terra messages**

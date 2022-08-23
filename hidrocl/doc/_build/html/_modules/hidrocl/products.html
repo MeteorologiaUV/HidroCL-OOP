@@ -1,0 +1,399 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>hidrocl.products &mdash; HidroCL-Database 0.0.2 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> HidroCL-Database
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">hidrocl</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">HidroCL-Database</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>hidrocl.products</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for hidrocl.products</h1><div class="highlight"><pre>
+<span></span><span class="c1"># coding=utf-8</span>
+
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">tempfile</span> <span class="kn">import</span> <span class="n">TemporaryDirectory</span>
+<span class="kn">from</span> <span class="nn">..variables</span> <span class="kn">import</span> <span class="n">HidroCLVariable</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">tools</span> <span class="k">as</span> <span class="n">t</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">extractions</span> <span class="k">as</span> <span class="n">e</span>
+
+
+<div class="viewcode-block" id="Test"><a class="viewcode-back" href="../../hidrocl.products.html#hidrocl.products.Test">[docs]</a><span class="k">class</span> <span class="nc">Test</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ndvi</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ndvi</span><span class="p">,</span> <span class="n">HidroCLVariable</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ndvi</span> <span class="o">=</span> <span class="n">ndvi</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;All good&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;ndvi must be HidroCLVariable object&#39;</span><span class="p">)</span></div>
+
+<span class="sd">&quot;&quot;&quot;&quot;</span>
+<span class="sd">Extraction of MODIS MOD13Q1 product:</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="Mod13q1"><a class="viewcode-back" href="../../hidrocl.products.html#hidrocl.products.Mod13q1">[docs]</a><span class="k">class</span> <span class="nc">Mod13q1</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;class to process MOD13Q1 to hidrocl variables</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    ndvi (HidroCLVariable): ndvi variable</span>
+<span class="sd">    evi (HidroCLVariable): evi variable</span>
+<span class="sd">    nbr (HidroCLVariable): nbr variable</span>
+<span class="sd">    product_path (str): path to the product</span>
+<span class="sd">    vector_path (str): path to the vector</span>
+<span class="sd">    ndvi_log (str): path to the ndvi log file</span>
+<span class="sd">    evi_log (str): path to the evi log file</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ndvi</span><span class="p">,</span> <span class="n">evi</span><span class="p">,</span> <span class="n">nbr</span><span class="p">,</span> <span class="n">product_path</span><span class="p">,</span> <span class="n">vector_path</span><span class="p">,</span>
+                 <span class="n">ndvi_log</span><span class="p">,</span> <span class="n">evi_log</span><span class="p">,</span> <span class="n">nbr_log</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">t</span><span class="o">.</span><span class="n">check_instance</span><span class="p">(</span><span class="n">ndvi</span><span class="p">,</span> <span class="n">evi</span><span class="p">,</span> <span class="n">nbr</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ndvi</span> <span class="o">=</span> <span class="n">ndvi</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">evi</span> <span class="o">=</span> <span class="n">evi</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">nbr</span> <span class="o">=</span> <span class="n">nbr</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ndvi_log</span> <span class="o">=</span> <span class="n">ndvi_log</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">evi_log</span> <span class="o">=</span> <span class="n">evi_log</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">nbr_log</span> <span class="o">=</span> <span class="n">nbr_log</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">productname</span> <span class="o">=</span> <span class="s2">&quot;MODIS MOD13Q1 Version 0.61&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">productpath</span> <span class="o">=</span> <span class="n">product_path</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">vectorpath</span> <span class="o">=</span> <span class="n">vector_path</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">common_elements</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">compare_indatabase</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ndvi</span><span class="o">.</span><span class="n">indatabase</span><span class="p">,</span>
+                                                        <span class="bp">self</span><span class="o">.</span><span class="n">evi</span><span class="o">.</span><span class="n">indatabase</span><span class="p">,</span>
+                                                        <span class="bp">self</span><span class="o">.</span><span class="n">nbr</span><span class="o">.</span><span class="n">indatabase</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">product_files</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">read_product_files</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">productpath</span><span class="p">,</span> <span class="s2">&quot;modis&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">product_ids</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">get_product_ids</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">product_files</span><span class="p">,</span> <span class="s2">&quot;modis&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">all_scenes</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">check_product_files</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">product_ids</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">scenes_occurrences</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">count_scenes_occurrences</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">all_scenes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">product_ids</span><span class="p">)</span>
+            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">overpopulated_scenes</span><span class="p">,</span>
+             <span class="bp">self</span><span class="o">.</span><span class="n">complete_scenes</span><span class="p">,</span>
+             <span class="bp">self</span><span class="o">.</span><span class="n">incomplete_scenes</span><span class="p">)</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">classify_ocurrences</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scenes_occurrences</span><span class="p">,</span> <span class="s2">&quot;modis&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">scenes_to_process</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">get_scenes_out_of_db</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">complete_scenes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">common_elements</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;ndvi, evi and nbr must be HidroCLVariable objects&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;Class to extract </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">productname</span><span class="si">}</span><span class="s1">&#39;</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">Product: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">productname</span><span class="si">}</span><span class="s1"></span>
+
+<span class="s1">NDVI records: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ndvi</span><span class="o">.</span><span class="n">indatabase</span><span class="p">)</span><span class="si">}</span><span class="s1">.</span>
+<span class="s1">NDVI database path: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ndvi</span><span class="o">.</span><span class="n">database</span><span class="si">}</span><span class="s1"></span>
+
+<span class="s1">EVI records: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">evi</span><span class="o">.</span><span class="n">indatabase</span><span class="p">)</span><span class="si">}</span><span class="s1">.</span>
+<span class="s1">EVI database path: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">evi</span><span class="o">.</span><span class="n">database</span><span class="si">}</span><span class="s1"></span>
+
+<span class="s1">NBR records: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nbr</span><span class="o">.</span><span class="n">indatabase</span><span class="p">)</span><span class="si">}</span><span class="s1">.</span>
+<span class="s1">NBR database path: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">nbr</span><span class="o">.</span><span class="n">database</span><span class="si">}</span><span class="s1"></span>
+<span class="s1">        &#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="Mod13q1.run_extraction"><a class="viewcode-back" href="../../hidrocl.products.html#hidrocl.products.Mod13q1.run_extraction">[docs]</a>    <span class="k">def</span> <span class="nf">run_extraction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;run extraction&quot;&quot;&quot;</span>
+
+        <span class="k">with</span> <span class="n">t</span><span class="o">.</span><span class="n">HiddenPrints</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ndvi</span><span class="o">.</span><span class="n">checkdatabase</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">evi</span><span class="o">.</span><span class="n">checkdatabase</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">nbr</span><span class="o">.</span><span class="n">checkdatabase</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">common_elements</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">compare_indatabase</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ndvi</span><span class="o">.</span><span class="n">indatabase</span><span class="p">,</span>
+                                                    <span class="bp">self</span><span class="o">.</span><span class="n">evi</span><span class="o">.</span><span class="n">indatabase</span><span class="p">,</span>
+                                                    <span class="bp">self</span><span class="o">.</span><span class="n">nbr</span><span class="o">.</span><span class="n">indatabase</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">scenes_to_process</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">get_scenes_out_of_db</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">complete_scenes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">common_elements</span><span class="p">)</span>
+
+        <span class="n">scenes_path</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">get_scenes_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">product_files</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">productpath</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="n">TemporaryDirectory</span><span class="p">()</span> <span class="k">as</span> <span class="n">tempdirname</span><span class="p">:</span>
+            <span class="n">temp_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">tempdirname</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">limit</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">scenes_to_process</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenes_to_process</span><span class="p">[:</span><span class="n">limit</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">scenes_to_process</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenes_to_process</span>
+
+            <span class="k">for</span> <span class="n">scene</span> <span class="ow">in</span> <span class="n">scenes_to_process</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">scene</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ndvi</span><span class="o">.</span><span class="n">indatabase</span><span class="p">:</span>
+                    <span class="n">e</span><span class="o">.</span><span class="n">weighted_mean_modis</span><span class="p">(</span><span class="n">scene</span><span class="p">,</span> <span class="n">scenes_path</span><span class="p">,</span>
+                                          <span class="n">temp_dir</span><span class="p">,</span> <span class="s1">&#39;ndvi&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vectorpath</span><span class="p">,</span>
+                                          <span class="bp">self</span><span class="o">.</span><span class="n">ndvi</span><span class="o">.</span><span class="n">database</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ndvi</span><span class="o">.</span><span class="n">pcdatabase</span><span class="p">,</span>
+                                          <span class="bp">self</span><span class="o">.</span><span class="n">ndvi</span><span class="o">.</span><span class="n">catchment_names</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ndvi_log</span><span class="p">,</span>
+                                          <span class="n">layer</span><span class="o">=</span><span class="s2">&quot;250m 16 days NDVI&quot;</span><span class="p">,)</span>
+
+                <span class="k">if</span> <span class="n">scene</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">evi</span><span class="o">.</span><span class="n">indatabase</span><span class="p">:</span>
+                    <span class="n">e</span><span class="o">.</span><span class="n">weighted_mean_modis</span><span class="p">(</span><span class="n">scene</span><span class="p">,</span> <span class="n">scenes_path</span><span class="p">,</span>
+                                          <span class="n">temp_dir</span><span class="p">,</span> <span class="s1">&#39;evi&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vectorpath</span><span class="p">,</span>
+                                          <span class="bp">self</span><span class="o">.</span><span class="n">evi</span><span class="o">.</span><span class="n">database</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">evi</span><span class="o">.</span><span class="n">pcdatabase</span><span class="p">,</span>
+                                          <span class="bp">self</span><span class="o">.</span><span class="n">evi</span><span class="o">.</span><span class="n">catchment_names</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">evi_log</span><span class="p">,</span>
+                                          <span class="n">layer</span><span class="o">=</span><span class="s2">&quot;250m 16 days EVI&quot;</span><span class="p">,)</span>
+
+                <span class="k">if</span> <span class="n">scene</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">evi</span><span class="o">.</span><span class="n">indatabase</span><span class="p">:</span>
+                    <span class="n">e</span><span class="o">.</span><span class="n">weighted_mean_modis</span><span class="p">(</span><span class="n">scene</span><span class="p">,</span> <span class="n">scenes_path</span><span class="p">,</span>
+                                          <span class="n">temp_dir</span><span class="p">,</span> <span class="s1">&#39;nbr&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vectorpath</span><span class="p">,</span>
+                                          <span class="bp">self</span><span class="o">.</span><span class="n">nbr</span><span class="o">.</span><span class="n">database</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nbr</span><span class="o">.</span><span class="n">pcdatabase</span><span class="p">,</span>
+                                          <span class="bp">self</span><span class="o">.</span><span class="n">nbr</span><span class="o">.</span><span class="n">catchment_names</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nbr_log</span><span class="p">,</span>
+                                          <span class="n">layer1</span><span class="o">=</span><span class="s2">&quot;250m 16 days NIR reflectance&quot;</span><span class="p">,</span>
+                                          <span class="n">layer2</span><span class="o">=</span><span class="s2">&quot;250m 16 days MIR reflectance&quot;</span><span class="p">)</span></div></div>
+
+<span class="sd">&quot;&quot;&quot;&quot;</span>
+<span class="sd">Extraction of MODIS MOD10A2 product:</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Mod10a2"><a class="viewcode-back" href="../../hidrocl.products.html#hidrocl.products.Mod10a2">[docs]</a><span class="k">class</span> <span class="nc">Mod10a2</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;class to process MOD13Q1 to hidrocl variables</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    nsnow (HidroCLVariable): north face snow</span>
+<span class="sd">    ssnow (HidroCLVariable): south face snow</span>
+<span class="sd">    product_path (str): path to the product</span>
+<span class="sd">    north_vector_path (str): path to north face vector</span>
+<span class="sd">    south_vector_path (str): path to south face vector</span>
+<span class="sd">    snow_log (str): path to the snow log file</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nsnow</span><span class="p">,</span> <span class="n">ssnow</span><span class="p">,</span> <span class="n">product_path</span><span class="p">,</span>
+                 <span class="n">north_vector_path</span><span class="p">,</span> <span class="n">south_vector_path</span><span class="p">,</span> <span class="n">snow_log</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">t</span><span class="o">.</span><span class="n">check_instance</span><span class="p">(</span><span class="n">nsnow</span><span class="p">,</span> <span class="n">ssnow</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">nsnow</span> <span class="o">=</span> <span class="n">nsnow</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ssnow</span> <span class="o">=</span> <span class="n">ssnow</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">snow_log</span> <span class="o">=</span> <span class="n">snow_log</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">productname</span> <span class="o">=</span> <span class="s2">&quot;MODIS MOD10A2 Version 0.61&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">productpath</span> <span class="o">=</span> <span class="n">product_path</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">northvectorpath</span> <span class="o">=</span> <span class="n">north_vector_path</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">southvectorpath</span> <span class="o">=</span> <span class="n">south_vector_path</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">common_elements</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">compare_indatabase</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nsnow</span><span class="o">.</span><span class="n">indatabase</span><span class="p">,</span>
+                                                        <span class="bp">self</span><span class="o">.</span><span class="n">ssnow</span><span class="o">.</span><span class="n">indatabase</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">product_files</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">read_product_files</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">productpath</span><span class="p">,</span> <span class="s2">&quot;modis&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">product_ids</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">get_product_ids</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">product_files</span><span class="p">,</span> <span class="s2">&quot;modis&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">all_scenes</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">check_product_files</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">product_ids</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">scenes_occurrences</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">count_scenes_occurrences</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">all_scenes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">product_ids</span><span class="p">)</span>
+            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">overpopulated_scenes</span><span class="p">,</span>
+             <span class="bp">self</span><span class="o">.</span><span class="n">complete_scenes</span><span class="p">,</span>
+             <span class="bp">self</span><span class="o">.</span><span class="n">incomplete_scenes</span><span class="p">)</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">classify_ocurrences</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scenes_occurrences</span><span class="p">,</span> <span class="s2">&quot;modis&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">scenes_to_process</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">get_scenes_out_of_db</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">complete_scenes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">common_elements</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;nsnow and ssnow must be HidroCLVariable objects&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;Class to extract </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">productname</span><span class="si">}</span><span class="s1">&#39;</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">Product: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">productname</span><span class="si">}</span><span class="s1"></span>
+
+<span class="s1">North face snow records: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nsnow</span><span class="o">.</span><span class="n">indatabase</span><span class="p">)</span><span class="si">}</span><span class="s1">.</span>
+<span class="s1">North face snow path: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">nsnow</span><span class="o">.</span><span class="n">database</span><span class="si">}</span><span class="s1"></span>
+
+<span class="s1">South face snow records: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ssnow</span><span class="o">.</span><span class="n">indatabase</span><span class="p">)</span><span class="si">}</span><span class="s1">.</span>
+<span class="s1">South face snow database path: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ssnow</span><span class="o">.</span><span class="n">database</span><span class="si">}</span><span class="s1"></span>
+<span class="s1">                &#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="Mod10a2.run_extraction"><a class="viewcode-back" href="../../hidrocl.products.html#hidrocl.products.Mod10a2.run_extraction">[docs]</a>    <span class="k">def</span> <span class="nf">run_extraction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;run extraction&quot;&quot;&quot;</span>
+
+        <span class="k">with</span> <span class="n">t</span><span class="o">.</span><span class="n">HiddenPrints</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">nsnow</span><span class="o">.</span><span class="n">checkdatabase</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ssnow</span><span class="o">.</span><span class="n">checkdatabase</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">common_elements</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">compare_indatabase</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nsnow</span><span class="o">.</span><span class="n">indatabase</span><span class="p">,</span>
+                                                    <span class="bp">self</span><span class="o">.</span><span class="n">ssnow</span><span class="o">.</span><span class="n">indatabase</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">scenes_to_process</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">get_scenes_out_of_db</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">complete_scenes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">common_elements</span><span class="p">)</span>
+
+        <span class="n">scenes_path</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">get_scenes_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">product_files</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">productpath</span><span class="p">)</span>
+
+
+        <span class="k">with</span> <span class="n">TemporaryDirectory</span><span class="p">()</span> <span class="k">as</span> <span class="n">tempdirname</span><span class="p">:</span>
+            <span class="n">temp_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">tempdirname</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">limit</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">scenes_to_process</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenes_to_process</span><span class="p">[:</span><span class="n">limit</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">scenes_to_process</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenes_to_process</span>
+
+            <span class="k">for</span> <span class="n">scene</span> <span class="ow">in</span> <span class="n">scenes_to_process</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">scene</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nsnow</span><span class="o">.</span><span class="n">indatabase</span><span class="p">:</span>
+                    <span class="n">e</span><span class="o">.</span><span class="n">weighted_mean_modis</span><span class="p">(</span><span class="n">scene</span><span class="p">,</span> <span class="n">scenes_path</span><span class="p">,</span>
+                                          <span class="n">temp_dir</span><span class="p">,</span> <span class="s1">&#39;nsnow&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">northvectorpath</span><span class="p">,</span>
+                                          <span class="bp">self</span><span class="o">.</span><span class="n">nsnow</span><span class="o">.</span><span class="n">database</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nsnow</span><span class="o">.</span><span class="n">pcdatabase</span><span class="p">,</span>
+                                          <span class="bp">self</span><span class="o">.</span><span class="n">nsnow</span><span class="o">.</span><span class="n">catchment_names</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nsnow_log</span><span class="p">,</span>
+                                          <span class="n">layer</span><span class="o">=</span><span class="s2">&quot;Maximum_Snow_Extent&quot;</span><span class="p">,)</span></div></div>
+
+
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2022, Aldo Tapia
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

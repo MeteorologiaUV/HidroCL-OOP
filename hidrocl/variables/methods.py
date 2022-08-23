@@ -6,7 +6,13 @@ import matplotlib.pyplot as plt
 
 
 def checkdatabase(database, catchment_names=None):
-    """check database"""
+    """
+    Check if the database exists and is valid
+
+    :param database: str with the path to the database
+    :param catchment_names: list with the catchment names
+    :return: pandas.DataFrame with the observations
+    """
 
     if os.path.exists(database):  # check if db exists
         print('Database found, using ' + database)
@@ -33,7 +39,13 @@ def checkdatabase(database, catchment_names=None):
 
 
 def get_catchment_name(catchment, catchment_names):
-    """Get catchment name"""
+    """
+    Get catchment name from catchment ID
+
+    :param catchment: str (catchment name) or int (catchment ID)
+    :param catchment_names: list with the catchment names
+    :return: str (catchement name)
+    """
     match catchment:
         case str():
             if catchment in catchment_names:
@@ -53,7 +65,14 @@ def get_catchment_name(catchment, catchment_names):
 
 
 def plot_variable(catchment, observations, what='valid'):
-    """Plot variable by catchment"""
+    """
+    Plot variable for a catchment
+
+    :param catchment: str (catchment name)
+    :param observations: pandas.DataFrame with the observations
+    :param what: str ('valid' or 'all')
+    :return: plot
+    """
 
     aim = observations[[catchment]]
     year_ = aim.index.year
