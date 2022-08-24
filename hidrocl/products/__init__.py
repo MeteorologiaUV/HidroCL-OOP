@@ -332,3 +332,125 @@ South face snow database path: {self.ssnow.database}
                                           north_vector_path=self.northvectorpath,
                                           south_vector_path=self.southvectorpath,
                                           layer="Maximum_Snow_Extent")
+
+
+class Mod16a2:
+
+    """
+    A class to process MOD13Q1 to hidrocl variables
+
+    Attributes
+    ----------
+    pet : HidroCLVariable
+        HidroCLVariable object with the potential evapotranspoira
+    pet_log : str
+        Path to the log file for the pet extraction
+    productname : str
+        Name of the remote sensing product to be processed
+    productpath : str
+        Path to the product folder where the product files are located
+    vectorpath : str
+        Path to the vector folder with Shapefile with areas to be processed
+    product_files : list
+        List of product files in the product folder
+    product_ids : list
+        List of product ids. Each product id is str with common tag by date
+    all_scenes : list
+        List of all scenes (no matter the product id here)
+    scenes_occurrences : list
+        List of scenes occurrences for each product id
+    overpopulated_scenes : list
+        List of overpopulated scenes (more than 9 scenes for modis)
+    complete_scenes : list
+        List of complete scenes (9 scenes for modis)
+    incomplete_scenes : list
+        List of incomplete scenes (less than 9 scenes for modis)
+    scenes_to_process : list
+        List of scenes to process (complete scenes no processed)
+    """
+
+    def __init__(self, pet, product_path, vector_path, pet_log):
+        """
+        Parameters
+        ----------
+        :param pet: HidroCLVariable
+            Object with the potential evapotranspiration data
+        :param product_path: str
+            Path to the product folder
+        :param vector_path: str
+            Path to the vector folder
+        :param pet_log: str
+            Path to the log file for the PET extraction
+        """
+        if t.check_instance(pet):
+            self.pet = pet
+            self.pet_log = pet_log
+            self.productname = "MODIS MOD16A2 Version 0.61"
+            self.productpath = product_path
+            self.vectorpath = vector_path
+            self.product_files = t.read_product_files(self.productpath, "modis")
+            self.product_ids = t.get_product_ids(self.product_files, "modis")
+            self.all_scenes = t.check_product_files(self.product_ids)
+            self.scenes_occurrences = t.count_scenes_occurrences(self.all_scenes, self.product_ids)
+            (self.overpopulated_scenes,
+             self.complete_scenes,
+             self.incomplete_scenes) = t.classify_occurrences(self.scenes_occurrences, "modis")
+            self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.pet.indatabase)
+        else:
+            raise TypeError('pet must be HidroCLVariable objects')
+
+    def __repr__(self):
+        """
+        Return a string representation of the object
+
+        :return: str
+        """
+        return f'Class to extract {self.productname}'
+
+    def __str__(self):
+        """
+        Return a string representation of the object
+
+        :return: str
+        """
+        return f'''
+Product: {self.productname}
+
+PET records: {len(self.pet.indatabase)}.
+PET database path: {self.pet.database}
+        '''
+
+    def run_extraction(self, limit=None):
+        """
+        Run the extraction of the product.
+        If limit is None, all scenes will be processed.
+        If limit is a number, only the first limit scenes will be processed.
+
+        :param limit: int (length of the scenes_to_process)
+        :return: Print
+        """
+
+        with t.HiddenPrints():
+            self.pet.checkdatabase()
+
+        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.pet.indatabase)
+
+        scenes_path = t.get_scenes_path(self.product_files, self.productpath)
+
+        with TemporaryDirectory() as tempdirname:
+            temp_dir = Path(tempdirname)
+
+            if limit is not None:
+                scenes_to_process = self.scenes_to_process[:limit]
+            else:
+                scenes_to_process = self.scenes_to_process
+
+            for scene in scenes_to_process:
+                if scene not in self.pet.indatabase:
+                    e.weighted_mean_modis(scene, scenes_path,
+                                          temp_dir, 'pet',
+                                          self.pet.catchment_names, self.pet_log,
+                                          database=self.pet.database,
+                                          pcdatabase=self.pet.pcdatabase,
+                                          vector_path=self.vectorpath,
+                                          layer="PET_500m", )
