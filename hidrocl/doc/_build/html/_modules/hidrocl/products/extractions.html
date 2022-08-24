@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>hidrocl.products.extractions &mdash; HidroCL-Database 0.0.2 documentation</title>
+  <title>hidrocl.products.extractions &mdash; HidroCL-Database 0.0.3 documentation</title>
   
 
   
@@ -228,7 +228,9 @@
             <span class="n">gauge_id_result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
             <span class="n">value_result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="n">ncol</span><span class="p">])</span>
     <span class="n">gauge_id_result</span> <span class="o">=</span> <span class="p">[</span><span class="n">value</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">gauge_id_result</span><span class="p">[</span><span class="mi">1</span><span class="p">:]]</span>
-    <span class="n">value_result</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">ceil</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="p">)))</span> <span class="k">if</span> <span class="n">value</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()</span> <span class="k">else</span> <span class="s1">&#39;NA&#39;</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span>
+    <span class="n">value_result</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">ceil</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="p">)))</span> <span class="k">if</span>
+                    <span class="n">value</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()</span> <span class="k">else</span>
+                    <span class="s1">&#39;NA&#39;</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span>
                     <span class="n">value_result</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="k">if</span> <span class="n">value</span><span class="p">]</span>
 
     <span class="k">if</span> <span class="n">catchment_names</span> <span class="o">==</span> <span class="n">gauge_id_result</span><span class="p">:</span>
@@ -312,10 +314,10 @@
             <span class="k">except</span> <span class="n">rxre</span><span class="o">.</span><span class="n">RioXarrayError</span><span class="p">:</span>
                 <span class="k">return</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error in scene </span><span class="si">{</span><span class="n">scene</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-    <span class="c1"># temporal_raster = os.path.join(tempfolder, name + &quot;_&quot; + scene + &quot;.tif&quot;)</span>
-    <span class="n">temporal_raster</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;/Users/aldotapia/hidrocl_test/&quot;</span><span class="p">,</span> <span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="n">scene</span> <span class="o">+</span> <span class="s2">&quot;.tif&quot;</span><span class="p">)</span>
-    <span class="n">result_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;/Users/aldotapia/hidrocl_test/&quot;</span><span class="p">,</span> <span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="n">scene</span> <span class="o">+</span> <span class="s2">&quot;.csv&quot;</span><span class="p">)</span>
-    <span class="c1"># result_file = os.path.join(tempfolder, name + &quot;_&quot; + scene + &quot;.csv&quot;)</span>
+    <span class="n">temporal_raster</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tempfolder</span><span class="p">,</span> <span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="n">scene</span> <span class="o">+</span> <span class="s2">&quot;.tif&quot;</span><span class="p">)</span>
+    <span class="c1"># temporal_raster = os.path.join(&quot;/Users/aldotapia/hidrocl_test/&quot;, name + &quot;_&quot; + scene + &quot;.tif&quot;)</span>
+    <span class="c1"># result_file = os.path.join(&quot;/Users/aldotapia/hidrocl_test/&quot;, name + &quot;_&quot; + scene + &quot;.csv&quot;)</span>
+    <span class="n">result_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tempfolder</span><span class="p">,</span> <span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="n">scene</span> <span class="o">+</span> <span class="s2">&quot;.csv&quot;</span><span class="p">)</span>
     <span class="n">mos</span><span class="o">.</span><span class="n">rio</span><span class="o">.</span><span class="n">to_raster</span><span class="p">(</span><span class="n">temporal_raster</span><span class="p">,</span> <span class="n">compress</span><span class="o">=</span><span class="s2">&quot;LZW&quot;</span><span class="p">)</span>
     <span class="k">match</span> <span class="n">name</span><span class="p">:</span>
         <span class="k">case</span> <span class="s1">&#39;snow&#39;</span><span class="p">:</span>
@@ -355,8 +357,8 @@
     <span class="n">currenttime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">localtime</span><span class="p">())</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Time elapsed for </span><span class="si">{</span><span class="n">scene</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">))</span><span class="si">}</span><span class="s2"> seconds&quot;</span><span class="p">)</span>
     <span class="n">write_log</span><span class="p">(</span><span class="n">log_file</span><span class="p">,</span> <span class="n">scene</span><span class="p">,</span> <span class="n">currenttime</span><span class="p">,</span> <span class="n">time_dif</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;database&quot;</span><span class="p">))</span>
-    <span class="c1"># os.remove(temporal_raster)</span>
-    <span class="c1"># os.remove(result_file)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">temporal_raster</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">result_file</span><span class="p">)</span>
     <span class="n">gc</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span></div>
 </pre></div>
 
