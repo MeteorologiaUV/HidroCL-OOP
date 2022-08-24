@@ -30,7 +30,8 @@ custom_sum <- function(values, coverage_fractions) {
 }
 
 count_na <- function(values, coverage_fractions) {
-  round((sum(!is.na(values) * coverage_fractions) / sum(coverage_fractions)) * 1000)
+  round((sum(as.numeric(!is.na(values)) * coverage_fractions) /
+    sum(coverage_fractions)) * 1000)
 }
 
 result <- try({

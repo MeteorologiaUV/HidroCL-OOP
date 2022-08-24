@@ -124,7 +124,7 @@ def get_scenes_out_of_db(complete_scenes, common_elements):
     :param common_elements: list with common elements
     :return: list with scenes out of database
     """
-    return list(set(complete_scenes) - set(common_elements))
+    return list(set(complete_scenes) - set(common_elements)).sort()
 
 
 class HiddenPrints:

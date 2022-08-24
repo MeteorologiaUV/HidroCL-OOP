@@ -77,7 +77,9 @@ def write_line(database, result, catchment_names, file_id, file_date, ncol=1):
             gauge_id_result.append(row[0])
             value_result.append(row[ncol])
     gauge_id_result = [value for value in gauge_id_result[1:]]
-    value_result = [str(ceil(float(value))) if value.replace('.', '', 1).isdigit() else 'NA' for value in
+    value_result = [str(ceil(float(value))) if
+                    value.replace('.', '', 1).lstrip("-").isdigit() else
+                    'NA' for value in
                     value_result[1:] if value]
 
     if catchment_names == gauge_id_result:
