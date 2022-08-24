@@ -14,6 +14,8 @@
 
 *to do: add description about data extraction*
 
+**Note**: In macOS, the command for running R is `RScript`, in Linux is `Rscript`.
+
 **Access to documentation [here](https://aldotapia.github.io/HidroCL-OOP/)**
 
 ----
