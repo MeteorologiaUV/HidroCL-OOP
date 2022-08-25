@@ -15,6 +15,6 @@ __copyright__ = "2022 Aldo Tapia"
 try:
     # from . import variables, products
     from .variables import HidroCLVariable
-    from .products import Mod13q1, Mod10a2, Mod16a2
+    from .products import Mod13q1, Mod10a2, Mod16a2, Mcd15a2h
 except ImportError:
     print("ImportError")

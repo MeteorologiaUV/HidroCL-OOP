@@ -4,7 +4,7 @@
 
 [![pythonversion](https://img.shields.io/badge/python-v3.10-blue?style=plastic&logo=python&logoColor=yellow)](https://www.python.org/downloads/release/python-3100/)
 [![packageversion](https://img.shields.io/badge/r-v4.1.2-blue?style=plastic&logo=r&logoColor=9cf)](https://anaconda.org/conda-forge/r-base?version=4.2.1)
-![packageversion](https://img.shields.io/badge/version-v0.0.3-blue?style=plastic)
+![packageversion](https://img.shields.io/badge/version-v0.0.4-blue?style=plastic)
 
 ## Data download
 
@@ -14,7 +14,7 @@
 
 *to do: add description about data extraction*
 
-**Note**: In macOS, the command for running R is `RScript`, in Linux is `Rscript`.
+**Note**: In macOS, the command for running R is `RScript`, while in Linux is `Rscript`.
 
 **Access to documentation [here](https://aldotapia.github.io/HidroCL-OOP/)**
 
@@ -35,7 +35,9 @@
 - [ ] GPM_3IMERGHHL processing
 - [ ] MCD12Q1 processing
 - [ ] MCD15A2H processing
-- [ ] MCD43A3 processing
+  - [ ] test locally
+  - [ ] test on nas
+- [ ] ~~MCD43A3 processing~~ *out of database for now*
 - [ ] MOD09A1 processing
 - [ ] MOD10A2 processing
   - [ ] test locally
@@ -44,6 +46,8 @@
   - [x] test locally
   - [x] test on nas
 - [ ] MOD16A2 processing
+  - [ ] test locally
+  - [x] test on nas
 - [ ] PERSIANN processing
 - [ ] Download functions refactoring
   - [ ] PERSIANN (FTP approach)
@@ -115,6 +119,12 @@ install.packages("codetools", dependencies = TRUE)
 ----
 
 ## Changelog
+
+### [0.0.4] - 2022-08-23
+#### Added
+- **MOD16A2 processing**: processing for potential evapotranspiration (PET) modis product. Documentation updated
+- **MCD15A2H processing**: processing for LAI and FPAR modis product. Documentation updated.
+- **run_extraction**: now the output list is sorted (*to do* from 0.0.3)
 
 ### [0.0.3] - 2022-08-23
 #### Added

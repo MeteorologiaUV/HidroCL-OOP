@@ -9,7 +9,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>hidrocl.products package &mdash; HidroCL-Database 0.0.3 documentation</title>
+  <title>hidrocl.products package &mdash; HidroCL-Database 0.0.4 documentation</title>
   
 
   
@@ -179,6 +179,205 @@
 </section>
 <section id="module-hidrocl.products">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-hidrocl.products" title="Permalink to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="hidrocl.products.Mcd15a2h">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hidrocl.products.</span></span><span class="sig-name descname"><span class="pre">Mcd15a2h</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lai</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fpar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">product_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vector_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lai_log</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fpar_log</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidrocl/products.html#Mcd15a2h"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidrocl.products.Mcd15a2h" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class to process MCD15A2H to hidrocl variables</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="hidrocl.products.Mcd15a2h.lai">
+<span class="sig-name descname"><span class="pre">lai</span></span><a class="headerlink" href="#hidrocl.products.Mcd15a2h.lai" title="Permalink to this definition">¶</a></dt>
+<dd><p>HidroCLVariable object with the LAI data</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="hidrocl.variables.html#hidrocl.variables.HidroCLVariable" title="hidrocl.variables.HidroCLVariable">HidroCLVariable</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="hidrocl.products.Mcd15a2h.fpar">
+<span class="sig-name descname"><span class="pre">fpar</span></span><a class="headerlink" href="#hidrocl.products.Mcd15a2h.fpar" title="Permalink to this definition">¶</a></dt>
+<dd><p>HidroCLVariable object with the FPAR data</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="hidrocl.variables.html#hidrocl.variables.HidroCLVariable" title="hidrocl.variables.HidroCLVariable">HidroCLVariable</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="hidrocl.products.Mcd15a2h.lai_log">
+<span class="sig-name descname"><span class="pre">lai_log</span></span><a class="headerlink" href="#hidrocl.products.Mcd15a2h.lai_log" title="Permalink to this definition">¶</a></dt>
+<dd><p>Path to the log file for the LAI extraction</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="hidrocl.products.Mcd15a2h.fpar_log">
+<span class="sig-name descname"><span class="pre">fpar_log</span></span><a class="headerlink" href="#hidrocl.products.Mcd15a2h.fpar_log" title="Permalink to this definition">¶</a></dt>
+<dd><p>Path to the log file for the FPAR extraction</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="hidrocl.products.Mcd15a2h.productname">
+<span class="sig-name descname"><span class="pre">productname</span></span><a class="headerlink" href="#hidrocl.products.Mcd15a2h.productname" title="Permalink to this definition">¶</a></dt>
+<dd><p>Name of the remote sensing product to be processed</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="hidrocl.products.Mcd15a2h.productpath">
+<span class="sig-name descname"><span class="pre">productpath</span></span><a class="headerlink" href="#hidrocl.products.Mcd15a2h.productpath" title="Permalink to this definition">¶</a></dt>
+<dd><p>Path to the product folder where the product files are located</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="hidrocl.products.Mcd15a2h.vectorpath">
+<span class="sig-name descname"><span class="pre">vectorpath</span></span><a class="headerlink" href="#hidrocl.products.Mcd15a2h.vectorpath" title="Permalink to this definition">¶</a></dt>
+<dd><p>Path to the vector folder with Shapefile with areas to be processed</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="hidrocl.products.Mcd15a2h.common_elements">
+<span class="sig-name descname"><span class="pre">common_elements</span></span><a class="headerlink" href="#hidrocl.products.Mcd15a2h.common_elements" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of common elements between the FPAR and LAI databases</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="hidrocl.products.Mcd15a2h.product_files">
+<span class="sig-name descname"><span class="pre">product_files</span></span><a class="headerlink" href="#hidrocl.products.Mcd15a2h.product_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of product files in the product folder</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="hidrocl.products.Mcd15a2h.product_ids">
+<span class="sig-name descname"><span class="pre">product_ids</span></span><a class="headerlink" href="#hidrocl.products.Mcd15a2h.product_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of product ids. Each product id is str with common tag by date</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="hidrocl.products.Mcd15a2h.all_scenes">
+<span class="sig-name descname"><span class="pre">all_scenes</span></span><a class="headerlink" href="#hidrocl.products.Mcd15a2h.all_scenes" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of all scenes (no matter the product id here)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="hidrocl.products.Mcd15a2h.scenes_occurrences">
+<span class="sig-name descname"><span class="pre">scenes_occurrences</span></span><a class="headerlink" href="#hidrocl.products.Mcd15a2h.scenes_occurrences" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of scenes occurrences for each product id</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="hidrocl.products.Mcd15a2h.overpopulated_scenes">
+<span class="sig-name descname"><span class="pre">overpopulated_scenes</span></span><a class="headerlink" href="#hidrocl.products.Mcd15a2h.overpopulated_scenes" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of overpopulated scenes (more than 9 scenes for modis)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="hidrocl.products.Mcd15a2h.complete_scenes">
+<span class="sig-name descname"><span class="pre">complete_scenes</span></span><a class="headerlink" href="#hidrocl.products.Mcd15a2h.complete_scenes" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of complete scenes (9 scenes for modis)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="hidrocl.products.Mcd15a2h.incomplete_scenes">
+<span class="sig-name descname"><span class="pre">incomplete_scenes</span></span><a class="headerlink" href="#hidrocl.products.Mcd15a2h.incomplete_scenes" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of incomplete scenes (less than 9 scenes for modis)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="hidrocl.products.Mcd15a2h.scenes_to_process">
+<span class="sig-name descname"><span class="pre">scenes_to_process</span></span><a class="headerlink" href="#hidrocl.products.Mcd15a2h.scenes_to_process" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of scenes to process (complete scenes no processed)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="hidrocl.products.Mcd15a2h.run_extraction">
+<span class="sig-name descname"><span class="pre">run_extraction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidrocl/products.html#Mcd15a2h.run_extraction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidrocl.products.Mcd15a2h.run_extraction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run the extraction of the product.
+If limit is None, all scenes will be processed.
+If limit is a number, only the first limit scenes will be processed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>limit</strong> – int (length of the scenes_to_process)</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Print</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 <dl class="py class">
 <dt class="sig sig-object py" id="hidrocl.products.Mod10a2">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hidrocl.products.</span></span><span class="sig-name descname"><span class="pre">Mod10a2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nsnow</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ssnow</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">product_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">north_vector_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">south_vector_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">snow_log</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidrocl/products.html#Mod10a2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidrocl.products.Mod10a2" title="Permalink to this definition">¶</a></dt>
@@ -593,11 +792,11 @@ If limit is a number, only the first limit scenes will be processed.</p>
 <dt class="sig sig-object py" id="hidrocl.products.Mod16a2">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">hidrocl.products.</span></span><span class="sig-name descname"><span class="pre">Mod16a2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pet</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">product_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vector_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pet_log</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidrocl/products.html#Mod16a2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidrocl.products.Mod16a2" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>A class to process MOD13Q1 to hidrocl variables</p>
+<p>A class to process MOD16A2 to hidrocl variables</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="hidrocl.products.Mod16a2.pet">
 <span class="sig-name descname"><span class="pre">pet</span></span><a class="headerlink" href="#hidrocl.products.Mod16a2.pet" title="Permalink to this definition">¶</a></dt>
-<dd><p>HidroCLVariable object with the potential evapotranspoira</p>
+<dd><p>HidroCLVariable object with the potential evapotranspiration</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="hidrocl.variables.html#hidrocl.variables.HidroCLVariable" title="hidrocl.variables.HidroCLVariable">HidroCLVariable</a></p>
