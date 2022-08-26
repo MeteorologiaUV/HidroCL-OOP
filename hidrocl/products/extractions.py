@@ -5,14 +5,13 @@ import gc
 import re
 import csv
 import time
-import xarray as xr
 import subprocess
 from math import ceil
+from . import tools as t
 from sys import platform
 import rioxarray as rioxr
 from datetime import datetime
 from rasterio import errors as rioe
-from netCDF4 import Dataset as Netdat
 from rioxarray import exceptions as rxre
 from rioxarray.merge import merge_arrays
 
@@ -23,8 +22,6 @@ elif platform == "darwin":
 # elif platform == "win32":
     # Windows...
 
-
-
 def load_hdf5(file, var):
     """
     Load .HDF5 file with xarray library and slice ver continental Chile
@@ -33,11 +30,16 @@ def load_hdf5(file, var):
     :param var: variable to extract
     :return:
     """
-    ncf = Netdat(file, diskless=True, persist=False)
-    xds = xr.open_dataset(xr.backends.NetCDF4DataStore(ncf.groups.get("Grid")))
-    return xds.sel(lat=slice(-55, -15), lon=slice(-75, -65))[var].transpose('time', 'lat', 'lon')
-    # return xds[var].transpose('time', 'lat', 'lon')
 
+    with t.HiddenPrints():
+        da = rioxr.open_rasterio(file, engine='h5netcdf')
+        da = da[0][var]
+        return da.assign_coords({"x": (da.x / 10) - 90}) \
+                .assign_coords({"y": (da.y / 10) - 180}) \
+                .sel(x=slice(-55, -15), y=slice(-75,-65)) \
+                .transpose('band', 'x', 'y') \
+                .rio.write_crs(4326) \
+                .rename({'x': 'y', 'y': 'x'})
 
 def sum_datasets(dataset_list):
     r"""

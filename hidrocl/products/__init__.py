@@ -745,4 +745,4 @@ IMERG precipitation database path: {self.pp.database}
                                   database=self.pp.database,
                                   pcdatabase=self.pp.pcdatabase,
                                   vector_path=self.vectorpath,
-                                  layer="precipitationCal")
+                                  layer="Grid_precipitationCal")
