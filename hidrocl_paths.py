@@ -40,7 +40,6 @@ snw_o_modis_sca_cum_s_d8_p0d = os.path.join(nas_path, 'databases/observed/snw_o_
 veg_o_modis_ndvi_mean_b_d16_p0d = os.path.join(nas_path, 'databases/observed/veg_o_modis_ndvi_mean_b_d16_p0d.csv')
 veg_o_modis_evi_mean_b_d16_p0d = os.path.join(nas_path, 'databases/observed/veg_o_modis_evi_mean_b_d16_p0d.csv')
 veg_o_int_nbr_mean_b_d16_p0d = os.path.join(nas_path, 'databases/observed/veg_o_int_nbr_mean_b_d16_p0d.csv')
-pp_o_imerg_pp_mean_b_d_pod = os.path.join(nas_path, 'databases/observed/pp_o_imerg_pp_mean_b_d_pod.csv')
 # sun_o_modis_al_mean_b_d16_p0d = os.path.join(nas_path, 'databases/observed/sun_o_modis_al_mean_b_d16_p0d.csv')
 # sun_o_modis_al_p10_b_d16_p0d = os.path.join(nas_path, 'databases/observed/sun_o_modis_al_p10_b_d16_p0d.csv')
 # sun_o_modis_al_p25_b_d16_p0d = os.path.join(nas_path, 'databases/observed/sun_o_modis_al_p25_b_d16_p0d.csv')
@@ -50,6 +49,7 @@ pp_o_imerg_pp_mean_b_d_pod = os.path.join(nas_path, 'databases/observed/pp_o_ime
 et_o_modis_eto_cum_b_d8_p0d = os.path.join(nas_path, 'databases/observed/et_o_modis_eto_cum_b_d8_p0d.csv')
 veg_o_modis_lai_mean_b_d8_p0d = os.path.join(nas_path, 'databases/observed/veg_o_modis_lai_mean_b_d8_p0d.csv')
 veg_o_modis_fpar_mean_b_d8_p0d = os.path.join(nas_path, 'databases/observed/veg_o_modis_fpar_mean_b_d8_p0d.csv')
+pp_o_imerg_pp_mean_b_d_p0d = os.path.join(nas_path, 'databases/observed/pp_o_imerg_pp_mean_b_d_p0d.csv')
 
 # forecasted
 
@@ -67,6 +67,7 @@ snw_o_modis_sca_cum_s_pc = os.path.join(nas_path, 'pcdatabases/observed/snw_o_mo
 et_o_modis_eto_cum_b_pc = os.path.join(nas_path, 'pcdatabases/observed/et_o_modis_eto_cum_b_pc.csv')
 veg_o_modis_lai_mean_b_pc = os.path.join(nas_path, 'pcdatabases/observed/veg_o_modis_lai_mean_b_pc.csv')
 veg_o_modis_fpar_mean_b_pc = os.path.join(nas_path, 'pcdatabases/observed/veg_o_modis_fpar_mean_b_pc.csv')
+pp_o_imerg_pp_mean_b_pc = os.path.join(nas_path, 'pcdatabases/observed/pp_o_imerg_pp_mean_b_pc.csv')
 
 # forecasted
 
@@ -78,7 +79,6 @@ log_snw_o_modis_sca_cum = os.path.join(nas_path, 'logs/log_snw_o_modis_sca_cum.t
 log_veg_o_modis_ndvi_mean = os.path.join(nas_path, 'logs/log_veg_o_modis_ndvi_mean.txt')
 log_veg_o_modis_evi_mean = os.path.join(nas_path, 'logs/log_veg_o_modis_evi_mean.txt')
 log_veg_o_int_nbr_mean = os.path.join(nas_path, 'logs/log_veg_o_int_nbr_mean.txt')
-log_pp_o_imerg_pp_mean_b_d_pod = os.path.join(nas_path, 'logs/log_pp_o_imerg_pp_mean_b_d_pod.txt')
 # log_sun_o_modis_al_mean_b_d16_p0d = os.path.join(nas_path, 'logs/log_sun_o_modis_al_mean_b_d16_p0d.txt')
 # log_sun_o_modis_al_median_b_d16_p0d = os.path.join(nas_path, 'logs/log_sun_o_modis_al_median_b_d16_p0d.txt')
 # log_sun_o_modis_al_p90_b_d16_p0d = os.path.join(nas_path, 'logs/log_sun_o_modis_al_p90_b_d16_p0d.txt')
@@ -88,21 +88,9 @@ log_pp_o_imerg_pp_mean_b_d_pod = os.path.join(nas_path, 'logs/log_pp_o_imerg_pp_
 log_et_o_modis_eto_cum_b_d8_p0d = os.path.join(nas_path, 'logs/log_et_o_modis_eto_cum_b_d8_p0d.txt')
 log_veg_o_modis_lai_mean = os.path.join(nas_path, 'logs/log_veg_o_modis_lai_mean.txt')
 log_veg_o_modis_fpar_mean = os.path.join(nas_path, 'logs/log_veg_o_modis_fpar_mean.txt')
+log_pp_o_imerg_pp_mean = os.path.join(nas_path, 'logs/log_pp_o_imerg_pp_mean.txt')
 
 # forecasted
-
-# ----
-# path for Rscript and R files
-# **NOTE**: change to python's R bindings?
-# ----
-rscript_path = '/Library/Frameworks/R.framework/Resources/Rscript'
-WeightedSumExtraction = os.path.join(github_path, 'Processing_functions/WeightedSumExtraction.R')
-WeightedPercentExtraction = os.path.join(github_path, 'Processing_functions/WeightedPercExtraction.R')
-WeightedMeanExtraction = os.path.join(github_path, 'Processing_functions/WeightedMeanExtraction.R')
-WeightedQuanExtraction = os.path.join(github_path, 'Processing_functions/WeightedQuanExtraction.R')
-AlbedoExtraction = os.path.join(github_path, 'Processing_functions/AlbedoExtraction.R')
-imergDailyMean = os.path.join(github_path, 'Processing_functions/pp_o_imerg_pp_mean_b_d_p0d.R')
-PreparingPackages = os.path.join(github_path, 'Processing_functions/PreparingPackages.R')
 
 """
 polys = gpd.read_file(hidrocl_sinusoidal)  # for getting gauge_id values
