@@ -192,8 +192,11 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
                 return print(f"Error in scene {scene}")
 
         case 'imerg':
-            datasets_list = [load_hdf5(ds, kwargs.get("layer")) for ds in selected_files]
-            mos = sum_datasets(datasets_list)
+            try:
+                datasets_list = [load_hdf5(ds, kwargs.get("layer")) for ds in selected_files]
+                mos = sum_datasets(datasets_list)
+            except OSError:
+                return print(f"Error in scene {scene}")
 
         case _:
             try:
