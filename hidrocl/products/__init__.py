@@ -626,7 +626,7 @@ Extraction of GPM IMERG Late Precipitation L3 Half Hourly 0.1 degree product:
 
 class Gpm_3imrghhl:
     """
-    A class to process MCD15A2H to hidrocl variables
+    A class to process GPM_3IMRGHHL to hidrocl variables
 
     Attributes
     ----------
@@ -649,11 +649,11 @@ class Gpm_3imrghhl:
     scenes_occurrences : list
         List of scenes occurrences for each product id
     overpopulated_scenes : list
-        List of overpopulated scenes (more than 9 scenes for modis)
+        List of overpopulated scenes (more than 48 scenes for modis)
     complete_scenes : list
-        List of complete scenes (9 scenes for modis)
+        List of complete scenes (48 scenes for modis)
     incomplete_scenes : list
-        List of incomplete scenes (less than 9 scenes for modis)
+        List of incomplete scenes (less than 48 scenes for modis)
     scenes_to_process : list
         List of scenes to process (complete scenes no processed)
     """
@@ -746,4 +746,3 @@ IMERG precipitation database path: {self.pp.database}
                                   pcdatabase=self.pp.pcdatabase,
                                   vector_path=self.vectorpath,
                                   layer="precipitationCal")
-

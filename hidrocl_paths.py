@@ -1,8 +1,18 @@
 import os
 # import geopandas as gpd
+from sys import platform
 
-nas_path = '/private/nfs2'
-github_path = '/Users/aldotapia/Documents/GitHub/HidroCL-OOP/'
+
+if platform == "linux" or platform == "linux2":
+    nas_path = '/mnt/nas'
+    github_path = '/home/aldo/github-hidrocl/HidroCL-DBCreation/'
+elif platform == "darwin":
+    nas_path = '/private/nfs2'
+    github_path = '/Users/aldotapia/Documents/GitHub/HidroCL-OOP/'
+elif platform == "win32":
+    # Windows...
+
+
 
 # ----
 # path to folders

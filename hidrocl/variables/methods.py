@@ -98,3 +98,41 @@ def plot_variable(catchment, observations, what='valid'):
     plt.yticks(range(0, len(aim.index), 3), aim.index.get_level_values(1)[::3])
 
     plt.show()
+
+
+def plot_variable_all(observations, catchment_names, database, what='obs'):
+    """
+    Plot variable for a catchment
+
+    :param observations: pandas.DataFrame with the observations
+    :param catchment_names: list with catchment names
+    :param database: str with database path
+    :param what: str ('obs' or 'pc')
+    :return: plot
+    """
+
+    databasename = database.split('/')[-1]
+    len_ = len(catchment_names)
+    year_ = observations.index.year
+    doy_ = observations.index.dayofyear
+
+    match what:
+        case 'obs':
+            df = observations.notnull().groupby([year_, doy_]).sum().assign(sum=lambda x: x.sum(axis=1))
+            df = df["sum"].div(len_).multiply(100).unstack(level=0).transpose()
+            message = f'% of valid observations for \n{databasename} by date'
+            plt.imshow(df, cmap=plt.get_cmap('rainbow_r', 20), aspect='equal', vmin=0, vmax=100)
+            plt.colorbar(ticks=[0, 100], fraction=0.035, pad=0.04)
+
+        case _:
+            df = observations.groupby([year_, doy_]).mean().div(10).assign(mean=lambda x: x.sum(axis=1))
+            df = df["mean"].div(len_).unstack(level=0).transpose()
+            message = f'% of mean pixel count for \n{databasename} observations by date'
+            plt.imshow(df, cmap=plt.get_cmap('rainbow_r', 20), aspect='equal', vmin=60, vmax=100)
+            plt.colorbar(ticks=[60, 100], fraction=0.035, pad=0.04)
+
+    plt.title(message)
+    plt.xticks(range(0, len(df.columns), len(df.columns)//8), df.columns[::(len(df.columns)//8)])
+    plt.yticks(range(0, len(df.index), 3), df.index[::3])
+
+    plt.show()

@@ -8,12 +8,21 @@ import time
 import xarray as xr
 import subprocess
 from math import ceil
+from sys import platform
 import rioxarray as rioxr
 from datetime import datetime
 from rasterio import errors as rioe
 from netCDF4 import Dataset as Netdat
 from rioxarray import exceptions as rxre
 from rioxarray.merge import merge_arrays
+
+if platform == "linux" or platform == "linux2":
+    rscript = "Rscript"
+elif platform == "darwin":
+    rscript = "RScript"
+elif platform == "win32":
+    # Windows...
+
 
 
 def load_hdf5(file, var):
@@ -212,7 +221,7 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
     mos.rio.to_raster(temporal_raster, compress="LZW")
     match name:
         case 'snow':
-            subprocess.call(["RScript",
+            subprocess.call([rscript,
                              "--vanilla",
                              "./hidrocl/products/Rfiles/WeightedPercExtraction.R",
                              kwargs.get("north_vector_path"),
@@ -222,7 +231,7 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
             write_line(kwargs.get("north_database"), result_file, catchment_names, scene, file_date, ncol=1)
             write_line(kwargs.get("north_pcdatabase"), result_file, catchment_names, scene, file_date, ncol=2)
 
-            subprocess.call(["RScript",
+            subprocess.call([rscript,
                              "--vanilla",
                              "./hidrocl/products/Rfiles/WeightedPercExtraction.R",
                              kwargs.get("south_vector_path"),
@@ -233,7 +242,7 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
             write_line(kwargs.get("south_pcdatabase"), result_file, catchment_names, scene, file_date, ncol=2)
 
         case _:
-            subprocess.call(["RScript",
+            subprocess.call([rscript,
                              "--vanilla",
                              "./hidrocl/products/Rfiles/WeightedMeanExtraction.R",
                              kwargs.get("vector_path"),

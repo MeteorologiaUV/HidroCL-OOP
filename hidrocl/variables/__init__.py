@@ -134,6 +134,22 @@ Pixel count database path: {self.pcdatabase}.
         ax.yaxis.set_major_formatter(mtick.PercentFormatter())
         plt.show()
 
+    def plot_grid_data_all(self):
+        """
+        Plot valid data for all catchments in grid format
+
+        :return: plot with valid data for all catchments with date index
+        """
+        methods.plot_variable_all(self.observations, self.catchment_names, self.database, what='obs')
+
+    def plot_grid_pcdata_all(self):
+        """
+        Plot valid data for all catchments in grid format
+
+        :return: plot with valid data for all catchments with date index
+        """
+        methods.plot_variable_all(self.pcobservations, self.catchment_names, self.database, what='pc')
+
     def plot_valid_data_individual(self, catchment):
         """
         Plot valid data for individual catchments
@@ -155,4 +171,3 @@ Pixel count database path: {self.pcdatabase}.
 
         catchment = methods.get_catchment_name(catchment, self.catchment_names)
         methods.plot_variable(catchment, self.pcobservations, what='count')
-
