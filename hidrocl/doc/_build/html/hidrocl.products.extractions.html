@@ -171,6 +171,23 @@
   <section id="module-hidrocl.products.extractions">
 <span id="hidrocl-products-extractions-module"></span><h1>hidrocl.products.extractions module<a class="headerlink" href="#module-hidrocl.products.extractions" title="Permalink to this heading">¶</a></h1>
 <dl class="py function">
+<dt class="sig sig-object py" id="hidrocl.products.extractions.load_hdf5">
+<span class="sig-prename descclassname"><span class="pre">hidrocl.products.extractions.</span></span><span class="sig-name descname"><span class="pre">load_hdf5</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">var</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidrocl/products/extractions.html#load_hdf5"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidrocl.products.extractions.load_hdf5" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load .HDF5 file with xarray library and slice ver continental Chile</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file</strong> – HDF5 raster path</p></li>
+<li><p><strong>var</strong> – variable to extract</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="hidrocl.products.extractions.mosaic_nd_raster">
 <span class="sig-prename descclassname"><span class="pre">hidrocl.products.extractions.</span></span><span class="sig-name descname"><span class="pre">mosaic_nd_raster</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raster_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidrocl/products/extractions.html#mosaic_nd_raster"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidrocl.products.extractions.mosaic_nd_raster" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function to compute normalized difference and mosaic files with rioxarray library.
@@ -208,39 +225,15 @@ normalized_difference = 1000 * (layer1 - layer2) / (layer1 + layer2)</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="hidrocl.products.extractions.weighted_mean_modis">
-<span class="sig-prename descclassname"><span class="pre">hidrocl.products.extractions.</span></span><span class="sig-name descname"><span class="pre">weighted_mean_modis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scene</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scenes_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tempfolder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">catchment_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_file</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidrocl/products/extractions.html#weighted_mean_modis"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidrocl.products.extractions.weighted_mean_modis" title="Permalink to this definition">¶</a></dt>
-<dd><p>Function to compute weighted mean MODIS products</p>
+<dt class="sig sig-object py" id="hidrocl.products.extractions.sum_datasets">
+<span class="sig-prename descclassname"><span class="pre">hidrocl.products.extractions.</span></span><span class="sig-name descname"><span class="pre">sum_datasets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset_list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidrocl/products/extractions.html#sum_datasets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidrocl.products.extractions.sum_datasets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to sum xarray datasets</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>scene</strong> – str with scene name</p></li>
-<li><p><strong>scenes_path</strong> – str with scenes path</p></li>
-<li><p><strong>tempfolder</strong> – str with temp folder path</p></li>
-<li><p><strong>name</strong> – str with product name</p></li>
-<li><p><strong>catchment_names</strong> – list with catchment names</p></li>
-<li><p><strong>log_file</strong> – str with log file path</p></li>
-<li><p><strong>**kwargs</strong> – See below</p></li>
-</ul>
+<dd class="field-odd"><p><strong>dataset_list</strong> – list with raster products</p>
 </dd>
-<dt class="field-even">Keword Arguments<span class="colon">:</span></dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>database</strong> (str) – Database path</p></li>
-<li><p><strong>pcdatabase</strong> (str) – pcdatabase path</p></li>
-<li><p><strong>north_database</strong> (str) – North database path</p></li>
-<li><p><strong>south_database</strong> (str) – South database path</p></li>
-<li><p><strong>north_pcdatabase</strong> (str) – North pcdatabase path</p></li>
-<li><p><strong>south_pcdatabase</strong> (str) – South pcdatabase path</p></li>
-<li><p><strong>vector_path</strong>: str with vector path</p></li>
-<li><p><strong>north_vector_path</strong>: str with north vector path</p></li>
-<li><p><strong>south_vector_path</strong>: str with south vector path</p></li>
-<li><p><strong>layer</strong>: str with layer to extract</p></li>
-<li><p><strong>layer1</strong>: str with layer1 to compute normalized difference</p></li>
-<li><p><strong>layer2</strong>: str with layer2 to compute normalized difference</p></li>
-</ul>
-</dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Print</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>xarray.Dataset with sum of rasters</p>
 </dd>
 </dl>
 </dd></dl>
@@ -282,6 +275,44 @@ normalized_difference = 1000 * (layer1 - layer2) / (layer1 + layer2)</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hidrocl.products.extractions.zonal_stats">
+<span class="sig-prename descclassname"><span class="pre">hidrocl.products.extractions.</span></span><span class="sig-name descname"><span class="pre">zonal_stats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scene</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scenes_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tempfolder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">catchment_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_file</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidrocl/products/extractions.html#zonal_stats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidrocl.products.extractions.zonal_stats" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to extract zonal statistics from raster files</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>scene</strong> – str with scene name</p></li>
+<li><p><strong>scenes_path</strong> – str with scenes path</p></li>
+<li><p><strong>tempfolder</strong> – str with temp folder path</p></li>
+<li><p><strong>name</strong> – str with product name</p></li>
+<li><p><strong>catchment_names</strong> – list with catchment names</p></li>
+<li><p><strong>log_file</strong> – str with log file path</p></li>
+<li><p><strong>**kwargs</strong> – See below</p></li>
+</ul>
+</dd>
+<dt class="field-even">Keword Arguments<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>database</strong> (str) – Database path</p></li>
+<li><p><strong>pcdatabase</strong> (str) – pcdatabase path</p></li>
+<li><p><strong>north_database</strong> (str) – North database path</p></li>
+<li><p><strong>south_database</strong> (str) – South database path</p></li>
+<li><p><strong>north_pcdatabase</strong> (str) – North pcdatabase path</p></li>
+<li><p><strong>south_pcdatabase</strong> (str) – South pcdatabase path</p></li>
+<li><p><strong>vector_path</strong>: str with vector path</p></li>
+<li><p><strong>north_vector_path</strong>: str with north vector path</p></li>
+<li><p><strong>south_vector_path</strong>: str with south vector path</p></li>
+<li><p><strong>layer</strong>: str with layer to extract</p></li>
+<li><p><strong>layer1</strong>: str with layer1 to compute normalized difference</p></li>
+<li><p><strong>layer2</strong>: str with layer2 to compute normalized difference</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Print</p>
 </dd>
 </dl>
 </dd></dl>

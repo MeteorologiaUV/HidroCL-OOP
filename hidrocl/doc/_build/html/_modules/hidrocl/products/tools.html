@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>hidrocl.products.tools &mdash; HidroCL-Database 0.0.3 documentation</title>
+  <title>hidrocl.products.tools &mdash; HidroCL-Database 0.0.4 documentation</title>
   
 
   
@@ -190,6 +190,8 @@
     <span class="k">match</span> <span class="n">what</span><span class="p">:</span>
         <span class="k">case</span> <span class="s2">&quot;modis&quot;</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">[</span><span class="n">value</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">productpath</span><span class="p">)</span> <span class="k">if</span> <span class="s2">&quot;.hdf&quot;</span> <span class="ow">in</span> <span class="n">value</span><span class="p">]</span>
+        <span class="k">case</span> <span class="s2">&quot;imerg&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">value</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">productpath</span><span class="p">)</span> <span class="k">if</span> <span class="s2">&quot;.HDF5&quot;</span> <span class="ow">in</span> <span class="n">value</span><span class="p">]</span>
         <span class="k">case</span> <span class="k">_</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Unknown product type&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="kc">None</span></div>
@@ -206,6 +208,8 @@
     <span class="k">match</span> <span class="n">what</span><span class="p">:</span>
         <span class="k">case</span> <span class="s2">&quot;modis&quot;</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">[</span><span class="n">value</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">product_files</span><span class="p">]</span>
+        <span class="k">case</span> <span class="s2">&quot;imerg&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">value</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">product_files</span><span class="p">]</span>
         <span class="k">case</span> <span class="k">_</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Unknown product type&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="kc">None</span></div>
@@ -252,6 +256,8 @@
     <span class="k">match</span> <span class="n">what</span><span class="p">:</span>
         <span class="k">case</span> <span class="s2">&quot;modis&quot;</span><span class="p">:</span>
             <span class="n">correctvalue</span> <span class="o">=</span> <span class="mi">9</span>
+        <span class="k">case</span> <span class="s2">&quot;imerg&quot;</span><span class="p">:</span>
+            <span class="n">correctvalue</span> <span class="o">=</span> <span class="mi">48</span>
         <span class="k">case</span> <span class="k">_</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Unknown product type&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="kc">None</span>

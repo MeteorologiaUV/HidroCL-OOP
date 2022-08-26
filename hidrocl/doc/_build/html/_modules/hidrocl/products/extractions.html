@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>hidrocl.products.extractions &mdash; HidroCL-Database 0.0.3 documentation</title>
+  <title>hidrocl.products.extractions &mdash; HidroCL-Database 0.0.4 documentation</title>
   
 
   
@@ -156,12 +156,42 @@
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">csv</span>
 <span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
 <span class="kn">import</span> <span class="nn">subprocess</span>
 <span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">ceil</span>
 <span class="kn">import</span> <span class="nn">rioxarray</span> <span class="k">as</span> <span class="nn">rioxr</span>
-<span class="kn">from</span> <span class="nn">rioxarray</span> <span class="kn">import</span> <span class="n">exceptions</span> <span class="k">as</span> <span class="n">rxre</span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">rasterio</span> <span class="kn">import</span> <span class="n">errors</span> <span class="k">as</span> <span class="n">rioe</span>
+<span class="kn">from</span> <span class="nn">netCDF4</span> <span class="kn">import</span> <span class="n">Dataset</span> <span class="k">as</span> <span class="n">Netdat</span>
+<span class="kn">from</span> <span class="nn">rioxarray</span> <span class="kn">import</span> <span class="n">exceptions</span> <span class="k">as</span> <span class="n">rxre</span>
 <span class="kn">from</span> <span class="nn">rioxarray.merge</span> <span class="kn">import</span> <span class="n">merge_arrays</span>
+
+
+<div class="viewcode-block" id="load_hdf5"><a class="viewcode-back" href="../../../hidrocl.products.extractions.html#hidrocl.products.extractions.load_hdf5">[docs]</a><span class="k">def</span> <span class="nf">load_hdf5</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">var</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load .HDF5 file with xarray library and slice ver continental Chile</span>
+
+<span class="sd">    :param file: HDF5 raster path</span>
+<span class="sd">    :param var: variable to extract</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ncf</span> <span class="o">=</span> <span class="n">Netdat</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">diskless</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">persist</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">xds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">xr</span><span class="o">.</span><span class="n">backends</span><span class="o">.</span><span class="n">NetCDF4DataStore</span><span class="p">(</span><span class="n">ncf</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Grid&quot;</span><span class="p">)))</span>
+    <span class="k">return</span> <span class="n">xds</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">lat</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="o">-</span><span class="mi">55</span><span class="p">,</span> <span class="o">-</span><span class="mi">15</span><span class="p">),</span> <span class="n">lon</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="o">-</span><span class="mi">75</span><span class="p">,</span> <span class="o">-</span><span class="mi">65</span><span class="p">))[</span><span class="n">var</span><span class="p">]</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="s1">&#39;lat&#39;</span><span class="p">,</span> <span class="s1">&#39;lon&#39;</span><span class="p">)</span></div>
+    <span class="c1"># return xds[var].transpose(&#39;time&#39;, &#39;lat&#39;, &#39;lon&#39;)</span>
+
+
+<div class="viewcode-block" id="sum_datasets"><a class="viewcode-back" href="../../../hidrocl.products.extractions.html#hidrocl.products.extractions.sum_datasets">[docs]</a><span class="k">def</span> <span class="nf">sum_datasets</span><span class="p">(</span><span class="n">dataset_list</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to sum xarray datasets</span>
+
+<span class="sd">    :param dataset_list: list with raster products</span>
+<span class="sd">    :return: xarray.Dataset with sum of rasters</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">template</span> <span class="o">=</span> <span class="n">dataset_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">sum_values</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="n">d</span><span class="o">.</span><span class="n">values</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">dataset_list</span><span class="p">])</span>
+    <span class="n">template</span><span class="o">.</span><span class="n">values</span> <span class="o">=</span> <span class="n">sum_values</span>
+    <span class="k">return</span> <span class="n">template</span></div>
 
 
 <div class="viewcode-block" id="mosaic_raster"><a class="viewcode-back" href="../../../hidrocl.products.extractions.html#hidrocl.products.extractions.mosaic_raster">[docs]</a><span class="k">def</span> <span class="nf">mosaic_raster</span><span class="p">(</span><span class="n">raster_list</span><span class="p">,</span> <span class="n">layer</span><span class="p">):</span>
@@ -258,10 +288,10 @@
         <span class="n">txt_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;ID </span><span class="si">{</span><span class="n">file_id</span><span class="si">}</span><span class="s1">. Date: </span><span class="si">{</span><span class="n">currenttime</span><span class="si">}</span><span class="s1">. Process time: </span><span class="si">{</span><span class="n">time_dif</span><span class="si">}</span><span class="s1"> s. Database: </span><span class="si">{</span><span class="n">database</span><span class="si">}</span><span class="s1">. </span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="weighted_mean_modis"><a class="viewcode-back" href="../../../hidrocl.products.extractions.html#hidrocl.products.extractions.weighted_mean_modis">[docs]</a><span class="k">def</span> <span class="nf">weighted_mean_modis</span><span class="p">(</span><span class="n">scene</span><span class="p">,</span> <span class="n">scenes_path</span><span class="p">,</span> <span class="n">tempfolder</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span>
-                        <span class="n">catchment_names</span><span class="p">,</span> <span class="n">log_file</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="zonal_stats"><a class="viewcode-back" href="../../../hidrocl.products.extractions.html#hidrocl.products.extractions.zonal_stats">[docs]</a><span class="k">def</span> <span class="nf">zonal_stats</span><span class="p">(</span><span class="n">scene</span><span class="p">,</span> <span class="n">scenes_path</span><span class="p">,</span> <span class="n">tempfolder</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span>
+                <span class="n">catchment_names</span><span class="p">,</span> <span class="n">log_file</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Function to compute weighted mean MODIS products</span>
+<span class="sd">    Function to extract zonal statistics from raster files</span>
 
 <span class="sd">    :param scene: str with scene name</span>
 <span class="sd">    :param scenes_path: str with scenes path</span>
@@ -291,27 +321,36 @@
     <span class="n">r</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;.*&#39;</span> <span class="o">+</span> <span class="n">scene</span> <span class="o">+</span> <span class="s1">&#39;.*&#39;</span><span class="p">)</span>
     <span class="n">selected_files</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">match</span><span class="p">,</span> <span class="n">scenes_path</span><span class="p">))</span>
     <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-    <span class="n">file_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">scene</span><span class="p">,</span> <span class="s1">&#39;A%Y%j&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">match</span> <span class="n">name</span><span class="p">:</span>
+        <span class="k">case</span> <span class="s1">&#39;imerg&#39;</span><span class="p">:</span>
+            <span class="n">file_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">scene</span><span class="p">,</span> <span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="k">case</span> <span class="k">_</span><span class="p">:</span>
+            <span class="n">file_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">scene</span><span class="p">,</span> <span class="s1">&#39;A%Y%j&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span>
 
     <span class="k">match</span> <span class="n">name</span><span class="p">:</span>
         <span class="k">case</span> <span class="s1">&#39;nbr&#39;</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">mos</span> <span class="o">=</span> <span class="n">mosaic_nd_raster</span><span class="p">(</span><span class="n">selected_files</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;layer1&quot;</span><span class="p">),</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;layer2&quot;</span><span class="p">))</span>
-            <span class="k">except</span> <span class="n">rxre</span><span class="o">.</span><span class="n">RioXarrayError</span><span class="p">:</span>
+            <span class="k">except</span> <span class="p">(</span><span class="n">rxre</span><span class="o">.</span><span class="n">RioXarrayError</span><span class="p">,</span> <span class="n">rioe</span><span class="o">.</span><span class="n">RasterioIOError</span><span class="p">):</span>
                 <span class="k">return</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error in scene </span><span class="si">{</span><span class="n">scene</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
         <span class="k">case</span> <span class="s1">&#39;snow&#39;</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">mos</span> <span class="o">=</span> <span class="n">mosaic_raster</span><span class="p">(</span><span class="n">selected_files</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">))</span>
                 <span class="n">mos</span> <span class="o">=</span> <span class="p">(</span><span class="n">mos</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mos</span> <span class="o">==</span> <span class="mi">200</span><span class="p">)</span> <span class="o">/</span> <span class="mi">200</span><span class="p">)</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-            <span class="k">except</span> <span class="n">rxre</span><span class="o">.</span><span class="n">RioXarrayError</span><span class="p">:</span>
+            <span class="k">except</span> <span class="p">(</span><span class="n">rxre</span><span class="o">.</span><span class="n">RioXarrayError</span><span class="p">,</span> <span class="n">rioe</span><span class="o">.</span><span class="n">RasterioIOError</span><span class="p">):</span>
                 <span class="k">return</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error in scene </span><span class="si">{</span><span class="n">scene</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">case</span> <span class="s1">&#39;imerg&#39;</span><span class="p">:</span>
+            <span class="n">datasets_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">load_hdf5</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">))</span> <span class="k">for</span> <span class="n">ds</span> <span class="ow">in</span> <span class="n">selected_files</span><span class="p">]</span>
+            <span class="n">mos</span> <span class="o">=</span> <span class="n">sum_datasets</span><span class="p">(</span><span class="n">datasets_list</span><span class="p">)</span>
 
         <span class="k">case</span> <span class="k">_</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">mos</span> <span class="o">=</span> <span class="n">mosaic_raster</span><span class="p">(</span><span class="n">selected_files</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;layer&quot;</span><span class="p">))</span>
                 <span class="n">mos</span> <span class="o">=</span> <span class="n">mos</span> <span class="o">*</span> <span class="mf">0.1</span>
-            <span class="k">except</span> <span class="n">rxre</span><span class="o">.</span><span class="n">RioXarrayError</span><span class="p">:</span>
+            <span class="k">except</span> <span class="p">(</span><span class="n">rxre</span><span class="o">.</span><span class="n">RioXarrayError</span><span class="p">,</span> <span class="n">rioe</span><span class="o">.</span><span class="n">RasterioIOError</span><span class="p">):</span>
                 <span class="k">return</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error in scene </span><span class="si">{</span><span class="n">scene</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="n">temporal_raster</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tempfolder</span><span class="p">,</span> <span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="n">scene</span> <span class="o">+</span> <span class="s2">&quot;.tif&quot;</span><span class="p">)</span>
