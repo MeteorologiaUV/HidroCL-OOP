@@ -39,6 +39,8 @@ def read_product_files(productpath, what="modis"):
     match what:
         case "modis":
             return [value for value in os.listdir(productpath) if ".hdf" in value]
+        case "imerg":
+            return [value for value in os.listdir(productpath) if ".HDF5" in value]
         case _:
             print("Unknown product type")
             return None
@@ -55,6 +57,8 @@ def get_product_ids(product_files, what="modis"):
     match what:
         case "modis":
             return [value.split(".")[1] for value in product_files]
+        case "imerg":
+            return [value.split(".")[4].split("-")[0] for value in product_files]
         case _:
             print("Unknown product type")
             return None
@@ -101,6 +105,8 @@ def classify_occurrences(scenes_occurrences, what="modis"):
     match what:
         case "modis":
             correctvalue = 9
+        case "imerg":
+            correctvalue = 48
         case _:
             print("Unknown product type")
             return None

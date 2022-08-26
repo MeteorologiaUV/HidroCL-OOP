@@ -31,22 +31,31 @@
     > **Notes:**
     > 
     > Values in Pixel count aren't consistent with `NA` values in the database.
+    >
+    > **Solved**: there was a bug in write_line function.
 - [ ] GLDAS_NOAHH25_3H processing 
 - [ ] GPM_3IMERGHHL processing
-- [ ] MCD12Q1 processing
-- [ ] MCD15A2H processing
-  - [ ] test locally
+  - [x] test locally
   - [ ] test on nas
+- [ ] MCD12Q1 processing (*Land cover type, last update was on 2020*)
+- [x] MCD15A2H processing
+  - [x] test locally
+  - [x] test on nas
+  > **Notes:**
+  > 
+  > There are several invalid images.
+  > 
+  > **To do**: create a image maintainer removing the invalid files.
 - [ ] ~~MCD43A3 processing~~ *out of database for now*
-- [ ] MOD09A1 processing
-- [ ] MOD10A2 processing
-  - [ ] test locally
+- [ ] MOD09A1 processing (*reflectance product, to evaluete later*)
+- [x] MOD10A2 processing
+  - [x] test locally
   - [x] test on nas
 - [x] MOD13Q1 processing
   - [x] test locally
   - [x] test on nas
-- [ ] MOD16A2 processing
-  - [ ] test locally
+- [x] MOD16A2 processing
+  - [x] test locally
   - [x] test on nas
 - [ ] PERSIANN processing
 - [ ] Download functions refactoring
@@ -89,6 +98,14 @@
 [![packageversion](https://img.shields.io/badge/matplotlib-v3.5.3-green?style=plastic)](https://anaconda.org/conda-forge/matplotlib)
 [![packageversion](https://img.shields.io/badge/geopandas-v0.11.1-green?style=plastic)](https://anaconda.org/conda-forge/geopandas)
 
+Test on server (without any extra installation although netCDF should be installed):
+
+[![packageversion](https://img.shields.io/badge/netCDF4-v1.6.0-green?style=plastic)](https://anaconda.org/conda-forge/netcdf4)
+[![packageversion](https://img.shields.io/badge/dask-v2022.2.1-green?style=plastic)](https://anaconda.org/conda-forge/dask)
+
+h5netcdf-1.0.2 (?)
+h5py-3.7.0  (?)
+
 *Documentation*
 
 [![packageversion](https://img.shields.io/badge/sphinx-v5.1.1-green?style=plastic)](https://anaconda.org/conda-forge/sphinx)
@@ -105,7 +122,7 @@ conda install -c conda-forge r-sf r-terra r-exactextractr r-tibble
 # for running tests
 conda install -c conda-forge jupyter
 #  installing python libraries
-conda install -c conda-forge pandas rioxarray matplotlib geopandas
+conda install -c conda-forge pandas rioxarray matplotlib geopandas netCDF4
 #  installing python documentation tool
 conda install -c conda-forge sphinx sphinx_rtd_theme
 ```
@@ -120,7 +137,12 @@ install.packages("codetools", dependencies = TRUE)
 
 ## Changelog
 
-### [0.0.4] - 2022-08-23
+### [0.0.5] - 2022-08-25
+#### Added
+- **GPM_3IMRGHHL processing**: processing for IMERG precipitation (PP) product. Documentation updated
+- **zonal_stats**: function refactored, now supports imerg (HDF5)
+
+### [0.0.4] - 2022-08-24
 #### Added
 - **MOD16A2 processing**: processing for potential evapotranspiration (PET) modis product. Documentation updated
 - **MCD15A2H processing**: processing for LAI and FPAR modis product. Documentation updated.

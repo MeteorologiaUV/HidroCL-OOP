@@ -5,12 +5,42 @@ import gc
 import re
 import csv
 import time
+import xarray as xr
 import subprocess
 from math import ceil
 import rioxarray as rioxr
-from rioxarray import exceptions as rxre
 from datetime import datetime
+from rasterio import errors as rioe
+from netCDF4 import Dataset as Netdat
+from rioxarray import exceptions as rxre
 from rioxarray.merge import merge_arrays
+
+
+def load_hdf5(file, var):
+    """
+    Load .HDF5 file with xarray library and slice ver continental Chile
+
+    :param file: HDF5 raster path
+    :param var: variable to extract
+    :return:
+    """
+    ncf = Netdat(file, diskless=True, persist=False)
+    xds = xr.open_dataset(xr.backends.NetCDF4DataStore(ncf.groups.get("Grid")))
+    return xds.sel(lat=slice(-55, -15), lon=slice(-75, -65))[var].transpose('time', 'lat', 'lon')
+    # return xds[var].transpose('time', 'lat', 'lon')
+
+
+def sum_datasets(dataset_list):
+    r"""
+    Function to sum xarray datasets
+
+    :param dataset_list: list with raster products
+    :return: xarray.Dataset with sum of rasters
+    """
+    template = dataset_list[0]
+    sum_values = sum([d.values for d in dataset_list])
+    template.values = sum_values
+    return template
 
 
 def mosaic_raster(raster_list, layer):
@@ -107,10 +137,10 @@ def write_log(log_file, file_id, currenttime, time_dif, database):
         txt_file.write(f'ID {file_id}. Date: {currenttime}. Process time: {time_dif} s. Database: {database}. \n')
 
 
-def weighted_mean_modis(scene, scenes_path, tempfolder, name,
-                        catchment_names, log_file, **kwargs):
+def zonal_stats(scene, scenes_path, tempfolder, name,
+                catchment_names, log_file, **kwargs):
     r"""
-    Function to compute weighted mean MODIS products
+    Function to extract zonal statistics from raster files
 
     :param scene: str with scene name
     :param scenes_path: str with scenes path
@@ -140,27 +170,36 @@ def weighted_mean_modis(scene, scenes_path, tempfolder, name,
     r = re.compile('.*' + scene + '.*')
     selected_files = list(filter(r.match, scenes_path))
     start = time.time()
-    file_date = datetime.strptime(scene, 'A%Y%j').strftime('%Y-%m-%d')
+    match name:
+        case 'imerg':
+            file_date = datetime.strptime(scene, '%Y%m%d').strftime('%Y-%m-%d')
+
+        case _:
+            file_date = datetime.strptime(scene, 'A%Y%j').strftime('%Y-%m-%d')
 
     match name:
         case 'nbr':
             try:
                 mos = mosaic_nd_raster(selected_files, kwargs.get("layer1"), kwargs.get("layer2"))
-            except rxre.RioXarrayError:
+            except (rxre.RioXarrayError, rioe.RasterioIOError):
                 return print(f"Error in scene {scene}")
 
         case 'snow':
             try:
                 mos = mosaic_raster(selected_files, kwargs.get("layer"))
                 mos = (mos.where(mos == 200) / 200).fillna(0)
-            except rxre.RioXarrayError:
+            except (rxre.RioXarrayError, rioe.RasterioIOError):
                 return print(f"Error in scene {scene}")
+
+        case 'imerg':
+            datasets_list = [load_hdf5(ds, kwargs.get("layer")) for ds in selected_files]
+            mos = sum_datasets(datasets_list)
 
         case _:
             try:
                 mos = mosaic_raster(selected_files, kwargs.get("layer"))
                 mos = mos * 0.1
-            except rxre.RioXarrayError:
+            except (rxre.RioXarrayError, rioe.RasterioIOError):
                 return print(f"Error in scene {scene}")
 
     temporal_raster = os.path.join(tempfolder, name + "_" + scene + ".tif")

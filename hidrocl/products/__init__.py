@@ -162,32 +162,32 @@ NBR database path: {self.nbr.database}
 
             for scene in scenes_to_process:
                 if scene not in self.ndvi.indatabase:
-                    e.weighted_mean_modis(scene, scenes_path,
-                                          temp_dir, 'ndvi',
-                                          self.ndvi.catchment_names, self.ndvi_log,
-                                          database=self.ndvi.database,
-                                          pcdatabase=self.ndvi.pcdatabase,
-                                          vector_path=self.vectorpath,
-                                          layer="250m 16 days NDVI",)
+                    e.zonal_stats(scene, scenes_path,
+                                  temp_dir, 'ndvi',
+                                  self.ndvi.catchment_names, self.ndvi_log,
+                                  database=self.ndvi.database,
+                                  pcdatabase=self.ndvi.pcdatabase,
+                                  vector_path=self.vectorpath,
+                                  layer="250m 16 days NDVI", )
 
                 if scene not in self.evi.indatabase:
-                    e.weighted_mean_modis(scene, scenes_path,
-                                          temp_dir, 'evi',
-                                          self.evi.catchment_names, self.evi_log,
-                                          database=self.evi.database,
-                                          pcdatabase=self.evi.pcdatabase,
-                                          vector_path=self.vectorpath,
-                                          layer="250m 16 days EVI",)
+                    e.zonal_stats(scene, scenes_path,
+                                  temp_dir, 'evi',
+                                  self.evi.catchment_names, self.evi_log,
+                                  database=self.evi.database,
+                                  pcdatabase=self.evi.pcdatabase,
+                                  vector_path=self.vectorpath,
+                                  layer="250m 16 days EVI", )
 
                 if scene not in self.evi.indatabase:
-                    e.weighted_mean_modis(scene, scenes_path,
-                                          temp_dir, 'nbr',
-                                          self.nbr.catchment_names, self.nbr_log,
-                                          database=self.nbr.database,
-                                          pcdatabase=self.nbr.pcdatabase,
-                                          vector_path=self.vectorpath,
-                                          layer1="250m 16 days NIR reflectance",
-                                          layer2="250m 16 days MIR reflectance")
+                    e.zonal_stats(scene, scenes_path,
+                                  temp_dir, 'nbr',
+                                  self.nbr.catchment_names, self.nbr_log,
+                                  database=self.nbr.database,
+                                  pcdatabase=self.nbr.pcdatabase,
+                                  vector_path=self.vectorpath,
+                                  layer1="250m 16 days NIR reflectance",
+                                  layer2="250m 16 days MIR reflectance")
 
 
 """"
@@ -322,16 +322,16 @@ South face snow database path: {self.ssnow.database}
 
             for scene in scenes_to_process:
                 if scene not in self.nsnow.indatabase:  # so what about the south one?
-                    e.weighted_mean_modis(scene, scenes_path,
-                                          temp_dir, 'snow',
-                                          self.nsnow.catchment_names, self.snow_log,
-                                          north_database=self.nsnow.database,
-                                          north_pcdatabase=self.nsnow.pcdatabase,
-                                          south_database=self.ssnow.database,
-                                          south_pcdatabase=self.ssnow.pcdatabase,
-                                          north_vector_path=self.northvectorpath,
-                                          south_vector_path=self.southvectorpath,
-                                          layer="Maximum_Snow_Extent")
+                    e.zonal_stats(scene, scenes_path,
+                                  temp_dir, 'snow',
+                                  self.nsnow.catchment_names, self.snow_log,
+                                  north_database=self.nsnow.database,
+                                  north_pcdatabase=self.nsnow.pcdatabase,
+                                  south_database=self.ssnow.database,
+                                  south_pcdatabase=self.ssnow.pcdatabase,
+                                  north_vector_path=self.northvectorpath,
+                                  south_vector_path=self.southvectorpath,
+                                  layer="Maximum_Snow_Extent")
 
 
 """"
@@ -452,13 +452,13 @@ PET database path: {self.pet.database}
 
             for scene in scenes_to_process:
                 if scene not in self.pet.indatabase:
-                    e.weighted_mean_modis(scene, scenes_path,
-                                          temp_dir, 'pet',
-                                          self.pet.catchment_names, self.pet_log,
-                                          database=self.pet.database,
-                                          pcdatabase=self.pet.pcdatabase,
-                                          vector_path=self.vectorpath,
-                                          layer="PET_500m", )
+                    e.zonal_stats(scene, scenes_path,
+                                  temp_dir, 'pet',
+                                  self.pet.catchment_names, self.pet_log,
+                                  database=self.pet.database,
+                                  pcdatabase=self.pet.pcdatabase,
+                                  vector_path=self.vectorpath,
+                                  layer="PET_500m", )
 
 
 """"
@@ -600,19 +600,148 @@ FPAR database path: {self.fpar.database}
 
             for scene in scenes_to_process:
                 if scene not in self.lai.indatabase:
-                    e.weighted_mean_modis(scene, scenes_path,
-                                          temp_dir, 'lai',
-                                          self.lai.catchment_names, self.lai_log,
-                                          database=self.lai.database,
-                                          pcdatabase=self.lai.pcdatabase,
-                                          vector_path=self.vectorpath,
-                                          layer="Lai_500m",)
+                    e.zonal_stats(scene, scenes_path,
+                                  temp_dir, 'lai',
+                                  self.lai.catchment_names, self.lai_log,
+                                  database=self.lai.database,
+                                  pcdatabase=self.lai.pcdatabase,
+                                  vector_path=self.vectorpath,
+                                  layer="Lai_500m", )
 
                 if scene not in self.fpar.indatabase:
-                    e.weighted_mean_modis(scene, scenes_path,
-                                          temp_dir, 'fpar',
-                                          self.fpar.catchment_names, self.fpar_log,
-                                          database=self.fpar.database,
-                                          pcdatabase=self.fpar.pcdatabase,
-                                          vector_path=self.vectorpath,
-                                          layer="Fpar_500m")
+                    e.zonal_stats(scene, scenes_path,
+                                  temp_dir, 'fpar',
+                                  self.fpar.catchment_names, self.fpar_log,
+                                  database=self.fpar.database,
+                                  pcdatabase=self.fpar.pcdatabase,
+                                  vector_path=self.vectorpath,
+                                  layer="Fpar_500m")
+
+
+""""
+Extraction of GPM IMERG Late Precipitation L3 Half Hourly 0.1 degree product:
+"""
+
+
+class Gpm_3imrghhl:
+    """
+    A class to process MCD15A2H to hidrocl variables
+
+    Attributes
+    ----------
+    pp : HidroCLVariable
+        HidroCLVariable object with IMERG precipitation data
+    pp_log : str
+        Path to the log file for IMERG precipitation data
+    productname : str
+        Name of the remote sensing product to be processed
+    productpath : str
+        Path to the product folder where the product files are located
+    vectorpath : str
+        Path to the vector folder with Shapefile with areas to be processed
+    product_files : list
+        List of product files in the product folder
+    product_ids : list
+        List of product ids. Each product id is str with common tag by date
+    all_scenes : list
+        List of all scenes (no matter the product id here)
+    scenes_occurrences : list
+        List of scenes occurrences for each product id
+    overpopulated_scenes : list
+        List of overpopulated scenes (more than 9 scenes for modis)
+    complete_scenes : list
+        List of complete scenes (9 scenes for modis)
+    incomplete_scenes : list
+        List of incomplete scenes (less than 9 scenes for modis)
+    scenes_to_process : list
+        List of scenes to process (complete scenes no processed)
+    """
+
+    def __init__(self, pp, product_path, vector_path, pp_log):
+        """
+        Parameters
+        ----------
+        :param pp: HidroCLVariable
+            Object with IMERG precipitation data
+        :param product_path: str
+            Path to the product folder
+        :param vector_path: str
+            Path to the vector folder
+        :param pp_log: str
+            Path to the log file for IMERG precipitation extraction
+        :param pp_log: str
+            Path to the log file for the IMERG precipitation extraction
+        """
+        if t.check_instance(pp):
+            self.pp = pp
+            self.pp_log = pp_log
+            self.productname = "GPM IMERG Late Precipitation L3 Half Hourly 0.1 degree Version 0.6"
+            self.productpath = product_path
+            self.vectorpath = vector_path
+            self.product_files = t.read_product_files(self.productpath, "imerg")
+            self.product_ids = t.get_product_ids(self.product_files, "imerg")
+            self.all_scenes = t.check_product_files(self.product_ids)
+            self.scenes_occurrences = t.count_scenes_occurrences(self.all_scenes, self.product_ids)
+            (self.overpopulated_scenes,
+             self.complete_scenes,
+             self.incomplete_scenes) = t.classify_occurrences(self.scenes_occurrences, "imerg")
+            self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.pp.indatabase)
+        else:
+            raise TypeError('pp must be HidroCLVariable objects')
+
+    def __repr__(self):
+        """
+        Return a string representation of the object
+
+        :return: str
+        """
+        return f'Class to extract {self.productname}'
+
+    def __str__(self):
+        """
+        Return a string representation of the object
+
+        :return: str
+        """
+        return f'''
+Product: {self.productname}
+
+IMERG precipitation records: {len(self.pp.indatabase)}.
+IMERG precipitation database path: {self.pp.database}
+        '''
+
+    def run_extraction(self, limit=None):
+        """
+        Run the extraction of the product.
+        If limit is None, all scenes will be processed.
+        If limit is a number, only the first limit scenes will be processed.
+
+        :param limit: int (length of the scenes_to_process)
+        :return: Print
+        """
+
+        with t.HiddenPrints():
+            self.pp.checkdatabase()
+
+        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.pp.indatabase)
+
+        scenes_path = t.get_scenes_path(self.product_files, self.productpath)
+
+        with TemporaryDirectory() as tempdirname:
+            temp_dir = Path(tempdirname)
+
+            if limit is not None:
+                scenes_to_process = self.scenes_to_process[:limit]
+            else:
+                scenes_to_process = self.scenes_to_process
+
+            for scene in scenes_to_process:
+                if scene not in self.pp.indatabase:
+                    e.zonal_stats(scene, scenes_path,
+                                  temp_dir, 'imerg',
+                                  self.pp.catchment_names, self.pp_log,
+                                  database=self.pp.database,
+                                  pcdatabase=self.pp.pcdatabase,
+                                  vector_path=self.vectorpath,
+                                  layer="precipitationCal")
+
