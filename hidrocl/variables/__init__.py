@@ -75,7 +75,7 @@ Pixel count database path: {self.pcdatabase}.
             print('Please, check the database for getting the IDs processed')
             return ''
         else:
-            return self.observations[self.observations.columns[0]].values.tolist()
+            return [str(i) for i in self.observations[self.observations.columns[0]].values.tolist()]
 
     def checkdatabase(self):
         """

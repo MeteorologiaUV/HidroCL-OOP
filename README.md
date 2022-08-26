@@ -97,14 +97,8 @@
 [![packageversion](https://img.shields.io/badge/rioxarray-v0.12.0-green?style=plastic)](https://anaconda.org/conda-forge/rioxarray)
 [![packageversion](https://img.shields.io/badge/matplotlib-v3.5.3-green?style=plastic)](https://anaconda.org/conda-forge/matplotlib)
 [![packageversion](https://img.shields.io/badge/geopandas-v0.11.1-green?style=plastic)](https://anaconda.org/conda-forge/geopandas)
-
-Test on server (without any extra installation although netCDF should be installed):
-
 [![packageversion](https://img.shields.io/badge/netCDF4-v1.6.0-green?style=plastic)](https://anaconda.org/conda-forge/netcdf4)
-[![packageversion](https://img.shields.io/badge/dask-v2022.2.1-green?style=plastic)](https://anaconda.org/conda-forge/dask)
 
-h5netcdf-1.0.2 (?)
-h5py-3.7.0  (?)
 
 *Documentation*
 

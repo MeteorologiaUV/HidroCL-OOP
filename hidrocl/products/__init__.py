@@ -393,6 +393,7 @@ class Mod16a2:
             self.productname = "MODIS MOD16A2 Version 0.61"
             self.productpath = product_path
             self.vectorpath = vector_path
+            self.common_elements = self.pet.indatabase
             self.product_files = t.read_product_files(self.productpath, "modis")
             self.product_ids = t.get_product_ids(self.product_files, "modis")
             self.all_scenes = t.check_product_files(self.product_ids)
@@ -400,7 +401,7 @@ class Mod16a2:
             (self.overpopulated_scenes,
              self.complete_scenes,
              self.incomplete_scenes) = t.classify_occurrences(self.scenes_occurrences, "modis")
-            self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.pet.indatabase)
+            self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.common_elements)
         else:
             raise TypeError('pet must be HidroCLVariable object')
 
@@ -678,6 +679,7 @@ class Gpm_3imrghhl:
             self.productname = "GPM IMERG Late Precipitation L3 Half Hourly 0.1 degree Version 0.6"
             self.productpath = product_path
             self.vectorpath = vector_path
+            self.common_elements = self.pp.indatabase
             self.product_files = t.read_product_files(self.productpath, "imerg")
             self.product_ids = t.get_product_ids(self.product_files, "imerg")
             self.all_scenes = t.check_product_files(self.product_ids)
@@ -685,7 +687,7 @@ class Gpm_3imrghhl:
             (self.overpopulated_scenes,
              self.complete_scenes,
              self.incomplete_scenes) = t.classify_occurrences(self.scenes_occurrences, "imerg")
-            self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.pp.indatabase)
+            self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.common_elements)
         else:
             raise TypeError('pp must be HidroCLVariable objects')
 
