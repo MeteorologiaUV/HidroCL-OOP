@@ -9,7 +9,7 @@ if platform == "linux" or platform == "linux2":
 elif platform == "darwin":
     nas_path = '/private/nfs2'
     github_path = '/Users/aldotapia/Documents/GitHub/HidroCL-OOP/'
-elif platform == "win32":
+# elif platform == "win32":
     # Windows...
 
 

@@ -20,7 +20,7 @@ if platform == "linux" or platform == "linux2":
     rscript = "Rscript"
 elif platform == "darwin":
     rscript = "RScript"
-elif platform == "win32":
+# elif platform == "win32":
     # Windows...
 
 
