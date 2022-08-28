@@ -5,10 +5,8 @@ hidrocl/__pycache__*
 local_tests.py
 nas_tests.py
 creation_test.ipynb
-MOD13Q1*
-Vectors*
 *rst*
 make.bat
 Makefile
 hidrocl/doc/_build/doctrees/*
-imerg*
+testfiles*

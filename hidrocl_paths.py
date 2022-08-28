@@ -60,6 +60,13 @@ et_o_modis_eto_cum_b_d8_p0d = os.path.join(nas_path, 'databases/observed/et_o_mo
 veg_o_modis_lai_mean_b_d8_p0d = os.path.join(nas_path, 'databases/observed/veg_o_modis_lai_mean_b_d8_p0d.csv')
 veg_o_modis_fpar_mean_b_d8_p0d = os.path.join(nas_path, 'databases/observed/veg_o_modis_fpar_mean_b_d8_p0d.csv')
 pp_o_imerg_pp_mean_b_d_p0d = os.path.join(nas_path, 'databases/observed/pp_o_imerg_pp_mean_b_d_p0d.csv')
+# GLDAS products:
+snw_o_gfs_swe_cum_b_d8_p0d = os.path.join(nas_path, 'databases/observed/snw_o_gfs_swe_cum_b_d8_p0d.csv')
+tmp_f_gfs_tmp_mean_b_d_p0d = os.path.join(nas_path, 'databases/observed/tmp_f_gfs_tmp_mean_b_d_p0d.csv')
+et_o_gldas_eta_cum_b_d0_p0d = os.path.join(nas_path, 'databases/observed/et_o_gldas_eta_cum_b_d0_p0d.csv')
+sm_o_gldas_sm_mean_b_d_p0d = os.path.join(nas_path, 'databases/observed/sm_o_gldas_sm_mean_b_d_p0d.csv')
+
+
 
 # forecasted
 
@@ -78,6 +85,12 @@ et_o_modis_eto_cum_b_pc = os.path.join(nas_path, 'pcdatabases/observed/et_o_modi
 veg_o_modis_lai_mean_b_pc = os.path.join(nas_path, 'pcdatabases/observed/veg_o_modis_lai_mean_b_pc.csv')
 veg_o_modis_fpar_mean_b_pc = os.path.join(nas_path, 'pcdatabases/observed/veg_o_modis_fpar_mean_b_pc.csv')
 pp_o_imerg_pp_mean_b_pc = os.path.join(nas_path, 'pcdatabases/observed/pp_o_imerg_pp_mean_b_pc.csv')
+# GLDAS products:
+snw_o_gfs_swe_cum_b_pc = os.path.join(nas_path, 'pcdatabases/observed/snw_o_gfs_swe_cum_b_pc.csv')
+tmp_f_gfs_tmp_mean_b_pc = os.path.join(nas_path, 'pcdatabases/observed/tmp_f_gfs_tmp_mean_b_pc.csv')
+et_o_gldas_eta_cum_b_pc = os.path.join(nas_path, 'pcdatabases/observed/et_o_gldas_eta_cum_b_pc.csv')
+sm_o_gldas_sm_mean_b_pc = os.path.join(nas_path, 'pcdatabases/observed/sm_o_gldas_sm_mean_b_pc.csv')
+
 
 # forecasted
 
@@ -99,6 +112,12 @@ log_et_o_modis_eto_cum_b_d8_p0d = os.path.join(nas_path, 'logs/log_et_o_modis_et
 log_veg_o_modis_lai_mean = os.path.join(nas_path, 'logs/log_veg_o_modis_lai_mean.txt')
 log_veg_o_modis_fpar_mean = os.path.join(nas_path, 'logs/log_veg_o_modis_fpar_mean.txt')
 log_pp_o_imerg_pp_mean = os.path.join(nas_path, 'logs/log_pp_o_imerg_pp_mean.txt')
+# GLDAS products:
+log_snw_o_gfs_swe_cum = os.path.join(nas_path, 'logs/log_snw_o_gfs_swe_cum.txt')
+log_tmp_f_gfs_tmp_mean = os.path.join(nas_path, 'logs/log_tmp_f_gfs_tmp_mean.txt')
+log_et_o_gldas_eta_cum = os.path.join(nas_path, 'logs/log_et_o_gldas_eta_cum.txt')
+log_sm_o_gldas_sm_mean = os.path.join(nas_path, 'logs/log_sm_o_gldas_sm_mean.txt')
+
 
 # forecasted
 

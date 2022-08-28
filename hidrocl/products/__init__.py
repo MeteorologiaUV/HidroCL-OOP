@@ -7,7 +7,7 @@ from . import tools as t
 from . import extractions as e
 
 
-""""
+"""
 Extraction of MODIS MOD13Q1 product:
 """
 
@@ -186,11 +186,11 @@ NBR database path: {self.nbr.database}
                                   database=self.nbr.database,
                                   pcdatabase=self.nbr.pcdatabase,
                                   vector_path=self.vectorpath,
-                                  layer1="250m 16 days NIR reflectance",
-                                  layer2="250m 16 days MIR reflectance")
+                                  layer=["250m 16 days NIR reflectance",
+                                         "250m 16 days MIR reflectance"])
 
 
-""""
+"""
 Extraction of MODIS MOD10A2 product:
 """
 
@@ -334,7 +334,7 @@ South face snow database path: {self.ssnow.database}
                                   layer="Maximum_Snow_Extent")
 
 
-""""
+"""
 Extraction of MODIS MOD16A2 product:
 """
 
@@ -462,7 +462,7 @@ PET database path: {self.pet.database}
                                   layer="PET_500m", )
 
 
-""""
+"""
 Extraction of MODIS MCD15A2H product:
 """
 
@@ -619,7 +619,7 @@ FPAR database path: {self.fpar.database}
                                   layer="Fpar_500m")
 
 
-""""
+"""
 Extraction of GPM IMERG Late Precipitation L3 Half Hourly 0.1 degree product:
 """
 
@@ -746,3 +746,210 @@ IMERG precipitation database path: {self.pp.database}
                                   pcdatabase=self.pp.pcdatabase,
                                   vector_path=self.vectorpath,
                                   layer="Grid_precipitationCal")
+
+
+"""
+Extraction of GLDAS_NOAH025_3H product:
+"""
+
+
+class Gldas_noah:
+    """
+    A class to process GLDAS_NOAH025_3H to hidrocl variables
+
+    Attributes
+    ----------
+    snow : HidroCLVariable
+        HidroCLVariable with the GLDAS snow data
+    temp : HidroCLVariable
+        HidroCLVariable with the GLDAS temperature data
+    et : HidroCLVariable
+        HidroCLVariable with the GLDAS evapotranspiration data
+    soilm : HidroCLVariable
+        HidroCLVariable with the GLDAS soil moisture data
+    snow_log : str
+        Path to the log file for the snow extraction
+    temp_log : str
+        Path to the log file for the temperature extraction
+    et_log : str
+        Path to the log file for the evapotranspiration extraction
+    soilm_log : str
+        Path to the log file for the soil moisture extraction
+    productname : str
+        Name of the remote sensing product to be processed
+    productpath : str
+        Path to the product folder where the product files are located
+    vectorpath : str
+        Path to the vector folder with Shapefile with areas to be processed
+    common_elements : list
+        List of common elements between the snow, temp, et and soilm databases
+    product_files : list
+        List of product files in the product folder
+    product_ids : list
+        List of product ids. Each product id is str with common tag by date
+    all_scenes : list
+        List of all scenes (no matter the product id here)
+    scenes_occurrences : list
+        List of scenes occurrences for each product id
+    overpopulated_scenes : list
+        List of overpopulated scenes (more than 9 scenes for modis)
+    complete_scenes : list
+        List of complete scenes (9 scenes for modis)
+    incomplete_scenes : list
+        List of incomplete scenes (less than 9 scenes for modis)
+    scenes_to_process : list
+        List of scenes to process (complete scenes no processed)
+    """
+
+    def __init__(self, snow, temp, et, soilm, product_path,
+                 vector_path, snow_log, temp_log, et_log, soilm_log):
+        """
+        Parameters
+        ----------
+        :param snow : HidroCLVariable
+            Object with GLDAS snow data
+        :param temp : HidroCLVariable
+            Object with GLDAS temperature data
+        :param et : HidroCLVariable
+            Object with GLDAS evapotranspiration data
+        :param soilm : HidroCLVariable
+            Object with GLDAS soil moisture data
+        :param product_path: str
+            Path to the product folder
+        :param vector_path: str
+            Path to the vector folder
+        :param snow_log: str
+            Path to the snow log file
+        :param temp_log: str
+            Path to the temperature log file
+        :param et_log: str
+            Path to the evapotranspiration log file
+        :param soilm_log: str
+            Path to the soil moisture log file
+        """
+        if t.check_instance(snow, temp, et, soilm):
+            self.snow = snow
+            self.temp = temp
+            self.et = et
+            self.soilm = soilm
+            self.snow_log = snow_log
+            self.temp_log = temp_log
+            self.et_log = et_log
+            self.soilm_log = soilm_log
+            self.productname = "GLDAS Noah Land Surface Model L4 3 hourly 0.25 degree Version 2.1"
+            self.productpath = product_path
+            self.vectorpath = vector_path
+            self.common_elements = t.compare_indatabase(self.snow.indatabase,
+                                                        self.temp.indatabase,
+                                                        self.et.indatabase,
+                                                        self.soilm.indatabase)
+            self.product_files = t.read_product_files(self.productpath, "gldas")
+            self.product_ids = t.get_product_ids(self.product_files, "gldas")
+            self.all_scenes = t.check_product_files(self.product_ids)
+            self.scenes_occurrences = t.count_scenes_occurrences(self.all_scenes, self.product_ids)
+            (self.overpopulated_scenes,
+             self.complete_scenes,
+             self.incomplete_scenes) = t.classify_occurrences(self.scenes_occurrences, "gldas")
+            self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.common_elements)
+        else:
+            raise TypeError('snow, temp, et and soilm must be HidroCLVariable objects')
+
+    def __repr__(self):
+        """
+        Return a string representation of the object
+
+        :return: str
+        """
+        return f'Class to extract {self.productname}'
+
+    def __str__(self):
+        """
+        Return a string representation of the object
+
+        :return: str
+        """
+        return f'''
+Product: {self.productname}
+
+Snow records: {len(self.snow.indatabase)}.
+Snow path: {self.snow.database}
+
+Temperature records: {len(self.temp.indatabase)}.
+Temperature path: {self.temp.database}
+
+Evapotranspiration records: {len(self.et.indatabase)}.
+Evapotranspiration path: {self.et.database}
+
+Soil moisture records: {len(self.soilm.indatabase)}.
+Soil moisture path: {self.soilm.database}
+                '''
+
+    def run_extraction(self, limit=None):
+        """run extraction"""
+
+        with t.HiddenPrints():
+            self.snow.checkdatabase()
+            self.temp.checkdatabase()
+            self.et.checkdatabase()
+            self.soilm.checkdatabase()
+
+        self.common_elements = t.compare_indatabase(self.snow.indatabase,
+                                                    self.temp.indatabase,
+                                                    self.et.indatabase,
+                                                    self.soilm.indatabase)
+
+        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.common_elements)
+
+        scenes_path = t.get_scenes_path(self.product_files, self.productpath)
+
+        with TemporaryDirectory() as tempdirname:
+            temp_dir = Path(tempdirname)
+
+            if limit is not None:
+                scenes_to_process = self.scenes_to_process[:limit]
+            else:
+                scenes_to_process = self.scenes_to_process
+
+            for scene in scenes_to_process:
+                if scene not in self.snow.indatabase:
+                    if scene not in self.snow.indatabase:
+                        e.zonal_stats(scene, scenes_path,
+                                      temp_dir, 'snow_gldas',
+                                      self.snow.catchment_names, self.snow_log,
+                                      database=self.snow.database,
+                                      pcdatabase=self.snow.pcdatabase,
+                                      vector_path=self.vectorpath,
+                                      layer="SWE_inst")
+
+                if scene not in self.temp.indatabase:
+                    if scene not in self.temp.indatabase:
+                        e.zonal_stats(scene, scenes_path,
+                                      temp_dir, 'temp_gldas',
+                                      self.temp.catchment_names, self.temp_log,
+                                      database=self.temp.database,
+                                      pcdatabase=self.temp.pcdatabase,
+                                      vector_path=self.vectorpath,
+                                      layer="Tair_f_inst")
+
+                if scene not in self.et.indatabase:
+                    if scene not in self.et.indatabase:
+                        e.zonal_stats(scene, scenes_path,
+                                      temp_dir, 'et_gldas',
+                                      self.et.catchment_names, self.et_log,
+                                      database=self.et.database,
+                                      pcdatabase=self.et.pcdatabase,
+                                      vector_path=self.vectorpath,
+                                      layer="ECanop_tavg")
+
+                if scene not in self.soilm.indatabase:
+                    if scene not in self.soilm.indatabase:
+                        e.zonal_stats(scene, scenes_path,
+                                      temp_dir, 'soilm_gldas',
+                                      self.soilm.catchment_names, self.soilm_log,
+                                      database=self.soilm.database,
+                                      pcdatabase=self.soilm.pcdatabase,
+                                      vector_path=self.vectorpath,
+                                      layer=["SoilMoi0_10cm_inst",
+                                             "SoilMoi10_40cm_inst",
+                                             "SoilMoi40_100cm_inst",
+                                             "SoilMoi100_200cm_inst"])

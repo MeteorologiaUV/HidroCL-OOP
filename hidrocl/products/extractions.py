@@ -5,7 +5,9 @@ import gc
 import re
 import csv
 import time
+import xarray
 import subprocess
+import numpy as np
 from math import ceil
 from . import tools as t
 from sys import platform
@@ -22,6 +24,7 @@ elif platform == "darwin":
 # elif platform == "win32":
     # Windows...
 
+
 def load_hdf5(file, var):
     """
     Load .HDF5 file with xarray library and slice ver continental Chile
@@ -36,10 +39,26 @@ def load_hdf5(file, var):
         da = da[0][var]
         return da.assign_coords({"x": (da.x / 10) - 90}) \
                 .assign_coords({"y": (da.y / 10) - 180}) \
-                .sel(x=slice(-55, -15), y=slice(-75,-65)) \
+                .sel(x=slice(-55, -15), y=slice(-75, -65)) \
                 .transpose('band', 'x', 'y') \
                 .rio.write_crs(4326) \
                 .rename({'x': 'y', 'y': 'x'})
+
+
+def load_gldas(file, var):
+    """
+    Load .nc files from GLDAS product
+
+    :param file: str with file path
+    :param var: str with variable to extract
+    :return:
+    """
+
+    with t.HiddenPrints():
+        da = xarray.open_dataset(file, engine="netcdf4")
+        da = da[var]
+        return da.sel(lat=slice(-55, -15), lon=slice(-75, -65))
+
 
 def sum_datasets(dataset_list):
     r"""
@@ -48,9 +67,22 @@ def sum_datasets(dataset_list):
     :param dataset_list: list with raster products
     :return: xarray.Dataset with sum of rasters
     """
-    template = dataset_list[0]
+    template = dataset_list[0].copy()
     sum_values = sum([d.values for d in dataset_list])
     template.values = sum_values
+    return template
+
+
+def mean_datasets(dataset_list):
+    r"""
+    Function to get mean from xarray datasets
+
+    :param dataset_list: list with raster products
+    :return: xarray.Dataset with mean of rasters
+    """
+    template = dataset_list[0].copy()
+    mean_values = np.mean([d.values for d in dataset_list], axis=0)
+    template.values = mean_values
     return template
 
 
@@ -171,9 +203,7 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
         - **vector_path**: str with vector path
         - **north_vector_path**: str with north vector path
         - **south_vector_path**: str with south vector path
-        - **layer**: str with layer to extract
-        - **layer1**: str with layer1 to compute normalized difference
-        - **layer2**: str with layer2 to compute normalized difference
+        - **layer**: str or list with layer/layers to extract
     :return: Print
     """
 
@@ -182,18 +212,23 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
     selected_files = list(filter(r.match, scenes_path))
     start = time.time()
     match name:
-        case 'imerg':
+        case "imerg":
             file_date = datetime.strptime(scene, '%Y%m%d').strftime('%Y-%m-%d')
-
+        case name if "gldas" in name:
+            file_date = datetime.strptime(scene, 'A%Y%m%d').strftime('%Y-%m-%d')
         case _:
             file_date = datetime.strptime(scene, 'A%Y%j').strftime('%Y-%m-%d')
 
     match name:
         case 'nbr':
-            try:
-                mos = mosaic_nd_raster(selected_files, kwargs.get("layer1"), kwargs.get("layer2"))
-            except (rxre.RioXarrayError, rioe.RasterioIOError):
-                return print(f"Error in scene {scene}")
+            if isinstance(kwargs.get("layer"), list):
+                lyrs = kwargs.get("layer")
+                try:
+                    mos = mosaic_nd_raster(selected_files, lyrs[0], lyrs[1])
+                except (rxre.RioXarrayError, rioe.RasterioIOError):
+                    return print(f"Error in scene {scene}")
+            else:
+                "layer argument must be a list"
 
         case 'snow':
             try:
@@ -209,6 +244,32 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
             except OSError:
                 return print(f"Error in scene {scene}")
 
+        case name if "gldas" in name:
+            match name:
+                case name if ("snow" in name) or ("temp" in name) or ("et" in name):
+                    if isinstance(kwargs.get("layer"), str):
+                        try:
+                            datasets_list = [load_gldas(ds, kwargs.get("layer")) for ds in selected_files]
+                            mos = mean_datasets(datasets_list)
+                        except OSError:
+                            return print(f"Error in scene {scene}")
+                    else:
+                        return print("layer argument must be a string")
+
+                case name if "soilm" in name:
+                    if isinstance(kwargs.get("layer"), list):
+                        lyrs = kwargs.get("layer")
+                        try:
+                            layers_list = []
+                            for lyr in lyrs:
+                                datasets_list = [load_gldas(ds, lyr) for ds in selected_files]
+                                layers_list.append(mean_datasets(datasets_list))
+                            mos = sum_datasets(layers_list)
+                        except OSError:
+                            return print(f"Error in scene {scene}")
+                    else:
+                        return print("layer argument must be a list")
+
         case _:
             try:
                 mos = mosaic_raster(selected_files, kwargs.get("layer"))
@@ -216,10 +277,10 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
             except (rxre.RioXarrayError, rioe.RasterioIOError):
                 return print(f"Error in scene {scene}")
 
-    temporal_raster = os.path.join(tempfolder, name + "_" + scene + ".tif")
-    # temporal_raster = os.path.join("/Users/aldotapia/hidrocl_test/", name + "_" + scene + ".tif")
-    # result_file = os.path.join("/Users/aldotapia/hidrocl_test/", name + "_" + scene + ".csv")
-    result_file = os.path.join(tempfolder, name + "_" + scene + ".csv")
+    # temporal_raster = os.path.join(tempfolder, name + "_" + scene + ".tif")
+    temporal_raster = os.path.join("/Users/aldotapia/hidrocl_test/", name + "_" + scene + ".tif")
+    result_file = os.path.join("/Users/aldotapia/hidrocl_test/", name + "_" + scene + ".csv")
+    # result_file = os.path.join(tempfolder, name + "_" + scene + ".csv")
     mos.rio.to_raster(temporal_raster, compress="LZW")
     match name:
         case 'snow':
@@ -259,6 +320,6 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
     currenttime = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
     print(f"Time elapsed for {scene}: {str(round(end - start))} seconds")
     write_log(log_file, scene, currenttime, time_dif, kwargs.get("database"))
-    os.remove(temporal_raster)
-    os.remove(result_file)
+    # os.remove(temporal_raster)
+    # os.remove(result_file)
     gc.collect()
