@@ -251,6 +251,7 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
                         try:
                             datasets_list = [load_gldas(ds, kwargs.get("layer")) for ds in selected_files]
                             mos = mean_datasets(datasets_list)
+                            mos = mos * 100
                         except OSError:
                             return print(f"Error in scene {scene}")
                     else:
@@ -265,6 +266,7 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
                                 datasets_list = [load_gldas(ds, lyr) for ds in selected_files]
                                 layers_list.append(mean_datasets(datasets_list))
                             mos = sum_datasets(layers_list)
+                            mos = mos * 100
                         except OSError:
                             return print(f"Error in scene {scene}")
                     else:
@@ -281,7 +283,7 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
     temporal_raster = os.path.join("/Users/aldotapia/hidrocl_test/", name + "_" + scene + ".tif")
     result_file = os.path.join("/Users/aldotapia/hidrocl_test/", name + "_" + scene + ".csv")
     # result_file = os.path.join(tempfolder, name + "_" + scene + ".csv")
-    mos.rio.to_raster(temporal_raster, compress="LZW")
+    mos.rio.to_raster(temporal_raster, dtype="uint8",compress="LZW")
     match name:
         case 'snow':
             subprocess.call([rscript,
