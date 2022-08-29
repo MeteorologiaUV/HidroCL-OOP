@@ -84,7 +84,7 @@
 
 [![packageversion](https://img.shields.io/badge/r--terra-v1.5.21-green?style=plastic)](https://anaconda.org/conda-forge/r-terra)
 [![packageversion](https://img.shields.io/badge/r--sf-v1.0.6-green?style=plastic)](https://anaconda.org/conda-forge/r-sf)
-[![packageversion](https://img.shields.io/badge/r--exactextractr-v0.7.2-green?style=plastic)](https://anaconda.org/conda-forge/r-exactextractr)
+[![packageversion](https://img.shields.io/badge/r--exactextractr-v0.9.0-green?style=plastic)](https://anaconda.org/conda-forge/r-exactextractr)
 [![packageversion](https://img.shields.io/badge/tibble-v3.1.8-green?style=plastic)](https://anaconda.org/conda-forge/r-tibble)
 
 *Interactive code*
@@ -104,6 +104,8 @@
 
 [![packageversion](https://img.shields.io/badge/sphinx-v5.1.1-green?style=plastic)](https://anaconda.org/conda-forge/sphinx)
 [![packageversion](https://img.shields.io/badge/sphinx--rtd--theme-v0.4.3-green?style=plastic)](https://anaconda.org/conda-forge/sphinx_rtd_theme)
+
+dask2022.2.1
 
 Installation commands:
 **Environment creation and first steps:**
@@ -125,6 +127,7 @@ conda install -c conda-forge sphinx sphinx_rtd_theme
 
 ```R
 install.packages("codetools", dependencies = TRUE)
+install.packages("tibble", dependencies = TRUE)
 ```
 
 ----

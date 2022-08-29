@@ -21,8 +21,10 @@ if platform == "linux" or platform == "linux2":
     rscript = "Rscript"
 elif platform == "darwin":
     rscript = "RScript"
+
+
 # elif platform == "win32":
-    # Windows...
+# Windows...
 
 
 def load_hdf5(file, var):
@@ -38,11 +40,11 @@ def load_hdf5(file, var):
         da = rioxr.open_rasterio(file, engine='h5netcdf')
         da = da[0][var]
         return da.assign_coords({"x": (da.x / 10) - 90}) \
-                .assign_coords({"y": (da.y / 10) - 180}) \
-                .sel(x=slice(-55, -15), y=slice(-75, -65)) \
-                .transpose('band', 'x', 'y') \
-                .rio.write_crs(4326) \
-                .rename({'x': 'y', 'y': 'x'})
+            .assign_coords({"y": (da.y / 10) - 180}) \
+            .sel(x=slice(-55, -15), y=slice(-75, -65)) \
+            .transpose('band', 'x', 'y') \
+            .rio.write_crs(4326) \
+            .rename({'x': 'y', 'y': 'x'})
 
 
 def load_gldas(file, var):
@@ -283,7 +285,7 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
     # temporal_raster = os.path.join("/Users/aldotapia/hidrocl_test/", name + "_" + scene + ".tif")
     # result_file = os.path.join("/Users/aldotapia/hidrocl_test/", name + "_" + scene + ".csv")
     result_file = os.path.join(tempfolder, name + "_" + scene + ".csv")
-    mos.rio.to_raster(temporal_raster, dtype="uint8",compress="LZW")
+    mos.rio.to_raster(temporal_raster, dtype="uint8", compress="LZW")
     match name:
         case 'snow':
             subprocess.call([rscript,

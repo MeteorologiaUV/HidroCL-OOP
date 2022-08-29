@@ -29,14 +29,14 @@ count_na <- function(values, coverage_fractions) {
 }
 
 result <- try({
-  exactextractr::exact_extract(x = terra::rast(r),
+  exactextractr::exact_extract(x = terra::rast(r) * 1,
   y = sf::read_sf(v),
   fun = custom_mean,
   append_cols = "gauge_id",
   progress = F)}, silent = TRUE)
 
 result2 <- try({
-  exactextractr::exact_extract(x = terra::rast(r),
+  exactextractr::exact_extract(x = terra::rast(r) * 1,
   y = sf::read_sf(v),
   fun = count_na,
   append_cols = "gauge_id",
