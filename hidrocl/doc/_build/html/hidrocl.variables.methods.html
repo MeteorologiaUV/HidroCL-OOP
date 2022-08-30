@@ -5,7 +5,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -213,6 +213,25 @@
 <li><p><strong>catchment</strong> – str (catchment name)</p></li>
 <li><p><strong>observations</strong> – pandas.DataFrame with the observations</p></li>
 <li><p><strong>what</strong> – str (‘valid’ or ‘all’)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>plot</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="hidrocl.variables.methods.plot_variable_all">
+<span class="sig-prename descclassname"><span class="pre">hidrocl.variables.methods.</span></span><span class="sig-name descname"><span class="pre">plot_variable_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">observations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">catchment_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">database</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">what</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'obs'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/hidrocl/variables/methods.html#plot_variable_all"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#hidrocl.variables.methods.plot_variable_all" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot variable for a catchment</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>observations</strong> – pandas.DataFrame with the observations</p></li>
+<li><p><strong>catchment_names</strong> – list with catchment names</p></li>
+<li><p><strong>database</strong> – str with database path</p></li>
+<li><p><strong>what</strong> – str (‘obs’ or ‘pc’)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>

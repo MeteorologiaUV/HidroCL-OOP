@@ -224,7 +224,7 @@
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Please, check the database for getting the IDs processed&#39;</span><span class="p">)</span>
             <span class="k">return</span> <span class="s1">&#39;&#39;</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">observations</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">observations</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span></div>
+            <span class="k">return</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">observations</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">observations</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tolist</span><span class="p">()]</span></div>
 
 <div class="viewcode-block" id="HidroCLVariable.checkdatabase"><a class="viewcode-back" href="../../hidrocl.variables.html#hidrocl.variables.HidroCLVariable.checkdatabase">[docs]</a>    <span class="k">def</span> <span class="nf">checkdatabase</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -283,6 +283,22 @@
         <span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_major_formatter</span><span class="p">(</span><span class="n">mtick</span><span class="o">.</span><span class="n">PercentFormatter</span><span class="p">())</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
 
+<div class="viewcode-block" id="HidroCLVariable.plot_grid_data_all"><a class="viewcode-back" href="../../hidrocl.variables.html#hidrocl.variables.HidroCLVariable.plot_grid_data_all">[docs]</a>    <span class="k">def</span> <span class="nf">plot_grid_data_all</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plot valid data for all catchments in grid format</span>
+
+<span class="sd">        :return: plot with valid data for all catchments with date index</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">methods</span><span class="o">.</span><span class="n">plot_variable_all</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">observations</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">catchment_names</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="p">,</span> <span class="n">what</span><span class="o">=</span><span class="s1">&#39;obs&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="HidroCLVariable.plot_grid_pcdata_all"><a class="viewcode-back" href="../../hidrocl.variables.html#hidrocl.variables.HidroCLVariable.plot_grid_pcdata_all">[docs]</a>    <span class="k">def</span> <span class="nf">plot_grid_pcdata_all</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plot valid data for all catchments in grid format</span>
+
+<span class="sd">        :return: plot with valid data for all catchments with date index</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">methods</span><span class="o">.</span><span class="n">plot_variable_all</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pcobservations</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">catchment_names</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="p">,</span> <span class="n">what</span><span class="o">=</span><span class="s1">&#39;pc&#39;</span><span class="p">)</span></div>
+
 <div class="viewcode-block" id="HidroCLVariable.plot_valid_data_individual"><a class="viewcode-back" href="../../hidrocl.variables.html#hidrocl.variables.HidroCLVariable.plot_valid_data_individual">[docs]</a>    <span class="k">def</span> <span class="nf">plot_valid_data_individual</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">catchment</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plot valid data for individual catchments</span>
@@ -304,7 +320,6 @@
 
         <span class="n">catchment</span> <span class="o">=</span> <span class="n">methods</span><span class="o">.</span><span class="n">get_catchment_name</span><span class="p">(</span><span class="n">catchment</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">catchment_names</span><span class="p">)</span>
         <span class="n">methods</span><span class="o">.</span><span class="n">plot_variable</span><span class="p">(</span><span class="n">catchment</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pcobservations</span><span class="p">,</span> <span class="n">what</span><span class="o">=</span><span class="s1">&#39;count&#39;</span><span class="p">)</span></div></div>
-
 </pre></div>
 
            </div>
