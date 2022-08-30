@@ -10,3 +10,6 @@ make.bat
 Makefile
 hidrocl/doc/_build/doctrees/*
 testfiles*
+local_test_persiann_css_extraction.ipynb
+local_test_persiann_css_cdr_extraction.ipynb
+local_test_gldas_extraction.ipynb

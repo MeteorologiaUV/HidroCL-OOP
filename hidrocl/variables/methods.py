@@ -116,19 +116,25 @@ def plot_variable_all(observations, catchment_names, database, what='obs'):
     year_ = observations.index.year
     doy_ = observations.index.dayofyear
 
+    asp = (len(doy_.unique()) + 3) / ((len(year_.unique()) + 3) * 1.5)
+
+    match asp:
+        case _ if asp < 0.4:
+            asp = 0.4
+
     match what:
         case 'obs':
             df = observations.notnull().groupby([year_, doy_]).sum().assign(sum=lambda x: x.sum(axis=1))
             df = df["sum"].div(len_).multiply(100).unstack(level=0).transpose()
             message = f'% of valid observations for \n{databasename} by date'
-            plt.imshow(df, cmap=plt.get_cmap('rainbow_r', 20), aspect='equal', vmin=0, vmax=100)
+            plt.imshow(df, cmap=plt.get_cmap('rainbow_r', 20), aspect=asp, vmin=0, vmax=100)
             plt.colorbar(ticks=[0, 100], fraction=0.035, pad=0.04)
 
         case _:
             df = observations.groupby([year_, doy_]).mean().div(10).assign(mean=lambda x: x.sum(axis=1))
             df = df["mean"].div(len_).unstack(level=0).transpose()
             message = f'% of mean pixel count for \n{databasename} observations by date'
-            plt.imshow(df, cmap=plt.get_cmap('rainbow_r', 20), aspect='equal', vmin=60, vmax=100)
+            plt.imshow(df, cmap=plt.get_cmap('rainbow_r', 20), aspect=asp, vmin=60, vmax=100)
             plt.colorbar(ticks=[60, 100], fraction=0.035, pad=0.04)
 
     plt.title(message)
