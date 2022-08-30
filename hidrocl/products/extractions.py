@@ -341,10 +341,10 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
             except (rxre.RioXarrayError, rioe.RasterioIOError):
                 return print(f"Error in scene {scene}")
 
-    # temporal_raster = os.path.join(tempfolder, name + "_" + scene + ".tif")
-    temporal_raster = os.path.join("/Users/aldotapia/hidrocl_test/", name + "_" + scene + ".tif")
-    result_file = os.path.join("/Users/aldotapia/hidrocl_test/", name + "_" + scene + ".csv")
-    # result_file = os.path.join(tempfolder, name + "_" + scene + ".csv")
+    temporal_raster = os.path.join(tempfolder, name + "_" + scene + ".tif")
+    # temporal_raster = os.path.join("/Users/aldotapia/hidrocl_test/", name + "_" + scene + ".tif")
+    # result_file = os.path.join("/Users/aldotapia/hidrocl_test/", name + "_" + scene + ".csv")
+    result_file = os.path.join(tempfolder, name + "_" + scene + ".csv")
     mos.rio.to_raster(temporal_raster, dtype="uint8", compress="LZW")
     match name:
         case 'snow':
@@ -384,6 +384,6 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
     currenttime = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
     print(f"Time elapsed for {scene}: {str(round(end - start))} seconds")
     write_log(log_file, scene, currenttime, time_dif, kwargs.get("database"))
-    # os.remove(temporal_raster)
-    # os.remove(result_file)
+    os.remove(temporal_raster)
+    os.remove(result_file)
     gc.collect()
