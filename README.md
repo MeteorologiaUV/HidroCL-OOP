@@ -4,7 +4,7 @@
 
 [![pythonversion](https://img.shields.io/badge/python-v3.10-blue?style=plastic&logo=python&logoColor=yellow)](https://www.python.org/downloads/release/python-3100/)
 [![packageversion](https://img.shields.io/badge/r-v4.1.2-blue?style=plastic&logo=r&logoColor=9cf)](https://anaconda.org/conda-forge/r-base?version=4.2.1)
-![packageversion](https://img.shields.io/badge/version-v0.0.6-blue?style=plastic)
+![packageversion](https://img.shields.io/badge/version-v0.0.7-blue?style=plastic)
 
 ## Data download
 
@@ -36,7 +36,7 @@
 - [x] GLDAS_NOAHH25_3H processing
   - [x] test locally
   - [x] test on nas
-- [ ] GPM_3IMERGHHL processing
+- [x] GPM_3IMERGHHL processing
   - [x] test locally
   - [x] test on nas
 - [ ] MCD12Q1 processing (*Land cover type, last update was on 2020*)
@@ -59,9 +59,9 @@
 - [x] MOD16A2 processing
   - [x] test locally
   - [x] test on nas
-- [ ] PERSIANN processing
+- [x] PERSIANN processing
   - [x] test locally
-  - [ ] test on nas
+  - [x] test on nas
 - [ ] Download functions refactoring
   - [ ] PERSIANN (FTP approach)
   - [ ] Earthdata (API approach)
@@ -69,9 +69,14 @@
   - [ ] test download functions  
 - [ ] Add documentation
   - [x] add variables documentation
-  - [ ] add products documentation
+  - [x] add products documentation
     - [x] MOD13Q1
     - [x] MOD10A2
+    - [x] MCD15A2H
+    - [x] MOD16A2
+    - [x] GPM_3IMERGHHL
+    - [x] GLDAS_NOAHH25_3H
+    - [x] PERSIANN
 - [ ] Add tests
 - [ ] Add examples
 - [ ] Add flowcharts
@@ -135,6 +140,13 @@ install.packages("tibble", dependencies = TRUE)
 ----
 
 ## Changelog
+
+### [0.0.7] - 2022-08-30
+#### Added
+- **run_maintainer**: function to test files inside product path folder and delete corrupt files.
+
+#### To do
+- Add for each product a download function complementing maintainer function.
 
 ### [0.0.6] - 2022-08-29
 #### Added
