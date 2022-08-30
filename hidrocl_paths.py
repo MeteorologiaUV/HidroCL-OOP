@@ -121,6 +121,7 @@ log_et_o_gldas_eta_cum = os.path.join(nas_path, 'logs/log_et_o_gldas_eta_cum.txt
 log_sm_o_gldas_sm_mean = os.path.join(nas_path, 'logs/log_sm_o_gldas_sm_mean.txt')
 log_pp_o_pers_pp_mean = os.path.join(nas_path, 'logs/log_pp_o_pers_pp_mean.txt')
 log_pp_o_pcdr_pp_mean = os.path.join(nas_path, 'logs/log_pp_o_pcdr_pp_mean.txt')
+log_file_maintainer = os.path.join(nas_path, 'logs/file_maintainer.txt')
 
 # forecasted
 

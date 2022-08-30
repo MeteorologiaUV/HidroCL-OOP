@@ -4,6 +4,7 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 from ..variables import HidroCLVariable
 from . import tools as t
+from . import maintainer as m
 from . import extractions as e
 
 
@@ -188,6 +189,38 @@ NBR database path: {self.nbr.database}
                                   vector_path=self.vectorpath,
                                   layer=["250m 16 days NIR reflectance",
                                          "250m 16 days MIR reflectance"])
+    def run_maintainer(self, log_file, limit=None):
+        """
+        Run file maintainer. It will remove any file with problems
+
+        :param log_file: str with log file path
+        :param limit: int (length of the scenes_to_process)
+        :return: Print
+        """
+
+        with t.HiddenPrints():
+            self.ndvi.checkdatabase()
+            self.evi.checkdatabase()
+            self.nbr.checkdatabase()
+
+        self.common_elements = t.compare_indatabase(self.ndvi.indatabase,
+                                                    self.evi.indatabase,
+                                                    self.nbr.indatabase)
+
+        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.common_elements)
+
+        scenes_path = t.get_scenes_path(self.product_files, self.productpath)
+
+        if limit is not None:
+            scenes_to_process = self.scenes_to_process[:limit]
+        else:
+            scenes_to_process = self.scenes_to_process
+
+        for scene in scenes_to_process:
+            m.file_maintainer(scene=scene,
+                              scenes_path=scenes_path,
+                              name='modis',
+                              log_file=log_file)
 
 
 """
@@ -333,6 +366,37 @@ South face snow database path: {self.ssnow.database}
                                   south_vector_path=self.southvectorpath,
                                   layer="Maximum_Snow_Extent")
 
+    def run_maintainer(self, log_file, limit=None):
+        """
+        Run file maintainer. It will remove any file with problems
+
+        :param log_file: str with log file path
+        :param limit: int (length of the scenes_to_process)
+        :return: Print
+        """
+
+        with t.HiddenPrints():
+            self.nsnow.checkdatabase()
+            self.ssnow.checkdatabase()
+
+        self.common_elements = t.compare_indatabase(self.nsnow.indatabase,
+                                                    self.ssnow.indatabase)
+
+        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.common_elements)
+
+        scenes_path = t.get_scenes_path(self.product_files, self.productpath)
+
+        if limit is not None:
+            scenes_to_process = self.scenes_to_process[:limit]
+        else:
+            scenes_to_process = self.scenes_to_process
+
+        for scene in scenes_to_process:
+            m.file_maintainer(scene=scene,
+                              scenes_path=scenes_path,
+                              name='modis',
+                              log_file=log_file)
+
 
 """
 Extraction of MODIS MOD16A2 product:
@@ -460,6 +524,33 @@ PET database path: {self.pet.database}
                                   pcdatabase=self.pet.pcdatabase,
                                   vector_path=self.vectorpath,
                                   layer="PET_500m", )
+
+    def run_maintainer(self, log_file, limit=None):
+        """
+        Run file maintainer. It will remove any file with problems
+
+        :param log_file: str with log file path
+        :param limit: int (length of the scenes_to_process)
+        :return: Print
+        """
+
+        with t.HiddenPrints():
+            self.pet.checkdatabase()
+
+        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.pet.indatabase)
+
+        scenes_path = t.get_scenes_path(self.product_files, self.productpath)
+
+        if limit is not None:
+            scenes_to_process = self.scenes_to_process[:limit]
+        else:
+            scenes_to_process = self.scenes_to_process
+
+        for scene in scenes_to_process:
+            m.file_maintainer(scene=scene,
+                              scenes_path=scenes_path,
+                              name='modis',
+                              log_file=log_file)
 
 
 """
@@ -618,6 +709,37 @@ FPAR database path: {self.fpar.database}
                                   vector_path=self.vectorpath,
                                   layer="Fpar_500m")
 
+    def run_maintainer(self, log_file, limit=None):
+        """
+        Run file maintainer. It will remove any file with problems
+
+        :param log_file: str with log file path
+        :param limit: int (length of the scenes_to_process)
+        :return: Print
+        """
+
+        with t.HiddenPrints():
+            self.lai.checkdatabase()
+            self.fpar.checkdatabase()
+
+        self.common_elements = t.compare_indatabase(self.lai.indatabase,
+                                                    self.fpar.indatabase)
+
+        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.common_elements)
+
+        scenes_path = t.get_scenes_path(self.product_files, self.productpath)
+
+        if limit is not None:
+            scenes_to_process = self.scenes_to_process[:limit]
+        else:
+            scenes_to_process = self.scenes_to_process
+
+        for scene in scenes_to_process:
+            m.file_maintainer(scene=scene,
+                              scenes_path=scenes_path,
+                              name='modis',
+                              log_file=log_file)
+
 
 """
 Extraction of GPM IMERG Late Precipitation L3 Half Hourly 0.1 degree product:
@@ -746,6 +868,33 @@ IMERG precipitation database path: {self.pp.database}
                                   pcdatabase=self.pp.pcdatabase,
                                   vector_path=self.vectorpath,
                                   layer="Grid_precipitationCal")
+
+    def run_maintainer(self, log_file, limit=None):
+        """
+        Run file maintainer. It will remove any file with problems
+
+        :param log_file: str with log file path
+        :param limit: int (length of the scenes_to_process)
+        :return: Print
+        """
+
+        with t.HiddenPrints():
+            self.pp.checkdatabase()
+
+        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.pp.indatabase)
+
+        scenes_path = t.get_scenes_path(self.product_files, self.productpath)
+
+        if limit is not None:
+            scenes_to_process = self.scenes_to_process[:limit]
+        else:
+            scenes_to_process = self.scenes_to_process
+
+        for scene in scenes_to_process:
+            m.file_maintainer(scene=scene,
+                              scenes_path=scenes_path,
+                              name='imerg',
+                              log_file=log_file)
 
 
 """
@@ -954,6 +1103,41 @@ Soil moisture path: {self.soilm.database}
                                              "SoilMoi40_100cm_inst",
                                              "SoilMoi100_200cm_inst"])
 
+    def run_maintainer(self, log_file, limit=None):
+        """
+        Run file maintainer. It will remove any file with problems
+
+        :param log_file: str with log file path
+        :param limit: int (length of the scenes_to_process)
+        :return: Print
+        """
+
+        with t.HiddenPrints():
+            self.snow.checkdatabase()
+            self.temp.checkdatabase()
+            self.et.checkdatabase()
+            self.soilm.checkdatabase()
+
+        self.common_elements = t.compare_indatabase(self.snow.indatabase,
+                                                    self.temp.indatabase,
+                                                    self.et.indatabase,
+                                                    self.soilm.indatabase)
+
+        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.common_elements)
+
+        scenes_path = t.get_scenes_path(self.product_files, self.productpath)
+
+        if limit is not None:
+            scenes_to_process = self.scenes_to_process[:limit]
+        else:
+            scenes_to_process = self.scenes_to_process
+
+        for scene in scenes_to_process:
+            m.file_maintainer(scene=scene,
+                              scenes_path=scenes_path,
+                              name='gldas',
+                              log_file=log_file)
+
 
 """
 Extraction of PERSIANN-CCS 0.04º degree product:
@@ -1082,6 +1266,33 @@ PERSIANN-CCS precipitation database path: {self.pp.database}
                                   pcdatabase=self.pp.pcdatabase,
                                   vector_path=self.vectorpath)
 
+    def run_maintainer(self, log_file, limit=None):
+        """
+        Run file maintainer. It will remove any file with problems
+
+        :param log_file: str with log file path
+        :param limit: int (length of the scenes_to_process)
+        :return: Print
+        """
+
+        with t.HiddenPrints():
+            self.pp.checkdatabase()
+
+        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.pp.indatabase)
+
+        scenes_path = t.get_scenes_path(self.product_files, self.productpath)
+
+        if limit is not None:
+            scenes_to_process = self.scenes_to_process[:limit]
+        else:
+            scenes_to_process = self.scenes_to_process
+
+        for scene in scenes_to_process:
+            m.file_maintainer(scene=scene,
+                              scenes_path=scenes_path,
+                              name='persiann',
+                              log_file=log_file)
+
 
 """
 Extraction of PERSIANN-CCS-CDR 0.04º degree product:
@@ -1209,3 +1420,30 @@ PERSIANN-CCS-CDR precipitation database path: {self.pp.database}
                                   database=self.pp.database,
                                   pcdatabase=self.pp.pcdatabase,
                                   vector_path=self.vectorpath)
+
+    def run_maintainer(self, log_file, limit=None):
+        """
+        Run file maintainer. It will remove any file with problems
+
+        :param log_file: str with log file path
+        :param limit: int (length of the scenes_to_process)
+        :return: Print
+        """
+
+        with t.HiddenPrints():
+            self.pp.checkdatabase()
+
+        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.pp.indatabase)
+
+        scenes_path = t.get_scenes_path(self.product_files, self.productpath)
+
+        if limit is not None:
+            scenes_to_process = self.scenes_to_process[:limit]
+        else:
+            scenes_to_process = self.scenes_to_process
+
+        for scene in scenes_to_process:
+            m.file_maintainer(scene=scene,
+                              scenes_path=scenes_path,
+                              name='persiann',
+                              log_file=log_file)
