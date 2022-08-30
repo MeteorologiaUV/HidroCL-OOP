@@ -85,7 +85,7 @@ class Mod13q1:
             self.ndvi_log = ndvi_log
             self.evi_log = evi_log
             self.nbr_log = nbr_log
-            self.productname = "MODIS MOD13Q1 Version 0.61"
+            self.productname = "MODIS MOD13Q1 Version 6.1"
             self.productpath = product_path
             self.vectorpath = vector_path
             self.common_elements = t.compare_indatabase(self.ndvi.indatabase,
@@ -257,7 +257,7 @@ class Mod10a2:
             self.nsnow = nsnow
             self.ssnow = ssnow
             self.snow_log = snow_log
-            self.productname = "MODIS MOD10A2 Version 0.61"
+            self.productname = "MODIS MOD10A2 Version 6.1"
             self.productpath = product_path
             self.northvectorpath = north_vector_path
             self.southvectorpath = south_vector_path
@@ -390,7 +390,7 @@ class Mod16a2:
         if t.check_instance(pet):
             self.pet = pet
             self.pet_log = pet_log
-            self.productname = "MODIS MOD16A2 Version 0.61"
+            self.productname = "MODIS MOD16A2 Version 6.1"
             self.productpath = product_path
             self.vectorpath = vector_path
             self.common_elements = self.pet.indatabase
@@ -530,7 +530,7 @@ class Mcd15a2h:
             self.fpar = fpar
             self.lai_log = lai_log
             self.fpar_log = fpar_log
-            self.productname = "MODIS MCD15A2H Version 0.6"
+            self.productname = "MODIS MCD15A2H Version 6.0"
             self.productpath = product_path
             self.vectorpath = vector_path
             self.common_elements = t.compare_indatabase(self.lai.indatabase,
@@ -649,11 +649,11 @@ class Gpm_3imrghhl:
     scenes_occurrences : list
         List of scenes occurrences for each product id
     overpopulated_scenes : list
-        List of overpopulated scenes (more than 48 scenes for modis)
+        List of overpopulated scenes (more than 48 scenes for imerg)
     complete_scenes : list
-        List of complete scenes (48 scenes for modis)
+        List of complete scenes (48 scenes for imerg)
     incomplete_scenes : list
-        List of incomplete scenes (less than 48 scenes for modis)
+        List of incomplete scenes (less than 48 scenes for imerg)
     scenes_to_process : list
         List of scenes to process (complete scenes no processed)
     """
@@ -792,11 +792,11 @@ class Gldas_noah:
     scenes_occurrences : list
         List of scenes occurrences for each product id
     overpopulated_scenes : list
-        List of overpopulated scenes (more than 9 scenes for modis)
+        List of overpopulated scenes (more than 9 scenes for gldas)
     complete_scenes : list
-        List of complete scenes (9 scenes for modis)
+        List of complete scenes (9 scenes for gldas)
     incomplete_scenes : list
-        List of incomplete scenes (less than 9 scenes for modis)
+        List of incomplete scenes (less than 9 scenes for gldas)
     scenes_to_process : list
         List of scenes to process (complete scenes no processed)
     """
@@ -953,3 +953,259 @@ Soil moisture path: {self.soilm.database}
                                              "SoilMoi10_40cm_inst",
                                              "SoilMoi40_100cm_inst",
                                              "SoilMoi100_200cm_inst"])
+
+
+"""
+Extraction of PERSIANN-CCS 0.04º degree product:
+"""
+
+
+class Persiann_ccs:
+    """
+    A class to process PERSIANN-CCS to hidrocl variables
+
+    Attributes
+    ----------
+    pp : HidroCLVariable
+        HidroCLVariable object with PERSIANN-CCS precipitation data
+    pp_log : str
+        Path to the log file for PERSIANN-CCS precipitation data
+    productname : str
+        Name of the remote sensing product to be processed
+    productpath : str
+        Path to the product folder where the product files are located
+    vectorpath : str
+        Path to the vector folder with Shapefile with areas to be processed
+    product_files : list
+        List of product files in the product folder
+    product_ids : list
+        List of product ids. Each product id is str with common tag by date
+    all_scenes : list
+        List of all scenes (no matter the product id here)
+    scenes_occurrences : list
+        List of scenes occurrences for each product id
+    overpopulated_scenes : list
+        List of overpopulated scenes (more than 1 scene for persiann)
+    complete_scenes : list
+        List of complete scenes (1 scene for persiann)
+    incomplete_scenes : list
+        List of incomplete scenes (less than 1 scenes for persiann)
+    scenes_to_process : list
+        List of scenes to process (complete scenes no processed)
+    """
+
+    def __init__(self, pp, product_path, vector_path, pp_log):
+        """
+        Parameters
+        ----------
+        :param pp: HidroCLVariable
+            Object with PERSIANN-CCS precipitation data
+        :param product_path: str
+            Path to the product folder
+        :param vector_path: str
+            Path to the vector folder
+        :param pp_log: str
+            Path to the log file for PERSIANN-CCS precipitation extraction
+        :param pp_log: str
+            Path to the log file for the PERSIANN-CCS precipitation extraction
+        """
+        if t.check_instance(pp):
+            self.pp = pp
+            self.pp_log = pp_log
+            self.productname = "PERSIANN-CCS 0.04º"
+            self.productpath = product_path
+            self.vectorpath = vector_path
+            self.common_elements = self.pp.indatabase
+            self.product_files = t.read_product_files(self.productpath, "persiann_ccs")
+            self.product_ids = t.get_product_ids(self.product_files, "persiann_ccs")
+            self.all_scenes = t.check_product_files(self.product_ids)
+            self.scenes_occurrences = t.count_scenes_occurrences(self.all_scenes, self.product_ids)
+            (self.overpopulated_scenes,
+             self.complete_scenes,
+             self.incomplete_scenes) = t.classify_occurrences(self.scenes_occurrences, "persiann_ccs")
+            self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.common_elements)
+        else:
+            raise TypeError('pp must be HidroCLVariable object')
+
+    def __repr__(self):
+        """
+        Return a string representation of the object
+
+        :return: str
+        """
+        return f'Class to extract {self.productname}'
+
+    def __str__(self):
+        """
+        Return a string representation of the object
+
+        :return: str
+        """
+        return f'''
+Product: {self.productname}
+
+PERSIANN-CCS precipitation records: {len(self.pp.indatabase)}.
+PERSIANN-CCS precipitation database path: {self.pp.database}
+        '''
+
+    def run_extraction(self, limit=None):
+        """
+        Run the extraction of the product.
+        If limit is None, all scenes will be processed.
+        If limit is a number, only the first limit scenes will be processed.
+
+        :param limit: int (length of the scenes_to_process)
+        :return: Print
+        """
+
+        with t.HiddenPrints():
+            self.pp.checkdatabase()
+
+        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.pp.indatabase)
+
+        scenes_path = t.get_scenes_path(self.product_files, self.productpath)
+
+        with TemporaryDirectory() as tempdirname:
+            temp_dir = Path(tempdirname)
+
+            if limit is not None:
+                scenes_to_process = self.scenes_to_process[:limit]
+            else:
+                scenes_to_process = self.scenes_to_process
+
+            for scene in scenes_to_process:
+                if scene not in self.pp.indatabase:
+                    e.zonal_stats(scene, scenes_path,
+                                  temp_dir, "persiann_ccs",
+                                  self.pp.catchment_names, self.pp_log,
+                                  database=self.pp.database,
+                                  pcdatabase=self.pp.pcdatabase,
+                                  vector_path=self.vectorpath)
+
+
+"""
+Extraction of PERSIANN-CCS-CDR 0.04º degree product:
+"""
+
+
+class Persiann_ccs_cdr:
+    """
+    A class to process PERSIANN-CCS-CDR to hidrocl variables
+
+    Attributes
+    ----------
+    pp : HidroCLVariable
+        HidroCLVariable object with PERSIANN-CCS-CDR precipitation data
+    pp_log : str
+        Path to the log file for PERSIANN-CCS-CDR precipitation data
+    productname : str
+        Name of the remote sensing product to be processed
+    productpath : str
+        Path to the product folder where the product files are located
+    vectorpath : str
+        Path to the vector folder with Shapefile with areas to be processed
+    product_files : list
+        List of product files in the product folder
+    product_ids : list
+        List of product ids. Each product id is str with common tag by date
+    all_scenes : list
+        List of all scenes (no matter the product id here)
+    scenes_occurrences : list
+        List of scenes occurrences for each product id
+    overpopulated_scenes : list
+        List of overpopulated scenes (more than 1 scene for persiann)
+    complete_scenes : list
+        List of complete scenes (1 scene for persiann)
+    incomplete_scenes : list
+        List of incomplete scenes (less than 1 scenes for persiann)
+    scenes_to_process : list
+        List of scenes to process (complete scenes no processed)
+    """
+
+    def __init__(self, pp, product_path, vector_path, pp_log):
+        """
+        Parameters
+        ----------
+        :param pp: HidroCLVariable
+            Object with PERSIANN-CCS-CDR precipitation data
+        :param product_path: str
+            Path to the product folder
+        :param vector_path: str
+            Path to the vector folder
+        :param pp_log: str
+            Path to the log file for PERSIANN-CCS-CDR precipitation extraction
+        :param pp_log: str
+            Path to the log file for the PERSIANN-CCS-CDR precipitation extraction
+        """
+        if t.check_instance(pp):
+            self.pp = pp
+            self.pp_log = pp_log
+            self.productname = "PERSIANN-CCS-CDR 0.04º"
+            self.productpath = product_path
+            self.vectorpath = vector_path
+            self.common_elements = self.pp.indatabase
+            self.product_files = t.read_product_files(self.productpath, "persiann_ccs_cdr")
+            self.product_ids = t.get_product_ids(self.product_files, "persiann_ccs_cdr")
+            self.all_scenes = t.check_product_files(self.product_ids)
+            self.scenes_occurrences = t.count_scenes_occurrences(self.all_scenes, self.product_ids)
+            (self.overpopulated_scenes,
+             self.complete_scenes,
+             self.incomplete_scenes) = t.classify_occurrences(self.scenes_occurrences, "persiann_ccs_cdr")
+            self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.common_elements)
+        else:
+            raise TypeError('pp must be HidroCLVariable object')
+
+    def __repr__(self):
+        """
+        Return a string representation of the object
+
+        :return: str
+        """
+        return f'Class to extract {self.productname}'
+
+    def __str__(self):
+        """
+        Return a string representation of the object
+
+        :return: str
+        """
+        return f'''
+Product: {self.productname}
+
+PERSIANN-CCS-CDR precipitation records: {len(self.pp.indatabase)}.
+PERSIANN-CCS-CDR precipitation database path: {self.pp.database}
+        '''
+
+    def run_extraction(self, limit=None):
+        """
+        Run the extraction of the product.
+        If limit is None, all scenes will be processed.
+        If limit is a number, only the first limit scenes will be processed.
+
+        :param limit: int (length of the scenes_to_process)
+        :return: Print
+        """
+
+        with t.HiddenPrints():
+            self.pp.checkdatabase()
+
+        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.pp.indatabase)
+
+        scenes_path = t.get_scenes_path(self.product_files, self.productpath)
+
+        with TemporaryDirectory() as tempdirname:
+            temp_dir = Path(tempdirname)
+
+            if limit is not None:
+                scenes_to_process = self.scenes_to_process[:limit]
+            else:
+                scenes_to_process = self.scenes_to_process
+
+            for scene in scenes_to_process:
+                if scene not in self.pp.indatabase:
+                    e.zonal_stats(scene, scenes_path,
+                                  temp_dir, "persiann_ccs_cdr",
+                                  self.pp.catchment_names, self.pp_log,
+                                  database=self.pp.database,
+                                  pcdatabase=self.pp.pcdatabase,
+                                  vector_path=self.vectorpath)

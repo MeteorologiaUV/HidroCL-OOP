@@ -4,7 +4,7 @@
 
 [![pythonversion](https://img.shields.io/badge/python-v3.10-blue?style=plastic&logo=python&logoColor=yellow)](https://www.python.org/downloads/release/python-3100/)
 [![packageversion](https://img.shields.io/badge/r-v4.1.2-blue?style=plastic&logo=r&logoColor=9cf)](https://anaconda.org/conda-forge/r-base?version=4.2.1)
-![packageversion](https://img.shields.io/badge/version-v0.0.4-blue?style=plastic)
+![packageversion](https://img.shields.io/badge/version-v0.0.6-blue?style=plastic)
 
 ## Data download
 
@@ -33,10 +33,12 @@
     > Values in Pixel count aren't consistent with `NA` values in the database.
     >
     > **Solved**: there was a bug in write_line function.
-- [ ] GLDAS_NOAHH25_3H processing 
+- [x] GLDAS_NOAHH25_3H processing
+  - [x] test locally
+  - [x] test on nas
 - [ ] GPM_3IMERGHHL processing
   - [x] test locally
-  - [ ] test on nas
+  - [x] test on nas
 - [ ] MCD12Q1 processing (*Land cover type, last update was on 2020*)
 - [x] MCD15A2H processing
   - [x] test locally
@@ -58,6 +60,8 @@
   - [x] test locally
   - [x] test on nas
 - [ ] PERSIANN processing
+  - [x] test locally
+  - [ ] test on nas
 - [ ] Download functions refactoring
   - [ ] PERSIANN (FTP approach)
   - [ ] Earthdata (API approach)
@@ -105,8 +109,6 @@
 [![packageversion](https://img.shields.io/badge/sphinx-v5.1.1-green?style=plastic)](https://anaconda.org/conda-forge/sphinx)
 [![packageversion](https://img.shields.io/badge/sphinx--rtd--theme-v0.4.3-green?style=plastic)](https://anaconda.org/conda-forge/sphinx_rtd_theme)
 
-dask2022.2.1
-
 Installation commands:
 **Environment creation and first steps:**
 ```bash
@@ -134,10 +136,16 @@ install.packages("tibble", dependencies = TRUE)
 
 ## Changelog
 
+### [0.0.6] - 2022-08-29
+#### Added
+- **GLDAS_NOAHH25_3H processing**: processing for snow, temperature, evapotranspiration, and soil moisture extraction.
+- **PERSIANN processing**: processing for precipitation extraction.
+- **zonal_stats**: function refactored, now multiple rasters by date and variable (GLDAS and IMERG)
+
 ### [0.0.5] - 2022-08-25
 #### Added
 - **GPM_3IMRGHHL processing**: processing for IMERG precipitation (PP) product. Documentation updated
-- **zonal_stats**: function refactored, now supports imerg (HDF5)
+- **zonal_stats**: function refactored, now supports IMERG (HDF5)
 
 ### [0.0.4] - 2022-08-24
 #### Added
