@@ -330,7 +330,7 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
                     file = selected_files[0]
                     mos = load_persiann(file)
                     mos = mos * 10
-                except OSError:
+                except (OSError, ValueError):
                     return print(f"Error in scene {scene}")
             else:
                 print('More than one file for scene, please check files')

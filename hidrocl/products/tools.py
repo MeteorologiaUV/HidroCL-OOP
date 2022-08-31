@@ -64,16 +64,18 @@ def get_product_ids(product_files, what="modis"):
     """
     match what:
         case "modis":
-            return [value.split(".")[1] for value in product_files]
+            ids = [value.split(".")[1] for value in product_files]
         case "imerg":
-            return [value.split(".")[4].split("-")[0] for value in product_files]
+            ids = [value.split(".")[4].split("-")[0] for value in product_files]
         case "gldas":
-            return [value.split(".")[1] for value in product_files]
+            ids = [value.split(".")[1] for value in product_files]
         case ("persiann_ccs_cdr" | "persiann_ccs"):
-            return [value.split(".")[0].split('1d')[1] for value in product_files]
+            ids = [value.split(".")[0].split('1d')[1] for value in product_files]
         case _:
             print("Unknown product type")
             return None
+
+    return [int(value) if value.isdigit() else value for value in ids]
 
 
 def check_product_files(product_ids):

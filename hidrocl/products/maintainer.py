@@ -108,7 +108,7 @@ def file_maintainer(scene, scenes_path, name, log_file):
             case name if "persiann" in name:
                 try:
                     test_load_persiann(file)
-                except OSError:
+                except (OSError, ValueError):
                     print(f'Removing {file}')
                     os.remove(file)
                     write_del_log(log_file, file)
