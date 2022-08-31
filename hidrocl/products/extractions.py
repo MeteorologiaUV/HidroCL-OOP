@@ -257,7 +257,7 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
     """
 
     print(f'Processing scene {scene} for {name}')
-    r = re.compile('.*' + scene + '.*')
+    r = re.compile('.*' + str(scene) + '.*')
     selected_files = list(filter(r.match, scenes_path))
     start = time.time()
     match name:

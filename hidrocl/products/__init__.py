@@ -99,7 +99,8 @@ class Mod13q1:
             (self.overpopulated_scenes,
              self.complete_scenes,
              self.incomplete_scenes) = t.classify_occurrences(self.scenes_occurrences, "modis")
-            self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.common_elements)
+            self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes,
+            self.common_elements, what = 'modis')
         else:
             raise TypeError('ndvi, evi and nbr must be HidroCLVariable objects')
 
@@ -303,7 +304,8 @@ class Mod10a2:
             (self.overpopulated_scenes,
              self.complete_scenes,
              self.incomplete_scenes) = t.classify_occurrences(self.scenes_occurrences, "modis")
-            self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.common_elements)
+            self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes,
+        self.common_elements, what='modis')
         else:
             raise TypeError('nsnow and ssnow must be HidroCLVariable objects')
 
@@ -465,7 +467,8 @@ class Mod16a2:
             (self.overpopulated_scenes,
              self.complete_scenes,
              self.incomplete_scenes) = t.classify_occurrences(self.scenes_occurrences, "modis")
-            self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.common_elements)
+            self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes,
+            self.common_elements, what = 'modis')
         else:
             raise TypeError('pet must be HidroCLVariable object')
 
@@ -633,7 +636,8 @@ class Mcd15a2h:
             (self.overpopulated_scenes,
              self.complete_scenes,
              self.incomplete_scenes) = t.classify_occurrences(self.scenes_occurrences, "modis")
-            self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.common_elements)
+            self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes,
+            self.common_elements, what = 'modis')
         else:
             raise TypeError('lai and fpar must be HidroCLVariable objects')
 
@@ -809,7 +813,8 @@ class Gpm_3imrghhl:
             (self.overpopulated_scenes,
              self.complete_scenes,
              self.incomplete_scenes) = t.classify_occurrences(self.scenes_occurrences, "imerg")
-            self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.common_elements)
+            self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes,
+            self.common_elements, what = 'imerg')
         else:
             raise TypeError('pp must be HidroCLVariable objects')
 
@@ -847,7 +852,7 @@ IMERG precipitation database path: {self.pp.database}
         with t.HiddenPrints():
             self.pp.checkdatabase()
 
-        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.pp.indatabase)
+        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.pp.indatabase, "imerg")
 
         scenes_path = t.get_scenes_path(self.product_files, self.productpath)
 
@@ -881,7 +886,7 @@ IMERG precipitation database path: {self.pp.database}
         with t.HiddenPrints():
             self.pp.checkdatabase()
 
-        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.pp.indatabase)
+        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.pp.indatabase, "imerg")
 
         scenes_path = t.get_scenes_path(self.product_files, self.productpath)
 
@@ -999,7 +1004,8 @@ class Gldas_noah:
             (self.overpopulated_scenes,
              self.complete_scenes,
              self.incomplete_scenes) = t.classify_occurrences(self.scenes_occurrences, "gldas")
-            self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.common_elements)
+            self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes,
+            self.common_elements, what = 'gldas')
         else:
             raise TypeError('snow, temp, et and soilm must be HidroCLVariable objects')
 
@@ -1047,7 +1053,7 @@ Soil moisture path: {self.soilm.database}
                                                     self.et.indatabase,
                                                     self.soilm.indatabase)
 
-        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.common_elements)
+        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.common_elements, "gldas")
 
         scenes_path = t.get_scenes_path(self.product_files, self.productpath)
 
@@ -1123,7 +1129,7 @@ Soil moisture path: {self.soilm.database}
                                                     self.et.indatabase,
                                                     self.soilm.indatabase)
 
-        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.common_elements)
+        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.common_elements, "gldas")
 
         scenes_path = t.get_scenes_path(self.product_files, self.productpath)
 
@@ -1207,7 +1213,8 @@ class Persiann_ccs:
             (self.overpopulated_scenes,
              self.complete_scenes,
              self.incomplete_scenes) = t.classify_occurrences(self.scenes_occurrences, "persiann_ccs")
-            self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.common_elements)
+            self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes,
+            self.common_elements, what = 'persiann_ccs')
         else:
             raise TypeError('pp must be HidroCLVariable object')
 
@@ -1245,7 +1252,7 @@ PERSIANN-CCS precipitation database path: {self.pp.database}
         with t.HiddenPrints():
             self.pp.checkdatabase()
 
-        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.pp.indatabase)
+        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.pp.indatabase,"persiann_ccs")
 
         scenes_path = t.get_scenes_path(self.product_files, self.productpath)
 
@@ -1278,7 +1285,7 @@ PERSIANN-CCS precipitation database path: {self.pp.database}
         with t.HiddenPrints():
             self.pp.checkdatabase()
 
-        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.pp.indatabase)
+        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.pp.indatabase,"persiann_ccs")
 
         scenes_path = t.get_scenes_path(self.product_files, self.productpath)
 
@@ -1362,7 +1369,8 @@ class Persiann_ccs_cdr:
             (self.overpopulated_scenes,
              self.complete_scenes,
              self.incomplete_scenes) = t.classify_occurrences(self.scenes_occurrences, "persiann_ccs_cdr")
-            self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.common_elements)
+            self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes,
+            self.common_elements, what ='persiann_ccs_cdr')
         else:
             raise TypeError('pp must be HidroCLVariable object')
 
@@ -1400,7 +1408,7 @@ PERSIANN-CCS-CDR precipitation database path: {self.pp.database}
         with t.HiddenPrints():
             self.pp.checkdatabase()
 
-        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.pp.indatabase)
+        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.pp.indatabase,'persiann_ccs_cdr')
 
         scenes_path = t.get_scenes_path(self.product_files, self.productpath)
 
@@ -1433,7 +1441,7 @@ PERSIANN-CCS-CDR precipitation database path: {self.pp.database}
         with t.HiddenPrints():
             self.pp.checkdatabase()
 
-        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.pp.indatabase)
+        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.pp.indatabase,'persiann_ccs_cdr')
 
         scenes_path = t.get_scenes_path(self.product_files, self.productpath)
 

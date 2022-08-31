@@ -64,18 +64,16 @@ def get_product_ids(product_files, what="modis"):
     """
     match what:
         case "modis":
-            ids = [value.split(".")[1] for value in product_files]
+            return [value.split(".")[1] for value in product_files]
         case "imerg":
-            ids = [value.split(".")[4].split("-")[0] for value in product_files]
+            return [value.split(".")[4].split("-")[0] for value in product_files]
         case "gldas":
-            ids = [value.split(".")[1] for value in product_files]
+            return [value.split(".")[1] for value in product_files]
         case ("persiann_ccs_cdr" | "persiann_ccs"):
-            ids = [value.split(".")[0].split('1d')[1] for value in product_files]
+            return [value.split(".")[0].split('1d')[1] for value in product_files]
         case _:
             print("Unknown product type")
             return None
-
-    return [int(value) if value.isdigit() else value for value in ids]
 
 
 def check_product_files(product_ids):
@@ -140,21 +138,39 @@ def classify_occurrences(scenes_occurrences, what="modis"):
     return overpopulated_scenes, complete_scenes, incomplete_scenes
 
 
-def get_scenes_out_of_db(complete_scenes, common_elements):
+def get_scenes_out_of_db(complete_scenes, common_elements, what='modis'):
     """
     Get scenes out of database
 
     :param complete_scenes: list with complete scenes
     :param common_elements: list with common elements
+    :param what: str with product name
     :return: list with scenes out of database
     """
+
+    match what:
+        case "modis":
+            idlenght = 7
+        case "imerg":
+            idlenght = 8
+        case "gldas":
+            idlenght = 8
+        case "persiann_ccs":
+            idlenght = 5
+        case "persiann_ccs_cdr":
+            idlenght = 6
+        case _:
+            idlenght = 7
+
     match len(common_elements):
         case 0:
             lst = complete_scenes
             lst.sort()
             return lst
         case _:
-            lst = list(set(complete_scenes) - set(common_elements))
+            common_elements_b = [str(value).zfill(idlenght) if
+                                 isinstance(value, int) else value for value in common_elements]
+            lst = list(set(complete_scenes) - set(common_elements_b))
             lst.sort()
             return lst
 
