@@ -128,13 +128,17 @@ def plot_variable_all(observations, catchment_names, database, what='obs'):
             df = df["sum"].div(len_).multiply(100).unstack(level=0).transpose()
             message = f'% of valid observations for \n{databasename} by date'
             plt.imshow(df, cmap=plt.get_cmap('rainbow_r', 20), aspect=asp, vmin=0, vmax=100)
+            plt.xlabel('Day of year')
+            plt.ylabel('Year')
             plt.colorbar(ticks=[0, 100], fraction=0.035, pad=0.04)
 
         case _:
             df = observations.groupby([year_, doy_]).mean().div(10).assign(mean=lambda x: x.sum(axis=1))
             df = df["mean"].div(len_).unstack(level=0).transpose()
             message = f'% of mean pixel count for \n{databasename} observations by date'
-            plt.imshow(df, cmap=plt.get_cmap('rainbow_r', 20), aspect=asp, vmin=60, vmax=100)
+            plt.imshow(df, cmap=plt.get_cmap('gist_ncar_r', 20), aspect=asp, vmin=60, vmax=100)
+            plt.xlabel('Day of year')
+            plt.ylabel('Year')
             plt.colorbar(ticks=[60, 100], fraction=0.035, pad=0.04)
 
     plt.title(message)
