@@ -49,7 +49,7 @@
   > 
   > **To do**: create a image maintainer removing the invalid files.
 - [ ] ~~MCD43A3 processing~~ *out of database for now*
-- [ ] MOD09A1 processing (*reflectance product, to evaluete later*)
+- [ ] MOD09A1 processing (*reflectance product, to evaluate later*)
 - [x] MOD10A2 processing
   - [x] test locally
   - [x] test on nas
@@ -66,6 +66,7 @@
   - [ ] PERSIANN (FTP approach)
   - [ ] Earthdata (API approach)
   - [ ] MODIS web scraping (include?)
+  - [x] ERA5-land hourly (API approach)
   - [ ] test download functions  
 - [ ] Add documentation
   - [x] add variables documentation
@@ -128,6 +129,8 @@ conda install -c conda-forge jupyter
 conda install -c conda-forge pandas rioxarray matplotlib geopandas netCDF4
 #  installing python documentation tool
 conda install -c conda-forge sphinx sphinx_rtd_theme
+# installing CDS api
+pip install cdsapi
 ```
 
 **R package needed for sf/terra messages**
@@ -140,6 +143,10 @@ install.packages("tibble", dependencies = TRUE)
 ----
 
 ## Changelog
+
+### [0.0.8] - 2022-09-26
+#### Added
+- **download_era5land**: function to download era5 files using .cdsapirc credentials. This is the first of a series of functions of the same time.
 
 ### [0.0.7] - 2022-08-30
 #### Added

@@ -48,7 +48,7 @@ def load_hdf5(file, var):
             .rename({'x': 'y', 'y': 'x'})
 
 
-def load_gldas(file, var):
+def load_nc(file, var):
     """
     Load .nc files from GLDAS product
 
@@ -302,7 +302,7 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
                 case name if ("snow" in name) or ("temp" in name) or ("et" in name):
                     if isinstance(kwargs.get("layer"), str):
                         try:
-                            datasets_list = [load_gldas(ds, kwargs.get("layer")) for ds in selected_files]
+                            datasets_list = [load_nc(ds, kwargs.get("layer")) for ds in selected_files]
                             mos = mean_datasets(datasets_list)
                             mos = mos * 100
                         except OSError:
@@ -316,7 +316,7 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
                         try:
                             layers_list = []
                             for lyr in lyrs:
-                                datasets_list = [load_gldas(ds, lyr) for ds in selected_files]
+                                datasets_list = [load_nc(ds, lyr) for ds in selected_files]
                                 layers_list.append(mean_datasets(datasets_list))
                             mos = sum_datasets(layers_list)
                             mos = mos * 100

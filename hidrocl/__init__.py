@@ -14,6 +14,7 @@ __copyright__ = "2022 Aldo Tapia"
 
 try:
     # from . import variables, products
+    from . import download
     from .variables import HidroCLVariable
     from .products import Mod13q1, Mod10a2, Mod16a2, Mcd15a2h,\
         Gpm_3imrghhl, Gldas_noah, Persiann_ccs, Persiann_ccs_cdr
