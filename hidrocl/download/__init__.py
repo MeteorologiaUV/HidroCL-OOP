@@ -2,10 +2,11 @@
 
 import os
 import cdsapi
+import tarfile
 
 
 def download_era5land(year, month, day, path):
-    """function to download era5-land reanalysis data
+    """function to download era5-land reanalysis data from CDS
 
     Parameters
     ----------
@@ -59,3 +60,43 @@ def download_era5land(year, month, day, path):
             ],
         },
         fname)
+
+
+def download_satsoilmoist(year, month, day, path):
+    """function to download Soil moisture gridded data from CDS
+
+    Parameters
+    ----------
+    year : int
+        year of the data to be downloaded
+    month : int
+        month of the data to be downloaded
+    day : int
+        day of the data to be downloaded
+    path : str
+        path to save the data
+    """
+
+    c = cdsapi.Client()
+
+    c.retrieve(
+        'satellite-soil-moisture',
+        {
+            'format': 'tgz',
+            'variable': 'volumetric_surface_soil_moisture',
+            'type_of_sensor': [
+                'combined_passive_and_active', 'passive',
+            ],
+            'time_aggregation': 'day_average',
+            'month': str(month).zfill(2),
+            'year': str(year).zfill(4),
+            'day': str(day).zfill(2),
+            'type_of_record': 'cdr',
+            'version': 'v202012.0.0',
+        },
+        'download.tar.gz')
+
+    with tarfile.open('download.tar.gz') as tar:
+        tar.extractall(path=path)
+
+    os.remove('download.tar.gz')

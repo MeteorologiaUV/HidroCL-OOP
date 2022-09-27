@@ -5,11 +5,13 @@ import os
 import hidrocl
 import hidrocl_paths as hcl
 
+files = os.listdir(hcl.era5_land_hourly_path)
+
 for year in range(2000, 2023):
     for month in range(1, 13):
         for day in range(1, 32):
             print(f'{year:04d}-{month:02d}-{day:02d}')
-            files = os.listdir(hcl.era5_land_hourly_path)
+
             fname = f'era5-land_{year:04d}{month:02d}{day:02d}.nc'
 
             if fname in files:
