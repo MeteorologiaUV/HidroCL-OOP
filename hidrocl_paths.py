@@ -25,6 +25,7 @@ mod10a2_path = os.path.join(nas_path, 'observed/MOD10A2/')  # snow
 mod13q1_path = os.path.join(nas_path, 'observed/MOD13Q1/')  # vegetation
 mod16a2_path = os.path.join(nas_path, 'observed/MOD16A2/')  # et
 imerghhl_path = os.path.join(nas_path, 'observed/GPM_3IMERGHHL/')  # pp + other
+imerggis_path = os.path.join(nas_path, 'observed/IMERG_GIS')  # pp
 persiann = os.path.join(nas_path, 'observed/PERSIANN/')  # pp
 gldas_noah025_3h_path = os.path.join(nas_path, 'observed/GLDAS_NOAH025_3H/')  # land data
 era5_land_hourly_path = os.path.join(nas_path, 'observed/ERA5_LAND_HOURLY/')  # era5 land data

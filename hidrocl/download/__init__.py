@@ -115,14 +115,14 @@ def download_satsoilmoist(year, month, day, path):
     os.remove('download.tar.gz')
 
 
-def get_imerg(start, end, user, password):
+def get_imerg(start, end, user, password, timeout=60):
     """function to get IMERG data filenames from jsimpsonhttps.pps.eosdis.nasa.gov
 
     Examples:
     ---------
         >>> get_imerg('2000-06', '2000-07', 'user@doma.in', 'password')
-    ['/imerg/gis/2000/06/3B-HHR-L.MS.MRG.3IMERG.20000608-S000000-E002959.0000.V06B.30min.tif',
-     '/imerg/gis/2000/06/3B-HHR-L.MS.MRG.3IMERG.20000608-S003000-E005959.0030.V06B.30min.tif',
+    ['/imerg/gis/2000/06/3B-HHR-L.MS.MRG.3IMERG.20000608-S000000-E002959.0000.V06B.30min.tif', \n
+     '/imerg/gis/2000/06/3B-HHR-L.MS.MRG.3IMERG.20000608-S003000-E005959.0030.V06B.30min.tif', \n
      ...]
 
     Args:
@@ -131,10 +131,18 @@ def get_imerg(start, end, user, password):
         end (str): start date in the format YYYY-MM
         user (str): username to access jsimpsonhttps.pps.eosdis.nasa.gov
         password (str): password to access jsimpsonhttps.pps.eosdis.nasa.gov
+        timeout (int): timeout in seconds
 
     Returns:
     ---------
         list: a list representing the filename of IMERG data available for the requested period
+
+    Raises:
+    ---------
+        ValueError: if:
+            - start or end are not in the format YYYY-MM
+            - start is after end
+            - start is less than 2000-06
     """
 
     start = pd.to_datetime(start+'-01', format="%Y-%m-%d")
@@ -156,16 +164,13 @@ def get_imerg(start, end, user, password):
 
     final_response = []
 
-    for day in p:
-        year = int(day.strftime('%Y'))
-        month = int(day.strftime('%m'))
-
-        if year < 2000:
-            year = 2000
+    for yyyymm in p:
+        year = int(yyyymm.strftime('%Y'))
+        month = int(yyyymm.strftime('%m'))
 
         url = f'https://jsimpsonhttps.pps.eosdis.nasa.gov/text/imerg/gis/{year:04d}/{month:02d}/'
 
-        response = requests.get(url, auth=HTTPBasicAuth(user, password))
+        response = requests.get(url, auth=HTTPBasicAuth(user, password), timeout=timeout)
 
         vals = str(response.content).split('\\n')
 
@@ -176,19 +181,22 @@ def get_imerg(start, end, user, password):
     return final_response
 
 
-def download_imerg(url_extract, folder, user, password):
-    """function to download IMERG data from jsimpsonhttps.pps.eosdis.nasa.gov
+def download_imerg(url_extract, folder, user, password, timeout = 60):
+    """download IMERG data from jsimpsonhttps.pps.eosdis.nasa.gov.
+
+    It is recommended to use the function get_imerg to get the filenames of the data to be downloaded
 
     Examples:
     ---------
         >>> download_imerg('/imerg/gis/2000/06/xyz.tif', '/path/to/data',  'user@doma.in', 'password')
     xyz.tif downloaded
+
         >>> # for multiple files (natural process)
         >>> files = get_imerg('2000-06', '2000-07', 'user@doma.in', 'password')
         >>> for file in files:
         >>>     download_imerg(file, '/path/to/data',  'user@doma.in', 'password')
-    xyz1.tif downloaded
-    xyz2.tif downloaded
+    xyz1.tif downloaded \n
+    xyz2.tif downloaded \n
     ...
 
     Args:
@@ -197,6 +205,7 @@ def download_imerg(url_extract, folder, user, password):
         folder (str): folder to save the data
         user (str): username to access jsimpsonhttps.pps.eosdis.nasa.gov
         password (str): password to access jsimpsonhttps.pps.eosdis.nasa.gov
+        timeout (int): timeout in seconds
 
     Returns:
     ---------
@@ -206,7 +215,7 @@ def download_imerg(url_extract, folder, user, password):
     url = 'https://jsimpsonhttps.pps.eosdis.nasa.gov'+url_extract
     fname = url.split('/')[-1]
 
-    response = requests.get(url, auth=HTTPBasicAuth(user, password))
+    response = requests.get(url, auth=HTTPBasicAuth(user, password), timeout=timeout)
     response.raise_for_status()
 
     with open(os.path.join(folder, fname), 'wb') as f:
