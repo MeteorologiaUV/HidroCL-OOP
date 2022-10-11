@@ -17,67 +17,58 @@ class Mod13q1:
     """
     A class to process MOD13Q1 to hidrocl variables
 
-    Attributes
-    ----------
-    ndvi : HidroCLVariable
-        HidroCLVariable object with the NDVI data
-    evi : HidroCLVariable
-        HidroCLVariable object with the EVI data
-    nbr : HidroCLVariable
-        HidroCLVariable object with the NBR data
-    ndvi_log : str
-        Path to the log file for the NDVI extraction
-    evi_log : str
-        Path to the log file for the EVI extraction
-    nbr_log : str
-        Path to the log file for the NBR extraction
-    productname : str
-        Name of the remote sensing product to be processed
-    productpath : str
-        Path to the product folder where the product files are located
-    vectorpath : str
-        Path to the vector folder with Shapefile with areas to be processed
-    common_elements : list
-        List of common elements between the NDVI, EVI and NBR databases
-    product_files : list
-        List of product files in the product folder
-    product_ids : list
-        List of product ids. Each product id is str with common tag by date
-    all_scenes : list
-        List of all scenes (no matter the product id here)
-    scenes_occurrences : list
-        List of scenes occurrences for each product id
-    overpopulated_scenes : list
-        List of overpopulated scenes (more than 9 scenes for modis)
-    complete_scenes : list
-        List of complete scenes (9 scenes for modis)
-    incomplete_scenes : list
-        List of incomplete scenes (less than 9 scenes for modis)
-    scenes_to_process : list
-        List of scenes to process (complete scenes no processed)
+    Attributes:
+        ndvi (HidroCLVariable): HidroCLVariable object with the NDVI data \n
+        evi (HidroCLVariable): HidroCLVariable object with the EVI data \n
+        nbr (HidroCLVariable): HidroCLVariable object with the NBR data \n
+        ndvi_log (str): Path to the log file for the NDVI extraction \n
+        evi_log (str): Path to the log file for the EVI extraction \n
+        nbr_log (str): Path to the log file for the NBR extraction \n
+        productname (str): Name of the remote sensing product to be processed \n
+        productpath (str): Path to the product folder where the product files are located \n
+        vectorpath (str): Path to the vector folder with Shapefile with areas to be processed \n
+        common_elements (list): List of common elements between the NDVI, EVI and NBR databases \n
+        product_files (list): List of product files in the product folder \n
+        product_ids (list): List of product ids. Each product id is str with common tag by date \n
+        all_scenes (list): List of all scenes (no matter the product id here) \n
+        scenes_occurrences (list): List of scenes occurrences for each product id \n
+        overpopulated_scenes (list): List of overpopulated scenes (more than 9 scenes for modis) \n
+        complete_scenes (list): List of complete scenes (9 scenes for modis) \n
+        incomplete_scenes (list): List of incomplete scenes (less than 9 scenes for modis) \n
+        scenes_to_process (list): List of scenes to process (complete scenes no processed) \n
     """
 
     def __init__(self, ndvi, evi, nbr, product_path, vector_path,
                  ndvi_log, evi_log, nbr_log):
         """
-        Parameters
-        ----------
-        :param ndvi: HidroCLVariable
-            Object with the NDVI data
-        :param evi: HidroCLVariable
-            Object with the EVI data
-        :param nbr: HidroCLVariable
-            Object with the NBR data
-        :param product_path: str
-            Path to the product folder
-        :param vector_path: str
-            Path to the vector folder
-        :param ndvi_log: str
-            Path to the log file for the NDVI extraction
-        :param evi_log: str
-            Path to the log file for the EVI extraction
-        :param nbr_log: str
-            Path to the log file for the NBR extraction
+        Examples:
+            >>> from hidrocl import HidroCLVariable
+            >>> from hidrocl.products import Mod13q1
+            >>> ndvi = HidroCLVariable('ndvi', 'ndvi.db', 'ndvi_pc.db')
+            >>> evi = HidroCLVariable('evi', 'evi.db', 'evi_pc.db')
+            >>> nbr = HidroCLVariable('nbr', 'nbr.db', 'nbr_pc.db')
+            >>> product_path = '/home/user/mod13q1'
+            >>> vector_path = '/home/user/vector.shp'
+            >>> ndvi_log = '/home/user/ndvi.log'
+            >>> evi_log = '/home/user/evi.log'
+            >>> nbr_log = '/home/user/nbr.log'
+            >>> mod13q1 = Mod13q1(ndvi, evi, nbr, product_path, vector_path,
+            ...                   ndvi_log, evi_log, nbr_log)
+            >>> mod13q1
+            Class to extract MODIS MOD13Q1 Version 6.1
+
+        Args:
+            ndvi (HidroCLVariable): Object with the NDVI data
+            evi (HidroCLVariable): Object with the EVI data
+            nbr (HidroCLVariable): Object with the NBR data
+            product_path (str): Path to the product folder
+            vector_path (str): Path to the vector folder
+            ndvi_log (str): Path to the log file for the NDVI extraction
+            evi_log (str): Path to the log file for the EVI extraction
+            nbr_log (str): Path to the log file for the NBR extraction
+
+        Raises:
+              TypeError: If the input is not a HidroCLVariable object
         """
         if t.check_instance(ndvi, evi, nbr):
             self.ndvi = ndvi
@@ -108,7 +99,8 @@ class Mod13q1:
         """
         Return a string representation of the object
 
-        :return: str
+        Returns:
+             str
         """
         return f'Class to extract {self.productname}'
 
@@ -116,7 +108,8 @@ class Mod13q1:
         """
         Return a string representation of the object
 
-        :return: str
+        Returns:
+            str
         """
         return f'''
 Product: {self.productname}
@@ -137,8 +130,11 @@ NBR database path: {self.nbr.database}
         If limit is None, all scenes will be processed.
         If limit is a number, only the first limit scenes will be processed.
 
-        :param limit: int (length of the scenes_to_process)
-        :return: Print
+        Args:
+            limit (int): length of the scenes_to_process
+
+        Returns:
+            Print
         """
 
         with t.HiddenPrints():
@@ -194,9 +190,12 @@ NBR database path: {self.nbr.database}
         """
         Run file maintainer. It will remove any file with problems
 
-        :param log_file: str with log file path
-        :param limit: int (length of the scenes_to_process)
-        :return: Print
+        Args:
+            log_file (str): log file path
+            limit (int): length of the scenes_to_process
+
+        Returns:
+            Print
         """
 
         with t.HiddenPrints():
@@ -233,59 +232,53 @@ class Mod10a2:
     """
     A class to process MOD10A2 to hidrocl variables
 
-    Attributes
-    ----------
-    nsnow : HidroCLVariable
-        HidroCLVariable with the snow data
-    ssnow : HidroCLVariable
-        HidroCLVariable with the snow data
-    snow_log : str
-        Path to the log file for the snow extraction
-    productname : str
-        Name of the remote sensing product to be processed
-    productpath : str
-        Path to the product folder where the product files are located
-    northvectorpath : str
-        Path to the vector folder with the north Shapefile with areas to be processed
-    southvectorpath : str
-        Path to the vector folder with the south Shapefile with areas to be processed
-    common_elements : list
-        List of common elements between the NDVI, EVI and NBR databases
-    product_files : list
-        List of product files in the product folder
-    product_ids : list
-        List of product ids. Each product id is str with common tag by date
-    all_scenes : list
-        List of all scenes (no matter the product id here)
-    scenes_occurrences : list
-        List of scenes occurrences for each product id
-    overpopulated_scenes : list
-        List of overpopulated scenes (more than 9 scenes for modis)
-    complete_scenes : list
-        List of complete scenes (9 scenes for modis)
-    incomplete_scenes : list
-        List of incomplete scenes (less than 9 scenes for modis)
-    scenes_to_process : list
-        List of scenes to process (complete scenes no processed)
+    Attributes:
+        nsnow (HidroCLVariable): HidroCLVariable object with north face snow data \n
+        ssnow (HidroCLVariable): HidroCLVariable object with south face snow data \n
+        snow_log (str): Path to the log file for the snow extraction \n
+        productname (str): Name of the remote sensing product to be processed \n
+        productpath (str): Path to the product folder where the product files are located \n
+        northvectorpath (str): Path to the vector folder with the north Shapefile with areas to be processed \n
+        southvectorpath (str): Path to the vector folder with the south Shapefile with areas to be processed \n
+        common_elements (list): List of common elements between the nsnow and ssnow databases \n
+        product_files (list): List of product files in the product folder \n
+        product_ids (list): List of product ids. Each product id is str with common tag by date \n
+        all_scenes (list): List of all scenes (no matter the product id here) \n
+        scenes_occurrences (list): List of scenes occurrences for each product id \n
+        overpopulated_scenes (list): List of overpopulated scenes (more than 9 scenes for modis) \n
+        complete_scenes (list): List of complete scenes (9 scenes for modis) \n
+        incomplete_scenes (list): List of incomplete scenes (less than 9 scenes for modis) \n
+        scenes_to_process (list): List of scenes to process (complete scenes no processed) \n
     """
 
     def __init__(self, nsnow, ssnow, product_path,
                  north_vector_path, south_vector_path, snow_log):
         """
-        Parameters
-        ----------
-        :param nsnow : HidroCLVariable
-            Object with the north face snow data
-        :param ssnow: HidroCLVariable
-            Object with the south face snow data
-        :param product_path: str
-            Path to the product folder
-        :param north_vector_path: str
-            Path to the north vector folder
-        :param south_vector_path: str
-            Path to the south vector folder
-        :param snow_log: str
-            Path to the snow log file
+        Examples:
+            >>> from hidrocl import HidroCLVariable
+            >>> from hidrocl import Mod10a2
+            >>> nsnow = HidroCLVariable('nsnow', 'modis', 'mod10a2', 'north')
+            >>> ssnow = HidroCLVariable('ssnow', 'modis', 'mod10a2', 'south')
+            >>> product_path = '/home/user/mod10a2'
+            >>> north_vector_path = '/home/user/north_vector.shp'
+            >>> south_vector_path = '/home/user/south_vector.shp'
+            >>> snow_log = '/home/user/snow.log'
+            >>> mod10a2 = Mod10a2(nsnow, ssnow, product_path,
+            ...                   north_vector_path, south_vector_path, snow_log)
+            >>> mod10a2
+            Class to extract MODIS MOD10A2 Version 6.1
+
+
+        Args:
+            nsnow (HidroCLVariable): HidroCLVariable object with north face snow data \n
+            ssnow (HidroCLVariable): HidroCLVariable object with south face snow data \n
+            product_path (str): Path to the product folder where the product files are located \n
+            north_vector_path (str): Path to the vector folder with the north Shapefile with areas to be processed \n
+            south_vector_path (str): Path to the vector folder with the south Shapefile with areas to be processed \n
+            snow_log (str): Path to the log file for the snow extraction \n
+
+        Raises:
+              TypeError: If nsnow or ssnow is not a HidroCLVariable object \n
         """
         if t.check_instance(nsnow, ssnow):
             self.nsnow = nsnow
@@ -313,7 +306,8 @@ class Mod10a2:
         """
         Return a string representation of the object
 
-        :return: str
+        Returns:
+             str
         """
         return f'Class to extract {self.productname}'
 
@@ -321,7 +315,8 @@ class Mod10a2:
         """
         Return a string representation of the object
 
-        :return: str
+        Returns:
+            str
         """
         return f'''
 Product: {self.productname}
@@ -334,7 +329,16 @@ South face snow database path: {self.ssnow.database}
                 '''
 
     def run_extraction(self, limit=None):
-        """run extraction"""
+        """Run the extraction of the product.
+        If limit is None, all scenes will be processed.
+        If limit is a number, only the first limit scenes will be processed.
+
+        Args:
+            limit (int): length of the scenes_to_process
+
+        Returns:
+            Print
+        """
 
         with t.HiddenPrints():
             self.nsnow.checkdatabase()
@@ -372,9 +376,12 @@ South face snow database path: {self.ssnow.database}
         """
         Run file maintainer. It will remove any file with problems
 
-        :param log_file: str with log file path
-        :param limit: int (length of the scenes_to_process)
-        :return: Print
+        Args:
+            log_file (str): log file path
+            limit (int): length of the scenes_to_process
+
+        Returns:
+            Print
         """
 
         with t.HiddenPrints():
@@ -410,48 +417,44 @@ class Mod16a2:
     """
     A class to process MOD16A2 to hidrocl variables
 
-    Attributes
-    ----------
-    pet : HidroCLVariable
-        HidroCLVariable object with the potential evapotranspiration
-    pet_log : str
-        Path to the log file for the pet extraction
-    productname : str
-        Name of the remote sensing product to be processed
-    productpath : str
-        Path to the product folder where the product files are located
-    vectorpath : str
-        Path to the vector folder with Shapefile with areas to be processed
-    product_files : list
-        List of product files in the product folder
-    product_ids : list
-        List of product ids. Each product id is str with common tag by date
-    all_scenes : list
-        List of all scenes (no matter the product id here)
-    scenes_occurrences : list
-        List of scenes occurrences for each product id
-    overpopulated_scenes : list
-        List of overpopulated scenes (more than 9 scenes for modis)
-    complete_scenes : list
-        List of complete scenes (9 scenes for modis)
-    incomplete_scenes : list
-        List of incomplete scenes (less than 9 scenes for modis)
-    scenes_to_process : list
-        List of scenes to process (complete scenes no processed)
+    Attributes:
+        pet (HidroCLVariable): HidroCLVariable object with the potential evapotranspiration \n
+        pet_log (str): Path to the log file for the pet extraction \n
+        productname (str): Name of the remote sensing product to be processed \n
+        productpath (str): Path to the product folder where the product files are located \n
+        vectorpath (str): Path to the vector folder with Shapefile with areas to be processed \n
+        common_elements (list): Elements in pet database \n
+        product_files (list): List of product files in the product folder \n
+        product_ids (list): List of product ids. Each product id is str with common tag by date \n
+        all_scenes (list): List of all scenes (no matter the product id here) \n
+        scenes_occurrences (list): List of scenes occurrences for each product id \n
+        overpopulated_scenes (list): List of overpopulated scenes (more than 9 scenes for modis) \n
+        complete_scenes (list): List of complete scenes (9 scenes for modis) \n
+        incomplete_scenes (list): List of incomplete scenes (less than 9 scenes for modis) \n
+        scenes_to_process (list): List of scenes to process (complete scenes no processed) \n
     """
 
     def __init__(self, pet, product_path, vector_path, pet_log):
         """
-        Parameters
-        ----------
-        :param pet: HidroCLVariable
-            Object with the potential evapotranspiration data
-        :param product_path: str
-            Path to the product folder
-        :param vector_path: str
-            Path to the vector folder
-        :param pet_log: str
-            Path to the log file for the PET extraction
+        Examples:
+            >>> from hidrocl import HidroCLVariable
+            >>> from hidrocl import Mod16a2
+            >>> pet = HidroCLVariable('pet', 'pet.db', 'pet_pc.db')
+            >>> product_path = '/home/user/modis/mod16a2'
+            >>> vector_path = '/home/user/vector.shp'
+            >>> pet_log = '/home/user/log/pet.log'
+            >>> mod16a2 = Mod16a2(pet, product_path, vector_path, pet_log)
+            >>> mod16a2
+            Class to extract MODIS MOD16A2 Version 6.1
+
+        Args:
+            pet (HidroCLVariable): Object with the potential evapotranspiration data
+            product_path (str): Path to the product folder
+            vector_path (str): Path to the vector folder
+            pet_log (str): Path to the log file for the pet extraction
+
+        Raises:
+            TypeError: If pet is not a HidroCLVariable object
         """
         if t.check_instance(pet):
             self.pet = pet
@@ -476,7 +479,8 @@ class Mod16a2:
         """
         Return a string representation of the object
 
-        :return: str
+        Returns:
+             str
         """
         return f'Class to extract {self.productname}'
 
@@ -484,7 +488,8 @@ class Mod16a2:
         """
         Return a string representation of the object
 
-        :return: str
+        Returns:
+            str
         """
         return f'''
 Product: {self.productname}
@@ -499,8 +504,11 @@ PET database path: {self.pet.database}
         If limit is None, all scenes will be processed.
         If limit is a number, only the first limit scenes will be processed.
 
-        :param limit: int (length of the scenes_to_process)
-        :return: Print
+        Args:
+            limit (int): length of the scenes_to_process
+
+        Returns:
+            Print
         """
 
         with t.HiddenPrints():
@@ -532,9 +540,12 @@ PET database path: {self.pet.database}
         """
         Run file maintainer. It will remove any file with problems
 
-        :param log_file: str with log file path
-        :param limit: int (length of the scenes_to_process)
-        :return: Print
+        Args:
+            log_file (str): log file path
+            limit (int): length of the scenes_to_process
+
+        Returns:
+            Print
         """
 
         with t.HiddenPrints():
@@ -565,59 +576,52 @@ class Mcd15a2h:
     """
     A class to process MCD15A2H to hidrocl variables
 
-    Attributes
-    ----------
-    lai : HidroCLVariable
-        HidroCLVariable object with the LAI data
-    fpar : HidroCLVariable
-        HidroCLVariable object with the FPAR data
-    lai_log : str
-        Path to the log file for the LAI extraction
-    fpar_log : str
-        Path to the log file for the FPAR extraction
-    productname : str
-        Name of the remote sensing product to be processed
-    productpath : str
-        Path to the product folder where the product files are located
-    vectorpath : str
-        Path to the vector folder with Shapefile with areas to be processed
-    common_elements : list
-        List of common elements between the FPAR and LAI databases
-    product_files : list
-        List of product files in the product folder
-    product_ids : list
-        List of product ids. Each product id is str with common tag by date
-    all_scenes : list
-        List of all scenes (no matter the product id here)
-    scenes_occurrences : list
-        List of scenes occurrences for each product id
-    overpopulated_scenes : list
-        List of overpopulated scenes (more than 9 scenes for modis)
-    complete_scenes : list
-        List of complete scenes (9 scenes for modis)
-    incomplete_scenes : list
-        List of incomplete scenes (less than 9 scenes for modis)
-    scenes_to_process : list
-        List of scenes to process (complete scenes no processed)
+    Attributes:
+        lai (HidroCLVariable): HidroCLVariable object with the LAI data \n
+        fpar (HidroCLVariable): HidroCLVariable object with the FPAR data \n
+        lai_log (str): Path to the log file for the LAI extraction \n
+        fpar_log (str): Path to the log file for the FPAR extraction \n
+        productname (str): Name of the remote sensing product to be processed \n
+        productpath (str): Path to the product folder where the product files are located \n
+        vectorpath (str): Path to the vector folder with Shapefile with areas to be processed \n
+        common_elements (list): List of common elements between the FPAR and LAI databases \n
+        product_files (list): List of product files in the product folder \n
+        product_ids (list): List of product ids. Each product id is str with common tag by date \n
+        all_scenes (list): List of all scenes (no matter the product id here) \n
+        scenes_occurrences (list): List of scenes occurrences for each product id \n
+        overpopulated_scenes (list): List of overpopulated scenes (more than 9 scenes for modis) \n
+        complete_scenes (list): List of complete scenes (9 scenes for modis) \n
+        incomplete_scenes (list): List of incomplete scenes (less than 9 scenes for modis) \n
+        scenes_to_process (list): List of scenes to process (complete scenes no processed) \n
     """
 
     def __init__(self, lai, fpar, product_path, vector_path,
                  lai_log, fpar_log):
         """
-        Parameters
-        ----------
-        :param lai: HidroCLVariable
-            Object with the LAI data
-        :param fpar: HidroCLVariable
-            Object with the FPAR data
-        :param product_path: str
-            Path to the product folder
-        :param vector_path: str
-            Path to the vector folder
-        :param lai_log: str
-            Path to the log file for the LAI extraction
-        :param fpar_log: str
-            Path to the log file for the FPAR extraction
+        Examples:
+            >>> from hidrocl import HidroCLVariable
+            >>> from hidrocl import Mcd15a2h
+            >>> lai = HidroCLVariable('lai', 'lai.db', 'lai_pc.db')
+            >>> fpar = HidroCLVariable('fpar', 'fpar.db', 'fpar_pc.db')
+            >>> product_path = '/home/user/mod15a2h'
+            >>> vector_path = '/home/user/vector'
+            >>> lai_log = '/home/user/lai.log'
+            >>> fpar_log = '/home/user/fpar.log'
+            >>> mcd15a2h = Mcd15a2h(lai, fpar, product_path, vector_path,
+            ...                     lai_log, fpar_log)
+            >>> mcd15a2h
+            Class to extract MODIS MCD15A2H Version 6.0
+
+        Args:
+            lai (HidroCLVariable): HidroCLVariable object with the LAI data
+            fpar (HidroCLVariable): HidroCLVariable object with the FPAR data
+            product_path (str): Path to the product folder
+            vector_path (str): Path to the vector folder
+            lai_log (str): Path to the log file for the LAI extraction
+            fpar_log (str): Path to the log file for the FPAR extraction
+
+        Raises:
+            TypeError: If lai or fpar is not HidroCLVariable object
         """
         if t.check_instance(lai, fpar):
             self.lai = lai
@@ -645,7 +649,8 @@ class Mcd15a2h:
         """
         Return a string representation of the object
 
-        :return: str
+        Returns:
+             str
         """
         return f'Class to extract {self.productname}'
 
@@ -653,7 +658,8 @@ class Mcd15a2h:
         """
         Return a string representation of the object
 
-        :return: str
+        Returns:
+            str
         """
         return f'''
 Product: {self.productname}
@@ -671,8 +677,11 @@ FPAR database path: {self.fpar.database}
         If limit is None, all scenes will be processed.
         If limit is a number, only the first limit scenes will be processed.
 
-        :param limit: int (length of the scenes_to_process)
-        :return: Print
+        Args:
+            limit (int): length of the scenes_to_process
+
+        Returns:
+            Print
         """
 
         with t.HiddenPrints():
@@ -717,9 +726,12 @@ FPAR database path: {self.fpar.database}
         """
         Run file maintainer. It will remove any file with problems
 
-        :param log_file: str with log file path
-        :param limit: int (length of the scenes_to_process)
-        :return: Print
+        Args:
+            log_file (str): log file path
+            limit (int): length of the scenes_to_process
+
+        Returns:
+            Print
         """
 
         with t.HiddenPrints():
@@ -754,50 +766,41 @@ class Gpm_3imrghhl:
     """
     A class to process GPM_3IMRGHHL to hidrocl variables
 
-    Attributes
-    ----------
-    pp : HidroCLVariable
-        HidroCLVariable object with IMERG precipitation data
-    pp_log : str
-        Path to the log file for IMERG precipitation data
-    productname : str
-        Name of the remote sensing product to be processed
-    productpath : str
-        Path to the product folder where the product files are located
-    vectorpath : str
-        Path to the vector folder with Shapefile with areas to be processed
-    product_files : list
-        List of product files in the product folder
-    product_ids : list
-        List of product ids. Each product id is str with common tag by date
-    all_scenes : list
-        List of all scenes (no matter the product id here)
-    scenes_occurrences : list
-        List of scenes occurrences for each product id
-    overpopulated_scenes : list
-        List of overpopulated scenes (more than 48 scenes for imerg)
-    complete_scenes : list
-        List of complete scenes (48 scenes for imerg)
-    incomplete_scenes : list
-        List of incomplete scenes (less than 48 scenes for imerg)
-    scenes_to_process : list
-        List of scenes to process (complete scenes no processed)
+    Attributes:
+        pp (HidroCLVariable): HidroCLVariable object with IMERG precipitation data \n
+        pp_log (str): Path to the log file for IMERG precipitation data \n
+        productname (str): Name of the remote sensing product to be processed \n
+        productpath (str): Path to the product folder where the product files are located \n
+        vectorpath (str): Path to the vector folder with Shapefile with areas to be processed \n
+        common_elements (list): common_elements (list): Elements in precipitation database \n
+        product_files (list): List of product files in the product folder \n
+        product_ids (list): List of product ids. Each product id is str with common tag by date \n
+        all_scenes (list): List of all scenes (no matter the product id here) \n
+        scenes_occurrences (list): List of scenes occurrences for each product id \n
+        overpopulated_scenes (list): List of overpopulated scenes (more than 48 scenes for modis) \n
+        complete_scenes (list): List of complete scenes (48 scenes for modis) \n
+        incomplete_scenes (list): List of incomplete scenes (less than 48 scenes for modis) \n
+        scenes_to_process (list): List of scenes to process (complete scenes no processed) \n
     """
 
     def __init__(self, pp, product_path, vector_path, pp_log):
         """
-        Parameters
-        ----------
-        :param pp: HidroCLVariable
-            Object with IMERG precipitation data
-        :param product_path: str
-            Path to the product folder
-        :param vector_path: str
-            Path to the vector folder
-        :param pp_log: str
-            Path to the log file for IMERG precipitation extraction
-        :param pp_log: str
-            Path to the log file for the IMERG precipitation extraction
+        Examples:
+            >>> from hidrocl import HidroCLVariable
+            >>> from hidrocl import Gpm_3imrghhl
+            >>> pp = HidroCLVariable('pp', 'imerg', 'pp.db', 'pp_pc.db')
+            >>> gpm = Gpm_3imrghhl(pp, product_path, vector_path, pp_log)
+            >>> gpm
+            Class to extract GPM IMERG Late Precipitation L3 Half Hourly 0.1 degree Version 0.6
+
+        Args:
+            pp (HidroCLVariable): HidroCLVariable object with IMERG precipitation data \n
+            product_path (str): Path to the product folder where the product files are located \n
+            vector_path (str): Path to the vector folder with Shapefile with areas to be processed \n
+            pp_log (str): Path to the log file for IMERG precipitation data \n
+
+        Raises:
+            TypeError: If pp is not a HidroCLVariable object
         """
         if t.check_instance(pp):
             self.pp = pp
@@ -822,7 +825,8 @@ class Gpm_3imrghhl:
         """
         Return a string representation of the object
 
-        :return: str
+        Returns:
+             str
         """
         return f'Class to extract {self.productname}'
 
@@ -830,7 +834,8 @@ class Gpm_3imrghhl:
         """
         Return a string representation of the object
 
-        :return: str
+        Returns:
+            str
         """
         return f'''
 Product: {self.productname}
@@ -845,8 +850,11 @@ IMERG precipitation database path: {self.pp.database}
         If limit is None, all scenes will be processed.
         If limit is a number, only the first limit scenes will be processed.
 
-        :param limit: int (length of the scenes_to_process)
-        :return: Print
+        Args:
+            limit (int): length of the scenes_to_process
+
+        Returns:
+            Print
         """
 
         with t.HiddenPrints():
@@ -878,9 +886,12 @@ IMERG precipitation database path: {self.pp.database}
         """
         Run file maintainer. It will remove any file with problems
 
-        :param log_file: str with log file path
-        :param limit: int (length of the scenes_to_process)
-        :return: Print
+        Args:
+            log_file (str): log file path
+            limit (int): length of the scenes_to_process
+
+        Returns:
+            Print
         """
 
         with t.HiddenPrints():
@@ -911,75 +922,64 @@ class Gldas_noah:
     """
     A class to process GLDAS_NOAH025_3H to hidrocl variables
 
-    Attributes
-    ----------
-    snow : HidroCLVariable
-        HidroCLVariable with the GLDAS snow data
-    temp : HidroCLVariable
-        HidroCLVariable with the GLDAS temperature data
-    et : HidroCLVariable
-        HidroCLVariable with the GLDAS evapotranspiration data
-    soilm : HidroCLVariable
-        HidroCLVariable with the GLDAS soil moisture data
-    snow_log : str
-        Path to the log file for the snow extraction
-    temp_log : str
-        Path to the log file for the temperature extraction
-    et_log : str
-        Path to the log file for the evapotranspiration extraction
-    soilm_log : str
-        Path to the log file for the soil moisture extraction
-    productname : str
-        Name of the remote sensing product to be processed
-    productpath : str
-        Path to the product folder where the product files are located
-    vectorpath : str
-        Path to the vector folder with Shapefile with areas to be processed
-    common_elements : list
-        List of common elements between the snow, temp, et and soilm databases
-    product_files : list
-        List of product files in the product folder
-    product_ids : list
-        List of product ids. Each product id is str with common tag by date
-    all_scenes : list
-        List of all scenes (no matter the product id here)
-    scenes_occurrences : list
-        List of scenes occurrences for each product id
-    overpopulated_scenes : list
-        List of overpopulated scenes (more than 9 scenes for gldas)
-    complete_scenes : list
-        List of complete scenes (9 scenes for gldas)
-    incomplete_scenes : list
-        List of incomplete scenes (less than 9 scenes for gldas)
-    scenes_to_process : list
-        List of scenes to process (complete scenes no processed)
+    Attributes:
+        snow (HidroCLVariable): HidroCLVariable with the GLDAS snow data \n
+        temp (HidroCLVariable): HidroCLVariable with the GLDAS temperature data \n
+        et (HidroCLVariable): HidroCLVariable with the GLDAS evapotranspiration data \n
+        soilm (HidroCLVariable): HidroCLVariable with the GLDAS soil moisture data \n
+        snow_log (str): Path to the log file for the snow extraction \n
+        temp_log (str): Path to the log file for the temperature extraction \n
+        et_log (str): Path to the log file for the evapotranspiration extraction \n
+        soilm_log (str): Path to the log file for the soil moisture extraction \n
+        productname (str): Name of the remote sensing product to be processed \n
+        productpath (str): Path to the product folder where the product files are located \n
+        vectorpath (str): Path to the vector folder with Shapefile with areas to be processed \n
+        common_elements (list): List of common elements between the snow, temp, et and soilm databases \n
+        product_files (list): List of product files in the product folder \n
+        product_ids (list): List of product ids. Each product id is str with common tag by date \n
+        all_scenes (list): List of all scenes (no matter the product id here) \n
+        scenes_occurrences (list): List of scenes occurrences for each product id \n
+        overpopulated_scenes (list): List of overpopulated scenes (more than 8 scenes for modis) \n
+        complete_scenes (list): List of complete scenes (8 scenes for modis) \n
+        incomplete_scenes (list): List of incomplete scenes (less than 8 scenes for modis) \n
+        scenes_to_process (list): List of scenes to process (complete scenes no processed) \n
     """
 
     def __init__(self, snow, temp, et, soilm, product_path,
                  vector_path, snow_log, temp_log, et_log, soilm_log):
         """
-        Parameters
-        ----------
-        :param snow : HidroCLVariable
-            Object with GLDAS snow data
-        :param temp : HidroCLVariable
-            Object with GLDAS temperature data
-        :param et : HidroCLVariable
-            Object with GLDAS evapotranspiration data
-        :param soilm : HidroCLVariable
-            Object with GLDAS soil moisture data
-        :param product_path: str
-            Path to the product folder
-        :param vector_path: str
-            Path to the vector folder
-        :param snow_log: str
-            Path to the snow log file
-        :param temp_log: str
-            Path to the temperature log file
-        :param et_log: str
-            Path to the evapotranspiration log file
-        :param soilm_log: str
-            Path to the soil moisture log file
+        Examples:
+            >>> from hidrocl import HidroCLVariable
+            >>> from hidrocl import Gldas_noah
+            >>> snow = HidroCLVariable('snow', 'snow.db', 'snow_pc.db')
+            >>> temp = HidroCLVariable('temp', 'temp.db', 'temp_pc.db')
+            >>> et = HidroCLVariable('et', 'et.db', 'et.db')
+            >>> soilm = HidroCLVariable('soilm', 'soilm.db', 'soilm_pc.db')
+            >>> product_path = '/home/user/data/GLDAS_NOAH025_3H'
+            >>> vector_path = '/home/user/data/vector.shp'
+            >>> snow_log = '/home/user/data/logs/snow.log'
+            >>> temp_log = '/home/user/data/logs/temp.log'
+            >>> et_log = '/home/user/data/logs/et.log'
+            >>> soilm_log = '/home/user/data/logs/soilm.log'
+            >>> gldas = Gldas_noah(snow, temp, et, soilm, product_path,
+            ...                    vector_path, snow_log, temp_log, et_log, soilm_log)
+            >>> gldas
+            Class to extract GLDAS Noah Land Surface Model L4 3 hourly 0.25 degree Version 2.1
+
+        Args:
+            snow (HidroCLVariable): HidroCLVariable with the GLDAS snow data \n
+            temp (HidroCLVariable): HidroCLVariable with the GLDAS temperature data \n
+            et (HidroCLVariable): HidroCLVariable with the GLDAS evapotranspiration data \n
+            soilm (HidroCLVariable): HidroCLVariable with the GLDAS soil moisture data \n
+            product_path (str): Path to the product folder where the product files are located \n
+            vector_path (str): Path to the vector folder with Shapefile with areas to be processed \n
+            snow_log (str): Path to the log file for the snow extraction \n
+            temp_log (str): Path to the log file for the temperature extraction \n
+            et_log (str): Path to the log file for the evapotranspiration extraction \n
+            soilm_log (str): Path to the log file for the soil moisture extraction \n
+
+        Raises:
+            TypeError: If snow, temp, et or soilm is not a HidroCLVariable
         """
         if t.check_instance(snow, temp, et, soilm):
             self.snow = snow
@@ -1013,7 +1013,8 @@ class Gldas_noah:
         """
         Return a string representation of the object
 
-        :return: str
+        Returns:
+             str
         """
         return f'Class to extract {self.productname}'
 
@@ -1021,7 +1022,8 @@ class Gldas_noah:
         """
         Return a string representation of the object
 
-        :return: str
+        Returns:
+            str
         """
         return f'''
 Product: {self.productname}
@@ -1040,7 +1042,17 @@ Soil moisture path: {self.soilm.database}
                 '''
 
     def run_extraction(self, limit=None):
-        """run extraction"""
+        """
+        Run the extraction of the product.
+        If limit is None, all scenes will be processed.
+        If limit is a number, only the first limit scenes will be processed.
+
+        Args:
+            limit (int): length of the scenes_to_process
+
+        Returns:
+            Print
+        """
 
         with t.HiddenPrints():
             self.snow.checkdatabase()
@@ -1113,9 +1125,12 @@ Soil moisture path: {self.soilm.database}
         """
         Run file maintainer. It will remove any file with problems
 
-        :param log_file: str with log file path
-        :param limit: int (length of the scenes_to_process)
-        :return: Print
+        Args:
+            log_file (str): log file path
+            limit (int): length of the scenes_to_process
+
+        Returns:
+            Print
         """
 
         with t.HiddenPrints():
@@ -1154,50 +1169,44 @@ class Persiann_ccs:
     """
     A class to process PERSIANN-CCS to hidrocl variables
 
-    Attributes
-    ----------
-    pp : HidroCLVariable
-        HidroCLVariable object with PERSIANN-CCS precipitation data
-    pp_log : str
-        Path to the log file for PERSIANN-CCS precipitation data
-    productname : str
-        Name of the remote sensing product to be processed
-    productpath : str
-        Path to the product folder where the product files are located
-    vectorpath : str
-        Path to the vector folder with Shapefile with areas to be processed
-    product_files : list
-        List of product files in the product folder
-    product_ids : list
-        List of product ids. Each product id is str with common tag by date
-    all_scenes : list
-        List of all scenes (no matter the product id here)
-    scenes_occurrences : list
-        List of scenes occurrences for each product id
-    overpopulated_scenes : list
-        List of overpopulated scenes (more than 1 scene for persiann)
-    complete_scenes : list
-        List of complete scenes (1 scene for persiann)
-    incomplete_scenes : list
-        List of incomplete scenes (less than 1 scenes for persiann)
-    scenes_to_process : list
-        List of scenes to process (complete scenes no processed)
+    Attributes:
+        pp (HidroCLVariable): HidroCLVariable object with PERSIANN-CCS precipitation data \n
+        pp_log (str): Path to the log file for PERSIANN-CCS precipitation data \n
+        productname (str): Name of the remote sensing product to be processed \n
+        productpath (str): Path to the product folder where the product files are located \n
+        vectorpath (str): Path to the vector folder with Shapefile with areas to be processed \n
+        common_elements (list): common_elements (list): Elements in precipitation database \n
+        product_files (list): List of product files in the product folder \n
+        product_ids (list): List of product ids. Each product id is str with common tag by date \n
+        all_scenes (list): List of all scenes (no matter the product id here) \n
+        scenes_occurrences (list): List of scenes occurrences for each product id \n
+        overpopulated_scenes (list): List of overpopulated scenes (more than 1 scenes for modis) \n
+        complete_scenes (list): List of complete scenes (1 scenes for modis) \n
+        incomplete_scenes (list): List of incomplete scenes (less than 1 scenes for modis) \n
+        scenes_to_process (list): List of scenes to process (complete scenes no processed) \n
     """
 
     def __init__(self, pp, product_path, vector_path, pp_log):
         """
-        Parameters
-        ----------
-        :param pp: HidroCLVariable
-            Object with PERSIANN-CCS precipitation data
-        :param product_path: str
-            Path to the product folder
-        :param vector_path: str
-            Path to the vector folder
-        :param pp_log: str
-            Path to the log file for PERSIANN-CCS precipitation extraction
-        :param pp_log: str
-            Path to the log file for the PERSIANN-CCS precipitation extraction
+        Examples:
+            >>> from hidrocl import HidroCLVariable
+            >>> from hidrocl import Persiann_ccs
+            >>> pp = HidroCLVariable('pp', 'PERSIANN-CCS', 'pp.db', 'pp_pc.db')
+            >>> product_path = '/home/user/data/PERSIANN-CCS'
+            >>> vector_path = '/home/user/data/vector.shp'
+            >>> pp_log = '/home/user/data/logs/pp_log.txt'
+            >>> persiann_ccs = Persiann_ccs(pp, product_path, vector_path, pp_log)
+            >>> persiann_ccs
+            Class to extract PERSIANN-CCS 0.04º
+
+        Args:
+            pp (HidroCLVariable): HidroCLVariable object with PERSIANN-CCS precipitation data \n
+            product_path (str): Path to the product folder where the product files are located \n
+            vector_path (str): Path to the vector folder with Shapefile with areas to be processed \n
+            pp_log (str): Path to the log file for PERSIANN-CCS precipitation data \n
+
+        Raises:
+            TypeError: If pp is not a HidroCLVariable object
         """
         if t.check_instance(pp):
             self.pp = pp
@@ -1222,7 +1231,8 @@ class Persiann_ccs:
         """
         Return a string representation of the object
 
-        :return: str
+        Returns:
+             str
         """
         return f'Class to extract {self.productname}'
 
@@ -1230,7 +1240,8 @@ class Persiann_ccs:
         """
         Return a string representation of the object
 
-        :return: str
+        Returns:
+            str
         """
         return f'''
 Product: {self.productname}
@@ -1245,8 +1256,11 @@ PERSIANN-CCS precipitation database path: {self.pp.database}
         If limit is None, all scenes will be processed.
         If limit is a number, only the first limit scenes will be processed.
 
-        :param limit: int (length of the scenes_to_process)
-        :return: Print
+        Args:
+            limit (int): length of the scenes_to_process
+
+        Returns:
+            Print
         """
 
         with t.HiddenPrints():
@@ -1277,9 +1291,12 @@ PERSIANN-CCS precipitation database path: {self.pp.database}
         """
         Run file maintainer. It will remove any file with problems
 
-        :param log_file: str with log file path
-        :param limit: int (length of the scenes_to_process)
-        :return: Print
+        Args:
+            log_file (str): log file path
+            limit (int): length of the scenes_to_process
+
+        Returns:
+            Print
         """
 
         with t.HiddenPrints():
@@ -1310,50 +1327,44 @@ class Persiann_ccs_cdr:
     """
     A class to process PERSIANN-CCS-CDR to hidrocl variables
 
-    Attributes
-    ----------
-    pp : HidroCLVariable
-        HidroCLVariable object with PERSIANN-CCS-CDR precipitation data
-    pp_log : str
-        Path to the log file for PERSIANN-CCS-CDR precipitation data
-    productname : str
-        Name of the remote sensing product to be processed
-    productpath : str
-        Path to the product folder where the product files are located
-    vectorpath : str
-        Path to the vector folder with Shapefile with areas to be processed
-    product_files : list
-        List of product files in the product folder
-    product_ids : list
-        List of product ids. Each product id is str with common tag by date
-    all_scenes : list
-        List of all scenes (no matter the product id here)
-    scenes_occurrences : list
-        List of scenes occurrences for each product id
-    overpopulated_scenes : list
-        List of overpopulated scenes (more than 1 scene for persiann)
-    complete_scenes : list
-        List of complete scenes (1 scene for persiann)
-    incomplete_scenes : list
-        List of incomplete scenes (less than 1 scenes for persiann)
-    scenes_to_process : list
-        List of scenes to process (complete scenes no processed)
+    Attributes:
+        pp (HidroCLVariable): HidroCLVariable object with PERSIANN-CCS-CDR precipitation data \n
+        pp_log (str): Path to the log file for PERSIANN-CCS-CDR precipitation data \n
+        productname (str): Name of the remote sensing product to be processed \n
+        productpath (str): Path to the product folder where the product files are located \n
+        vectorpath (str): Path to the vector folder with Shapefile with areas to be processed \n
+        common_elements (list): common_elements (list): Elements in precipitation database \n
+        product_files (list): List of product files in the product folder \n
+        product_ids (list): List of product ids. Each product id is str with common tag by date \n
+        all_scenes (list): List of all scenes (no matter the product id here) \n
+        scenes_occurrences (list): List of scenes occurrences for each product id \n
+        overpopulated_scenes (list): List of overpopulated scenes (more than 1 scenes for modis) \n
+        complete_scenes (list): List of complete scenes (1 scenes for modis) \n
+        incomplete_scenes (list): List of incomplete scenes (less than 1 scenes for modis) \n
+        scenes_to_process (list): List of scenes to process (complete scenes no processed) \n
     """
 
     def __init__(self, pp, product_path, vector_path, pp_log):
         """
-        Parameters
-        ----------
-        :param pp: HidroCLVariable
-            Object with PERSIANN-CCS-CDR precipitation data
-        :param product_path: str
-            Path to the product folder
-        :param vector_path: str
-            Path to the vector folder
-        :param pp_log: str
-            Path to the log file for PERSIANN-CCS-CDR precipitation extraction
-        :param pp_log: str
-            Path to the log file for the PERSIANN-CCS-CDR precipitation extraction
+        Examples:
+            >>> from hidrocl import HidroCLVariable
+            >>> from hidrocl import Persiann_ccs_cdr
+            >>> pp = HidroCLVariable('pp', 'PERSIANN-CCS-CDR', 'pp.db', 'pp_pc.db')
+            >>> product_path = '/home/user/data/PERSIANN-CCS-CDR'
+            >>> vector_path = '/home/user/data/vector.shp'
+            >>> pp_log = '/home/user/data/logs/pp_log.txt'
+            >>> persiann_ccs_cdr = Persiann_ccs_cdr(pp, product_path, vector_path, pp_log)
+            >>> persiann_ccs_cdr
+            Class to extract PERSIANN-CCS-CDR 0.04º
+
+        Args:
+            pp (HidroCLVariable): HidroCLVariable object with PERSIANN-CCS-CDR precipitation data \n
+            product_path (str): Path to the product folder where the product files are located \n
+            vector_path (str): Path to the vector folder with Shapefile with areas to be processed \n
+            pp_log (str): Path to the log file for PERSIANN-CCS-CDR precipitation data \n
+
+        Raises:
+            TypeError: If pp is not a HidroCLVariable object
         """
         if t.check_instance(pp):
             self.pp = pp
@@ -1378,7 +1389,8 @@ class Persiann_ccs_cdr:
         """
         Return a string representation of the object
 
-        :return: str
+        Returns:
+             str
         """
         return f'Class to extract {self.productname}'
 
@@ -1386,7 +1398,8 @@ class Persiann_ccs_cdr:
         """
         Return a string representation of the object
 
-        :return: str
+        Returns:
+            str
         """
         return f'''
 Product: {self.productname}
@@ -1401,8 +1414,11 @@ PERSIANN-CCS-CDR precipitation database path: {self.pp.database}
         If limit is None, all scenes will be processed.
         If limit is a number, only the first limit scenes will be processed.
 
-        :param limit: int (length of the scenes_to_process)
-        :return: Print
+        Args:
+            limit (int): length of the scenes_to_process
+
+        Returns:
+            Print
         """
 
         with t.HiddenPrints():
@@ -1433,9 +1449,12 @@ PERSIANN-CCS-CDR precipitation database path: {self.pp.database}
         """
         Run file maintainer. It will remove any file with problems
 
-        :param log_file: str with log file path
-        :param limit: int (length of the scenes_to_process)
-        :return: Print
+        Args:
+            log_file (str): log file path
+            limit (int): length of the scenes_to_process
+
+        Returns:
+            Print
         """
 
         with t.HiddenPrints():

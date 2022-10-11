@@ -17,18 +17,15 @@ def download_era5land(year, month, day, path):
     key: <your key>
 
     Examples:
-    ---------
         >>> download_era5land(2000, 6, 1, '/path/to/data')
 
     Args:
-    ---------
         year (int): year of the data to be downloaded
         month (int): month of the data to be downloaded
         day (int): day of the data to be downloaded
         path (str):path to save the data
 
     Returns:
-    ---------
         None
 
     """
@@ -78,16 +75,17 @@ def download_era5land(year, month, day, path):
 def download_satsoilmoist(year, month, day, path):
     """function to download Soil moisture gridded data from CDS
 
-    Parameters
-    ----------
-    year : int
-        year of the data to be downloaded
-    month : int
-        month of the data to be downloaded
-    day : int
-        day of the data to be downloaded
-    path : str
-        path to save the data
+    Examples:
+        >>> download_satsoilmoist(2000, 6, 1, '/path/to/data')
+
+    Args:
+        year (int): year of the data to be downloaded
+        month (int): month of the data to be downloaded
+        day (int): day of the data to be downloaded
+        path (str): path to save the data
+
+    Returns:
+        None
     """
 
     c = cdsapi.Client()
@@ -119,14 +117,12 @@ def get_imerg(start, end, user, password, timeout=60):
     """function to get IMERG data filenames from jsimpsonhttps.pps.eosdis.nasa.gov
 
     Examples:
-    ---------
         >>> get_imerg('2000-06', '2000-07', 'user@doma.in', 'password')
-    ['/imerg/gis/2000/06/3B-HHR-L.MS.MRG.3IMERG.20000608-S000000-E002959.0000.V06B.30min.tif', \n
-     '/imerg/gis/2000/06/3B-HHR-L.MS.MRG.3IMERG.20000608-S003000-E005959.0030.V06B.30min.tif', \n
-     ...]
+        ['/imerg/gis/2000/06/3B-HHR-L.MS.MRG.3IMERG.20000608-S000000-E002959.0000.V06B.30min.tif',
+         '/imerg/gis/2000/06/3B-HHR-L.MS.MRG.3IMERG.20000608-S003000-E005959.0030.V06B.30min.tif',
+         ...]
 
     Args:
-    ---------
         start (str): start date in the format YYYY-MM
         end (str): start date in the format YYYY-MM
         user (str): username to access jsimpsonhttps.pps.eosdis.nasa.gov
@@ -134,11 +130,9 @@ def get_imerg(start, end, user, password, timeout=60):
         timeout (int): timeout in seconds
 
     Returns:
-    ---------
         list: a list representing the filename of IMERG data available for the requested period
 
     Raises:
-    ---------
         ValueError: if:
             - start or end are not in the format YYYY-MM
             - start is after end
@@ -187,20 +181,18 @@ def download_imerg(url_extract, folder, user, password, timeout = 60):
     It is recommended to use the function get_imerg to get the filenames of the data to be downloaded
 
     Examples:
-    ---------
         >>> download_imerg('/imerg/gis/2000/06/xyz.tif', '/path/to/data',  'user@doma.in', 'password')
-    xyz.tif downloaded
+        xyz.tif downloaded
 
         >>> # for multiple files (natural process)
         >>> files = get_imerg('2000-06', '2000-07', 'user@doma.in', 'password')
         >>> for file in files:
         >>>     download_imerg(file, '/path/to/data',  'user@doma.in', 'password')
-    xyz1.tif downloaded \n
-    xyz2.tif downloaded \n
-    ...
+        xyz1.tif downloaded
+        xyz2.tif downloaded
+        ...
 
     Args:
-    ---------
         url_extract (str): extract of url in format '/imerg/gis/2000/06/xyz.tif'
         folder (str): folder to save the data
         user (str): username to access jsimpsonhttps.pps.eosdis.nasa.gov
@@ -208,7 +200,6 @@ def download_imerg(url_extract, folder, user, password, timeout = 60):
         timeout (int): timeout in seconds
 
     Returns:
-    ---------
         None
     """
 

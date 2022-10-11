@@ -131,6 +131,11 @@ conda install -c conda-forge pandas rioxarray matplotlib geopandas netCDF4
 conda install -c conda-forge sphinx sphinx_rtd_theme
 # installing CDS api
 pip install cdsapi
+# documenting with mkdocs
+pip install mkdocs
+pip install mkdocstrings
+pip install mkdocs-material
+pip install mkdocstrings-python
 ```
 
 **R package needed for sf/terra messages**

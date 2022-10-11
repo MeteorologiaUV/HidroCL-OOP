@@ -8,12 +8,10 @@ from . import methods
 class HidroCLVariable:
     """A class to hold information about a hidrocl variable
 
-    Attributes
+    Args:
     ----------
-    name : str
-        Name of the variable
-    database : str
-        Path to the database
+    name (str): Name of the variable
+    database (str): Path to the database
     pcdatabase : str
         Path to the database with pixel count
     indatabase : list

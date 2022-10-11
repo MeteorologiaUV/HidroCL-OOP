@@ -1,0 +1,34 @@
+site_name: HidroCL documentation
+theme:
+  name: material
+  logo: assets/logo_reverse.svg
+  favicon: assets/favicon.png
+  palette:
+    # Palette toggle for light mode
+    - scheme: default
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to dark mode
+
+    # Palette toggle for dark mode
+    - scheme: slate
+      toggle:
+        icon: material/toggle-switch-off-outline
+        name: Switch to light mode
+  features:
+    - navigation.instant
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [..]
+nav:
+  - Home: 'index.md'
+  - Reference:
+      - 'Reference index': 'reference.md'
+      - 'Product processors': 'products.md'
+      - 'Download functions': 'download.md'
+markdown_extensions:
+  - attr_list
+  - md_in_html
