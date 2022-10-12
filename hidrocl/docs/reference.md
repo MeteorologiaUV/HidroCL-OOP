@@ -2,7 +2,7 @@
 
 Page structure:
 
- - Base variable
+ - [Base variable](variable.md)
  - [Product processors](products.md)
  - [Download functions](download.md)
 

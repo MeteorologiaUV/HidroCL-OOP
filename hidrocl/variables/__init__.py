@@ -8,32 +8,28 @@ from . import methods
 class HidroCLVariable:
     """A class to hold information about a hidrocl variable
 
-    Args:
-    ----------
-    name (str): Name of the variable
-    database (str): Path to the database
-    pcdatabase : str
-        Path to the database with pixel count
-    indatabase : list
-        List of IDs in the database
-    observations : pandas.DataFrame
-        Dataframe with the observations
-    pcobservations : pandas.DataFrame
-        Dataframe with the pixel count
-    catchment_names : list
-        List of catchment names
+    Examples:
+        >>> from hidrocl import HidroCLVariable
+        >>> variable = HidroCLVariable('precipitation', 'precipitation.csv', 'precipitation_pc.csv')
+        >>> variable
+        Variable: precipitation. Records: 0
+
+    Attributes:
+        name (str): Name of the variable
+        database (str): Path to the database
+        pcdatabase (str): Path to the database with pixel count
+        indatabase (list): List of IDs in the database
+        observations (pandas.DataFrame): Dataframe with the observations
+        pcobservations (pandas.DataFrame): Dataframe with the pixel count
+        catchment_names (list): List of catchment names
     """
 
     def __init__(self, name, database, pcdatabase):
         """
-        Parameters
-        ----------
-        :param name: str
-            Name of the variable
-        :param database: str
-            Path to the database
-        :param pcdatabase: str
-            Path to the database with pixel count
+        Args:
+            name (str): Name of the variable
+            database (str): Path to the database
+            pcdatabase (str): Path to the database with pixel count
         """
         self.name = name
         self.database = database
@@ -48,14 +44,18 @@ class HidroCLVariable:
     def __repr__(self):
         """
         Representation of the object
-        :return: str
+
+        Returns:
+             str: Representation of the object
         """
         return f'Variable: {self.name}. Records: {len(self.indatabase)}'
 
     def __str__(self):
         """
         String representation of the object
-        :return: str
+
+        Returns:
+            str: String representation of the object
         """
         return f'''
 Variable {self.name}.
@@ -67,7 +67,9 @@ Pixel count database path: {self.pcdatabase}.
     def checkindatabase(self):
         """
         Check IDs in database
-        :return: list
+
+        Returns:
+            list: List of IDs in the database
         """
         if self.observations is None:
             print('Please, check the database for getting the IDs processed')
@@ -79,7 +81,8 @@ Pixel count database path: {self.pcdatabase}.
         """
         Check database
 
-        :return: pandas.DataFrame
+        Returns:
+            pandas.DataFrame: Dataframe with the observations
         """
         self.observations = methods.checkdatabase(self.database, self.catchment_names)
         self.indatabase = self.checkindatabase()
@@ -92,7 +95,8 @@ Pixel count database path: {self.pcdatabase}.
         """
         Check database with pixel count
 
-        :return: pandas.DataFrame
+        Returns:
+            pandas.DataFrame: Dataframe with the pixel count
         """
         self.pcobservations = methods.checkdatabase(self.pcdatabase, self.catchment_names)
 
@@ -100,8 +104,11 @@ Pixel count database path: {self.pcdatabase}.
         """
         Add catchment names to the variable using cathment_names from database
 
-        :param catchment_names_list: list of catchment names
-        :return: None
+        Args:
+            catchment_names_list (list): list of catchment names
+
+        Returns:
+            None
         """
         if self.catchment_names is None:
             if catchment_names_list is not None:
@@ -116,7 +123,8 @@ Pixel count database path: {self.pcdatabase}.
         """
         Return valid data for all catchments
 
-        :return: list with valid data with date index
+        Returns:
+            list: list with valid data with date index
         """
         return self.observations.notnull().sum()[1:]
 
@@ -124,7 +132,8 @@ Pixel count database path: {self.pcdatabase}.
         """
         Plot valid data for all catchments
 
-        :return: plot with valid data for all catchments with date index
+        Returns:
+            plot: plot with valid data for all catchments with date index
         """
         df = self.observations.drop(self.observations.columns[0], axis=1).notnull().sum().divide(
             len(self.observations.index)).multiply(100)
@@ -136,7 +145,8 @@ Pixel count database path: {self.pcdatabase}.
         """
         Plot valid data for all catchments in grid format
 
-        :return: plot with valid data for all catchments with date index
+        Returns:
+            plot: plot with valid data for all catchments with date index
         """
         methods.plot_variable_all(self.observations, self.catchment_names, self.database, what='obs')
 
@@ -144,7 +154,8 @@ Pixel count database path: {self.pcdatabase}.
         """
         Plot valid data for all catchments in grid format
 
-        :return: plot with valid data for all catchments with date index
+        Returns:
+            plot: plot with valid data for all catchments with date index
         """
         methods.plot_variable_all(self.pcobservations, self.catchment_names, self.database, what='pc')
 
@@ -152,8 +163,11 @@ Pixel count database path: {self.pcdatabase}.
         """
         Plot valid data for individual catchments
 
-        :param catchment: str (catchment name) or int (catchment index)
-        :return: plot with valid data for individual catchments with date index
+        Args:
+            catchment (str): catchment (catchment name) or int (catchment index)
+
+        Returns:
+            plot: plot with valid data for individual catchments with date index
         """
 
         catchment = methods.get_catchment_name(catchment, self.catchment_names)
@@ -163,8 +177,11 @@ Pixel count database path: {self.pcdatabase}.
         """
         Plot pixel count for individual catchments
 
-        :param catchment: str (catchment name) or int (catchment index)
-        :return: plot with pixel count for individual catchments with date index
+        Args:
+            catchment (str): catchment (catchment name) or int (catchment index)
+
+        Returns:
+            plot: plot with pixel count for individual catchments with date index
         """
 
         catchment = methods.get_catchment_name(catchment, self.catchment_names)

@@ -27,6 +27,7 @@ nav:
   - Home: 'index.md'
   - Reference:
       - 'Reference index': 'reference.md'
+      - 'Base variable': 'variable.md'
       - 'Product processors': 'products.md'
       - 'Download functions': 'download.md'
 markdown_extensions:

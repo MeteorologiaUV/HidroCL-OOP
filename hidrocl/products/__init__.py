@@ -91,7 +91,7 @@ class Mod13q1:
              self.complete_scenes,
              self.incomplete_scenes) = t.classify_occurrences(self.scenes_occurrences, "modis")
             self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes,
-            self.common_elements, what = 'modis')
+                                                            self.common_elements, what='modis')
         else:
             raise TypeError('ndvi, evi and nbr must be HidroCLVariable objects')
 
@@ -100,7 +100,7 @@ class Mod13q1:
         Return a string representation of the object
 
         Returns:
-             str
+             str: String representation of the object
         """
         return f'Class to extract {self.productname}'
 
@@ -109,7 +109,7 @@ class Mod13q1:
         Return a string representation of the object
 
         Returns:
-            str
+            str: String representation of the object
         """
         return f'''
 Product: {self.productname}
@@ -134,7 +134,7 @@ NBR database path: {self.nbr.database}
             limit (int): length of the scenes_to_process
 
         Returns:
-            Print
+            str: Print
         """
 
         with t.HiddenPrints():
@@ -186,6 +186,7 @@ NBR database path: {self.nbr.database}
                                   vector_path=self.vectorpath,
                                   layer=["250m 16 days NIR reflectance",
                                          "250m 16 days MIR reflectance"])
+
     def run_maintainer(self, log_file, limit=None):
         """
         Run file maintainer. It will remove any file with problems
@@ -195,7 +196,7 @@ NBR database path: {self.nbr.database}
             limit (int): length of the scenes_to_process
 
         Returns:
-            Print
+            str: Print
         """
 
         with t.HiddenPrints():
@@ -298,7 +299,7 @@ class Mod10a2:
              self.complete_scenes,
              self.incomplete_scenes) = t.classify_occurrences(self.scenes_occurrences, "modis")
             self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes,
-        self.common_elements, what='modis')
+                                                            self.common_elements, what='modis')
         else:
             raise TypeError('nsnow and ssnow must be HidroCLVariable objects')
 
@@ -307,7 +308,7 @@ class Mod10a2:
         Return a string representation of the object
 
         Returns:
-             str
+             str: String representation of the object
         """
         return f'Class to extract {self.productname}'
 
@@ -316,7 +317,7 @@ class Mod10a2:
         Return a string representation of the object
 
         Returns:
-            str
+            str: String representation of the object
         """
         return f'''
 Product: {self.productname}
@@ -337,7 +338,7 @@ South face snow database path: {self.ssnow.database}
             limit (int): length of the scenes_to_process
 
         Returns:
-            Print
+            str: Print
         """
 
         with t.HiddenPrints():
@@ -381,7 +382,7 @@ South face snow database path: {self.ssnow.database}
             limit (int): length of the scenes_to_process
 
         Returns:
-            Print
+            str: Print
         """
 
         with t.HiddenPrints():
@@ -471,7 +472,7 @@ class Mod16a2:
              self.complete_scenes,
              self.incomplete_scenes) = t.classify_occurrences(self.scenes_occurrences, "modis")
             self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes,
-            self.common_elements, what = 'modis')
+                                                            self.common_elements, what='modis')
         else:
             raise TypeError('pet must be HidroCLVariable object')
 
@@ -480,7 +481,7 @@ class Mod16a2:
         Return a string representation of the object
 
         Returns:
-             str
+             str: String representation of the object
         """
         return f'Class to extract {self.productname}'
 
@@ -489,7 +490,7 @@ class Mod16a2:
         Return a string representation of the object
 
         Returns:
-            str
+            str: String representation of the object
         """
         return f'''
 Product: {self.productname}
@@ -508,7 +509,7 @@ PET database path: {self.pet.database}
             limit (int): length of the scenes_to_process
 
         Returns:
-            Print
+            str: Print
         """
 
         with t.HiddenPrints():
@@ -545,7 +546,7 @@ PET database path: {self.pet.database}
             limit (int): length of the scenes_to_process
 
         Returns:
-            Print
+            str: Print
         """
 
         with t.HiddenPrints():
@@ -641,7 +642,7 @@ class Mcd15a2h:
              self.complete_scenes,
              self.incomplete_scenes) = t.classify_occurrences(self.scenes_occurrences, "modis")
             self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes,
-            self.common_elements, what = 'modis')
+                                                            self.common_elements, what='modis')
         else:
             raise TypeError('lai and fpar must be HidroCLVariable objects')
 
@@ -650,7 +651,7 @@ class Mcd15a2h:
         Return a string representation of the object
 
         Returns:
-             str
+             str: String representation of the object
         """
         return f'Class to extract {self.productname}'
 
@@ -659,7 +660,7 @@ class Mcd15a2h:
         Return a string representation of the object
 
         Returns:
-            str
+            str: String representation of the object
         """
         return f'''
 Product: {self.productname}
@@ -681,7 +682,7 @@ FPAR database path: {self.fpar.database}
             limit (int): length of the scenes_to_process
 
         Returns:
-            Print
+            str: Print
         """
 
         with t.HiddenPrints():
@@ -731,7 +732,7 @@ FPAR database path: {self.fpar.database}
             limit (int): length of the scenes_to_process
 
         Returns:
-            Print
+            str: Print
         """
 
         with t.HiddenPrints():
@@ -817,7 +818,7 @@ class Gpm_3imrghhl:
              self.complete_scenes,
              self.incomplete_scenes) = t.classify_occurrences(self.scenes_occurrences, "imerg")
             self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes,
-            self.common_elements, what = 'imerg')
+                                                            self.common_elements, what='imerg')
         else:
             raise TypeError('pp must be HidroCLVariable objects')
 
@@ -826,7 +827,7 @@ class Gpm_3imrghhl:
         Return a string representation of the object
 
         Returns:
-             str
+             str: String representation of the object
         """
         return f'Class to extract {self.productname}'
 
@@ -835,7 +836,7 @@ class Gpm_3imrghhl:
         Return a string representation of the object
 
         Returns:
-            str
+            str: String representation of the object
         """
         return f'''
 Product: {self.productname}
@@ -854,7 +855,7 @@ IMERG precipitation database path: {self.pp.database}
             limit (int): length of the scenes_to_process
 
         Returns:
-            Print
+            str: Print
         """
 
         with t.HiddenPrints():
@@ -891,7 +892,7 @@ IMERG precipitation database path: {self.pp.database}
             limit (int): length of the scenes_to_process
 
         Returns:
-            Print
+            str: Print
         """
 
         with t.HiddenPrints():
@@ -1005,7 +1006,7 @@ class Gldas_noah:
              self.complete_scenes,
              self.incomplete_scenes) = t.classify_occurrences(self.scenes_occurrences, "gldas")
             self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes,
-            self.common_elements, what = 'gldas')
+                                                            self.common_elements, what='gldas')
         else:
             raise TypeError('snow, temp, et and soilm must be HidroCLVariable objects')
 
@@ -1014,7 +1015,7 @@ class Gldas_noah:
         Return a string representation of the object
 
         Returns:
-             str
+             str: String representation of the object
         """
         return f'Class to extract {self.productname}'
 
@@ -1023,7 +1024,7 @@ class Gldas_noah:
         Return a string representation of the object
 
         Returns:
-            str
+            str: String representation of the object
         """
         return f'''
 Product: {self.productname}
@@ -1051,7 +1052,7 @@ Soil moisture path: {self.soilm.database}
             limit (int): length of the scenes_to_process
 
         Returns:
-            Print
+            str: Print
         """
 
         with t.HiddenPrints():
@@ -1130,7 +1131,7 @@ Soil moisture path: {self.soilm.database}
             limit (int): length of the scenes_to_process
 
         Returns:
-            Print
+            str: Print
         """
 
         with t.HiddenPrints():
@@ -1223,7 +1224,7 @@ class Persiann_ccs:
              self.complete_scenes,
              self.incomplete_scenes) = t.classify_occurrences(self.scenes_occurrences, "persiann_ccs")
             self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes,
-            self.common_elements, what = 'persiann_ccs')
+                                                            self.common_elements, what='persiann_ccs')
         else:
             raise TypeError('pp must be HidroCLVariable object')
 
@@ -1232,7 +1233,7 @@ class Persiann_ccs:
         Return a string representation of the object
 
         Returns:
-             str
+             str: String representation of the object
         """
         return f'Class to extract {self.productname}'
 
@@ -1241,7 +1242,7 @@ class Persiann_ccs:
         Return a string representation of the object
 
         Returns:
-            str
+            str: String representation of the object
         """
         return f'''
 Product: {self.productname}
@@ -1260,13 +1261,13 @@ PERSIANN-CCS precipitation database path: {self.pp.database}
             limit (int): length of the scenes_to_process
 
         Returns:
-            Print
+            str: Print
         """
 
         with t.HiddenPrints():
             self.pp.checkdatabase()
 
-        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.pp.indatabase,"persiann_ccs")
+        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.pp.indatabase, "persiann_ccs")
 
         scenes_path = t.get_scenes_path(self.product_files, self.productpath)
 
@@ -1296,13 +1297,13 @@ PERSIANN-CCS precipitation database path: {self.pp.database}
             limit (int): length of the scenes_to_process
 
         Returns:
-            Print
+            str: Print
         """
 
         with t.HiddenPrints():
             self.pp.checkdatabase()
 
-        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.pp.indatabase,"persiann_ccs")
+        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.pp.indatabase, "persiann_ccs")
 
         scenes_path = t.get_scenes_path(self.product_files, self.productpath)
 
@@ -1381,7 +1382,7 @@ class Persiann_ccs_cdr:
              self.complete_scenes,
              self.incomplete_scenes) = t.classify_occurrences(self.scenes_occurrences, "persiann_ccs_cdr")
             self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes,
-            self.common_elements, what ='persiann_ccs_cdr')
+                                                            self.common_elements, what='persiann_ccs_cdr')
         else:
             raise TypeError('pp must be HidroCLVariable object')
 
@@ -1390,7 +1391,7 @@ class Persiann_ccs_cdr:
         Return a string representation of the object
 
         Returns:
-             str
+             str: String representation of the object
         """
         return f'Class to extract {self.productname}'
 
@@ -1399,7 +1400,7 @@ class Persiann_ccs_cdr:
         Return a string representation of the object
 
         Returns:
-            str
+            str: String representation of the object
         """
         return f'''
 Product: {self.productname}
@@ -1418,13 +1419,13 @@ PERSIANN-CCS-CDR precipitation database path: {self.pp.database}
             limit (int): length of the scenes_to_process
 
         Returns:
-            Print
+            str: Print
         """
 
         with t.HiddenPrints():
             self.pp.checkdatabase()
 
-        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.pp.indatabase,'persiann_ccs_cdr')
+        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.pp.indatabase, 'persiann_ccs_cdr')
 
         scenes_path = t.get_scenes_path(self.product_files, self.productpath)
 
@@ -1454,13 +1455,13 @@ PERSIANN-CCS-CDR precipitation database path: {self.pp.database}
             limit (int): length of the scenes_to_process
 
         Returns:
-            Print
+            str: Print
         """
 
         with t.HiddenPrints():
             self.pp.checkdatabase()
 
-        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.pp.indatabase,'persiann_ccs_cdr')
+        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.pp.indatabase, 'persiann_ccs_cdr')
 
         scenes_path = t.get_scenes_path(self.product_files, self.productpath)
 

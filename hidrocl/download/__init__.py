@@ -175,7 +175,7 @@ def get_imerg(start, end, user, password, timeout=60):
     return final_response
 
 
-def download_imerg(url_extract, folder, user, password, timeout = 60):
+def download_imerg(url_extract, folder, user, password, timeout=60):
     """download IMERG data from jsimpsonhttps.pps.eosdis.nasa.gov.
 
     It is recommended to use the function get_imerg to get the filenames of the data to be downloaded
