@@ -32,9 +32,12 @@ def load_hdf5(file, var):
     """
     Load .HDF5 file with xarray library and slice ver continental Chile
 
-    :param file: HDF5 raster path
-    :param var: variable to extract
-    :return:
+    Args:
+        file (str): file path
+        var (str): variable to extract
+
+    Returns:
+        xarray.DataArray: variable data
     """
 
     with t.HiddenPrints():
@@ -52,9 +55,12 @@ def load_nc(file, var):
     """
     Load .nc files from GLDAS product
 
-    :param file: str with file path
-    :param var: str with variable to extract
-    :return:
+    Args:
+        file (str): file path
+        var (str): variable to extract
+
+    Returns:
+        xarray.DataArray: xarray DataArray
     """
 
     with t.HiddenPrints():
@@ -62,13 +68,46 @@ def load_nc(file, var):
         da = da[var]
         return da.sel(lat=slice(-55, -15), lon=slice(-75, -65))
 
+def load_era5(file, var, reducer='mean'):
+    """
+    Load .nc files from ERA5 product
+
+    Args:
+        file (str): file path
+        var (str): variable to extract
+        reducer (str): reducer to use
+
+    Returns:
+        xarray.DataArray: xarray.DataArray with the variable
+    """
+
+    with t.HiddenPrints():
+        da = xarray.open_dataset(file, mask_and_scale=True)
+        da = da[var]
+        match reducer:
+            case 'mean':
+                da = da.mean(dim='time')
+            case 'sum':
+                da = da.sum(dim='time')
+            case _:
+                raise ValueError("Reducer not supported")
+        match var:
+            case 't2m':
+                da = da - 273.15
+            case _:
+                pass
+        return da
+
 
 def load_persiann(file):
     """
     Load .bin persiann files
 
-    :param file: str with file path
-    :return: xarray.Dataset with persiann precipitation data
+    Args:
+        file (str): file path
+
+    Returns:
+        xarray.DataArray: xarray.DataArray with the variable
     """
     with t.HiddenPrints():
         da = open(file, 'rb')
@@ -110,11 +149,14 @@ def load_persiann(file):
 
 
 def sum_datasets(dataset_list):
-    r"""
+    """
     Function to sum xarray datasets
 
-    :param dataset_list: list with raster products
-    :return: xarray.Dataset with sum of rasters
+    Args:
+        dataset_list (list): list of xarray datasets
+
+    Returns:
+        xarray.Dataset: xarray dataset with the sum of the datasets
     """
     template = dataset_list[0].copy()
     sum_values = sum([d.values for d in dataset_list])
@@ -123,11 +165,14 @@ def sum_datasets(dataset_list):
 
 
 def mean_datasets(dataset_list):
-    r"""
+    """
     Function to get mean from xarray datasets
 
-    :param dataset_list: list with raster products
-    :return: xarray.Dataset with mean of rasters
+    Args:
+        dataset_list (list): list of xarray datasets
+
+    Returns:
+        xarray.Dataset: xarray dataset with the mean of the datasets
     """
     template = dataset_list[0].copy()
     mean_values = np.mean([d.values for d in dataset_list], axis=0)
@@ -139,9 +184,12 @@ def mosaic_raster(raster_list, layer):
     """
     Function to compute mosaic files with rioxarray library
 
-    :param raster_list: list with raster paths
-    :param layer: str with layer to extract
-    :return: rioxarray.Dataset with mosaic
+    Args:
+        raster_list (list): list of raster files
+        layer (str): layer to mosaic
+
+    Returns:
+        xarray.DataArray: xarray DataArray with the mosaic
     """
     raster_single = []
 
@@ -159,10 +207,13 @@ def mosaic_nd_raster(raster_list, layer1, layer2):
     The normalized difference is computed as:
     normalized_difference = 1000 * (layer1 - layer2) / (layer1 + layer2)
 
-    :param raster_list: list with raster paths
-    :param layer1: str with layer1 to compute normalized difference
-    :param layer2: str with layer2 to compute normalized difference
-    :return: rioxarray.Dataset with normalized difference's mosaic
+    Args:
+        raster_list (list): list of raster files
+        layer1 (str): layer to mosaic
+        layer2 (str): layer to mosaic
+
+    Returns:
+        xarray.DataArray: xarray DataArray with the mosaic
     """
     raster_single = []
 
@@ -182,14 +233,17 @@ def mosaic_nd_raster(raster_list, layer1, layer2):
 def write_line(database, result, catchment_names, file_id, file_date, ncol=1):
     """
     Write line to database
-    
-    :param database: str with database path 
-    :param result: pandas.DataFrame with result
-    :param catchment_names: list with catchment names
-    :param file_id: str with file ID
-    :param file_date: str with file date
-    :param ncol: int with number of column to extract values
-    :return: None
+
+    Args:
+        database (str): database path
+        result (list): list of results
+        catchment_names (list): list of catchment names
+        file_id (str): file id
+        file_date (str): file date
+        ncol (int): number of columns
+
+    Returns:
+        None
     """
     with open(result) as csv_file:
         csvreader = csv.reader(csv_file, delimiter=',')
@@ -218,12 +272,15 @@ def write_log(log_file, file_id, currenttime, time_dif, database):
     """
     Write log file
 
-    :param log_file: str with log file path
-    :param file_id: str with file ID
-    :param currenttime: str with current time
-    :param time_dif: str with time difference
-    :param database: str with database path
-    :return: None
+    Args:
+        log_file (str): log file path
+        file_id (str): file id
+        currenttime (str): current time
+        time_dif (str): time difference
+        database (str): database path
+
+    Returns:
+        None
     """
     with open(log_file, 'a') as txt_file:
         txt_file.write(f'ID {file_id}. Date: {currenttime}. Process time: {time_dif} s. Database: {database}. \n')
@@ -231,29 +288,32 @@ def write_log(log_file, file_id, currenttime, time_dif, database):
 
 def zonal_stats(scene, scenes_path, tempfolder, name,
                 catchment_names, log_file, **kwargs):
-    r"""
+    """
     Function to extract zonal statistics from raster files
 
-    :param scene: str with scene name
-    :param scenes_path: str with scenes path
-    :param tempfolder: str with temp folder path
-    :param name: str with product name
-    :param catchment_names: list with catchment names
-    :param log_file: str with log file path
-    :param \**kwargs:
-        See below
-    :Keword Arguments:
-        - **database** (str) -- Database path
-        - **pcdatabase** (str) -- pcdatabase path
-        - **north_database** (str) -- North database path
-        - **south_database** (str) -- South database path
-        - **north_pcdatabase** (str) -- North pcdatabase path
-        - **south_pcdatabase** (str) -- South pcdatabase path
-        - **vector_path**: str with vector path
-        - **north_vector_path**: str with north vector path
-        - **south_vector_path**: str with south vector path
-        - **layer**: str or list with layer/layers to extract
-    :return: Print
+    Args:
+        scene (str): scene name
+        scenes_path (str): path where scenes are
+        tempfolder (str): temporary folder path
+        name (str): product name
+        catchment_names (list): catchment names
+        log_file (str): log file path
+        **kwargs: additional arguments
+
+    Keyword Args:
+        database (str): Database path
+        pcdatabase (str): pcdatabase path
+        north_database (str): North database path
+        south_database (str): South database path
+        north_pcdatabase (str): North pcdatabase path
+        south_pcdatabase (str): South pcdatabase path
+        vector_path (str): vector path
+        north_vector_path (str): north vector path
+        south_vector_path (str): south vector path
+        layer (Union[str,list]): with layer/layers to extract
+
+    Returns:
+        Print
     """
 
     print(f'Processing scene {scene} for {name}')
@@ -269,6 +329,8 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
             file_date = datetime.strptime(scene, '%y%j').strftime('%Y-%m-%d')
         case "persiann_ccs_cdr":
             file_date = datetime.strptime(scene, '%y%m%d').strftime('%Y-%m-%d')
+        case name if "era5" in name:
+            file_date = datetime.strptime(scene, '%Y%m%d').strftime('%Y-%m-%d')
         case _:
             file_date = datetime.strptime(scene, 'A%Y%j').strftime('%Y-%m-%d')
 
@@ -324,6 +386,47 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
                             return print(f"Error in scene {scene}")
                     else:
                         return print("layer argument must be a list")
+        case name if "era5" in name:
+            match name:
+                case name if "temp" in name:
+                    if isinstance(kwargs.get("layer"), str):
+                        try:
+                            file = selected_files[0]
+                            mos = load_era5(file, kwargs.get("layer"), "mean")
+                            mos = mos * 10
+                        except (OSError, ValueError):
+                            return print(f"Error in scene {scene}")
+                case name if ("et" in name) or ("pp" in name):
+                    if isinstance(kwargs.get("layer"), str):
+                        try:
+                            file = selected_files[0]
+                            mos = load_era5(file, kwargs.get("layer"), "sum")
+                            mos = mos * 10000
+                        except (OSError, ValueError):
+                            return print(f"Error in scene {scene}")
+                case name if "snw" in name:
+                    if isinstance(kwargs.get("layer"), str):
+                        try:
+                            file = selected_files[0]
+                            mos = load_era5(file, kwargs.get("layer"), "mean")
+                            mos = mos * 10000
+                        except (OSError, ValueError):
+                            return print(f"Error in scene {scene}")
+                case name if "soilm" in name:
+                    if isinstance(kwargs.get("layer"), list):
+                        lyrs = kwargs.get("layer")
+                        try:
+                            layers_list = []
+                            for lyr in lyrs:
+                                file = selected_files[0]
+                                dataset = load_era5(file, lyr, "mean")
+                                layers_list.append(dataset)
+                            mos = sum_datasets(layers_list)
+                            mos = mos * 1000
+                        except (OSError, ValueError):
+                            return print(f"Error in scene {scene}")
+                    else:
+                        return print("layer argument must be a list")
         case name if "persiann" in name:
             if len(selected_files) == 1:
                 try:
@@ -345,7 +448,7 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
     # temporal_raster = os.path.join("/Users/aldotapia/hidrocl_test/", name + "_" + scene + ".tif")
     # result_file = os.path.join("/Users/aldotapia/hidrocl_test/", name + "_" + scene + ".csv")
     result_file = os.path.join(tempfolder, name + "_" + scene + ".csv")
-    mos.rio.to_raster(temporal_raster, dtype="uint8", compress="LZW")
+    mos.rio.to_raster(temporal_raster, compress="LZW")
     match name:
         case 'snow':
             subprocess.call([rscript,

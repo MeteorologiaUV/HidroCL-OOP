@@ -49,6 +49,8 @@ def read_product_files(productpath, what="modis"):
         case "persiann_ccs":
             return [value for value in os.listdir(productpath) if "rgccs" in value
                     and ".bin" in value and ".gz" not in value]
+        case "era5":
+            return [value for value in os.listdir(productpath) if ".nc" in value]
         case _:
             print("Unknown product type")
             return None
@@ -71,6 +73,8 @@ def get_product_ids(product_files, what="modis"):
             return [value.split(".")[1] for value in product_files]
         case ("persiann_ccs_cdr" | "persiann_ccs"):
             return [value.split(".")[0].split('1d')[1] for value in product_files]
+        case "era5":
+            return [value.split("_")[1].split(".")[0] for value in product_files]
         case _:
             print("Unknown product type")
             return None
@@ -121,7 +125,7 @@ def classify_occurrences(scenes_occurrences, what="modis"):
             correctvalue = 48
         case "gldas":
             correctvalue = 8
-        case ("persiann_ccs_cdr" | "persiann_ccs"):
+        case ("persiann_ccs_cdr" | "persiann_ccs" | "era5"):
             correctvalue = 1
         case _:
             print("Unknown product type")
@@ -159,6 +163,8 @@ def get_scenes_out_of_db(complete_scenes, common_elements, what='modis'):
             idlenght = 5
         case "persiann_ccs_cdr":
             idlenght = 6
+        case "era5":
+            idlenght = 8
         case _:
             idlenght = 7
 

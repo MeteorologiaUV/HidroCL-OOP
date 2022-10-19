@@ -49,6 +49,20 @@ def test_load_persiann(file):
         da = open(file, 'rb')
         pass
 
+def test_load_era5(file):
+    """
+    Load .nc to test file
+
+    Args:
+        file (str): file path
+
+    Returns:
+        None
+    """
+    with t.HiddenPrints():
+        da = xarray.open_dataset(file, mask_and_scale=True)
+        pass
+
 
 def write_del_log(log_file, file):
     """
@@ -108,6 +122,13 @@ def file_maintainer(scene, scenes_path, name, log_file):
             case name if "persiann" in name:
                 try:
                     test_load_persiann(file)
+                except (OSError, ValueError):
+                    print(f'Removing {file}')
+                    os.remove(file)
+                    write_del_log(log_file, file)
+            case "era5":
+                try:
+                    test_load_era5(file)
                 except (OSError, ValueError):
                     print(f'Removing {file}')
                     os.remove(file)

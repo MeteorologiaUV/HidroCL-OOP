@@ -62,11 +62,16 @@
 - [x] PERSIANN processing
   - [x] test locally
   - [x] test on nas
+- [x] ERA5-Land processing
+  - [x] test locally
+  - [x] test on nas
 - [ ] Download functions refactoring
   - [ ] PERSIANN (FTP approach)
   - [ ] Earthdata (API approach)
   - [ ] MODIS web scraping (include?)
-  - [x] ERA5-land hourly (API approach)
+  - [x] ERA5-Land hourly (API approach)
+  - [x] soil moisture (API approach)
+  - [x] IMERG GIS (HTTPS approach)
   - [ ] test download functions  
 - [ ] Add documentation
   - [x] add variables documentation
@@ -78,6 +83,7 @@
     - [x] GPM_3IMERGHHL
     - [x] GLDAS_NOAHH25_3H
     - [x] PERSIANN
+    - [x] ERA5-Land
 - [ ] Add tests
 - [ ] Add examples
 - [ ] Add flowcharts
@@ -112,8 +118,10 @@
 
 *Documentation*
 
-[![packageversion](https://img.shields.io/badge/sphinx-v5.1.1-green?style=plastic)](https://anaconda.org/conda-forge/sphinx)
-[![packageversion](https://img.shields.io/badge/sphinx--rtd--theme-v0.4.3-green?style=plastic)](https://anaconda.org/conda-forge/sphinx_rtd_theme)
+[![packageversion](https://img.shields.io/badge/mkdocs-v1.4.0-green?style=plastic)](https://www.mkdocs.org)
+[![packageversion](https://img.shields.io/badge/mkdocstrings-v0.19.0-green?style=plastic)](https://mkdocstrings.github.io)
+[![packageversion](https://img.shields.io/badge/mkdocstrings-v8.5.6-green?style=plastic)](https://squidfunk.github.io/mkdocs-material/)
+[![packageversion](https://img.shields.io/badge/mkdocstrings--python-v0.7.1-green?style=plastic)](https://pypi.org/project/mkdocstrings-python/)
 
 Installation commands:
 **Environment creation and first steps:**
@@ -127,8 +135,6 @@ conda install -c conda-forge r-sf r-terra r-exactextractr r-tibble
 conda install -c conda-forge jupyter
 #  installing python libraries
 conda install -c conda-forge pandas rioxarray matplotlib geopandas netCDF4
-#  installing python documentation tool
-conda install -c conda-forge sphinx sphinx_rtd_theme
 # installing CDS api
 pip install cdsapi
 # documenting with mkdocs
@@ -148,6 +154,14 @@ install.packages("tibble", dependencies = TRUE)
 ----
 
 ## Changelog
+
+### [0.0.9] - 2022-10-19
+#### Added
+- **ERA5-Land processing**: processing of temp, pp, evapotranspiration (potential and total) snow (cover, albedo, density and depth), soil moisture from ERA5-Land product
+- **mkdocs documentation**: documentation of the package with mkdocs
+
+#### Removed
+- **sphinx documentation**: now it works with mkdocs
 
 ### [0.0.8] - 2022-09-26
 #### Added

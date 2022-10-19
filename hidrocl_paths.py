@@ -70,6 +70,16 @@ et_o_gldas_eta_cum_b_d0_p0d = os.path.join(nas_path, 'databases/observed/et_o_gl
 sm_o_gldas_sm_mean_b_d_p0d = os.path.join(nas_path, 'databases/observed/sm_o_gldas_sm_mean_b_d_p0d.csv')
 pp_o_pers_pp_mean_b_d_p0d = os.path.join(nas_path, 'databases/observed/pp_o_pers_pp_mean_b_d_p0d.csv')
 pp_o_pcdr_pp_mean_b_d_p0d = os.path.join(nas_path, 'databases/observed/pp_o_pcdr_pp_mean_b_d_p0d.csv')
+# ERA5 products:
+tmp_o_era5_tmp_mean_b_d14_p0d = os.path.join(nas_path, 'databases/observed/tmp_o_era5_tmp_mean_b_d14_p0d.csv')
+pp_o_era5_pp_mean_b_d_p0d = os.path.join(nas_path, 'databases/observed/pp_o_era5_pp_mean_b_d_p0d.csv')
+et_o_era5_eto_cum_b_d_p0d = os.path.join(nas_path, 'databases/observed/et_o_era5_eto_cum_b_d_p0d.csv')
+et_o_era5_et_cum_b_d_p0d = os.path.join(nas_path, 'databases/observed/et_o_era5_et_cum_b_d_p0d.csv')
+snow_o_era5_sca_mean_b_d_p0d = os.path.join(nas_path, 'databases/observed/snow_o_era5_sca_mean_b_d_p0d.csv')
+snow_o_era5_sna_mean_b_d_p0d = os.path.join(nas_path, 'databases/observed/snow_o_era5_sna_mean_b_d_p0d.csv') # snow albedo
+snow_o_era5_snr_mean_b_d_p0d = os.path.join(nas_path, 'databases/observed/snow_o_era5_snr_mean_b_d_p0d.csv') # snow density
+snow_o_era5_snd_mean_b_d_p0d = os.path.join(nas_path, 'databases/observed/snow_o_era5_snd_mean_b_d_p0d.csv') # snow depth
+sm_o_era5_sm_mean_b_d_p0d = os.path.join(nas_path, 'databases/observed/sm_o_era5_sm_mean_b_d_p0d.csv') # soil moisture
 
 
 # forecasted
@@ -96,6 +106,16 @@ et_o_gldas_eta_cum_b_pc = os.path.join(nas_path, 'pcdatabases/observed/et_o_glda
 sm_o_gldas_sm_mean_b_pc = os.path.join(nas_path, 'pcdatabases/observed/sm_o_gldas_sm_mean_b_pc.csv')
 pp_o_pers_pp_mean_b_pc = os.path.join(nas_path, 'pcdatabases/observed/pp_o_pers_pp_mean_b_pc.csv')
 pp_o_pcdr_pp_mean_b_pc = os.path.join(nas_path, 'pcdatabases/observed/pp_o_pcdr_pp_mean_b_pc.csv')
+# ERA5 products:
+tmp_o_era5_tmp_mean_b_pc = os.path.join(nas_path, 'pcdatabases/observed/tmp_o_era5_tmp_mean_b_pc.csv')
+pp_o_era5_pp_mean_b_pc = os.path.join(nas_path, 'pcdatabases/observed/pp_o_era5_pp_mean_b_pc.csv')
+et_o_era5_eto_cum_b_pc = os.path.join(nas_path, 'pcdatabases/observed/et_o_era5_eto_cum_b_pc.csv')
+et_o_era5_et_cum_b_pc = os.path.join(nas_path, 'pcdatabases/observed/et_o_era5_et_cum_b_pc.csv')
+snow_o_era5_sca_mean_b_pc = os.path.join(nas_path, 'pcdatabases/observed/snow_o_era5_sca_b_mean_pc.csv')
+snow_o_era5_sna_mean_b_pc = os.path.join(nas_path, 'pcdatabases/observed/snow_o_era5_sna_b_mean_pc.csv') # snow albedo
+snow_o_era5_snr_mean_b_pc = os.path.join(nas_path, 'pcdatabases/observed/snow_o_era5_snr_b_mean_pc.csv') # snow density
+snow_o_era5_snd_mean_b_pc = os.path.join(nas_path, 'pcdatabases/observed/snow_o_era5_snd_b_mean_pc.csv') # snow depth
+sm_o_era5_sm_mean_b_pc = os.path.join(nas_path, 'pcdatabases/observed/sm_o_era5_sm_mean_b_pc.csv') # soil moisture
 
 # forecasted
 
@@ -124,6 +144,17 @@ log_et_o_gldas_eta_cum = os.path.join(nas_path, 'logs/log_et_o_gldas_eta_cum.txt
 log_sm_o_gldas_sm_mean = os.path.join(nas_path, 'logs/log_sm_o_gldas_sm_mean.txt')
 log_pp_o_pers_pp_mean = os.path.join(nas_path, 'logs/log_pp_o_pers_pp_mean.txt')
 log_pp_o_pcdr_pp_mean = os.path.join(nas_path, 'logs/log_pp_o_pcdr_pp_mean.txt')
+# ERA5 products:
+log_tmp_o_era5_tmp_mean = os.path.join(nas_path, 'logs/log_tmp_o_era5_tmp_mean.txt')
+log_pp_o_era5_pp_mean = os.path.join(nas_path, 'logs/log_pp_o_era5_pp_mean.txt')
+log_et_o_era5_eto_cum = os.path.join(nas_path, 'logs/log_et_o_era5_eto_cum.txt')
+log_et_o_era5_et_cum = os.path.join(nas_path, 'logs/log_et_o_era5_et_cum.txt')
+log_snow_o_era5_sca = os.path.join(nas_path, 'logs/log_snow_o_era5_sca.txt')
+log_snow_o_era5_sna = os.path.join(nas_path, 'logs/log_snow_o_era5_sna.txt')
+log_snow_o_era5_snr = os.path.join(nas_path, 'logs/log_snow_o_era5_snr.txt')
+log_snow_o_era5_snd = os.path.join(nas_path, 'logs/log_snow_o_era5_snd.txt')
+log_sm_o_era5_sm_mean = os.path.join(nas_path, 'logs/log_sm_o_era5_sm_mean.txt')
+
 log_file_maintainer = os.path.join(nas_path, 'logs/file_maintainer.txt')
 
 # forecasted

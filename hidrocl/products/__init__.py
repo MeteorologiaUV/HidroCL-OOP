@@ -778,9 +778,9 @@ class Gpm_3imrghhl:
         product_ids (list): List of product ids. Each product id is str with common tag by date \n
         all_scenes (list): List of all scenes (no matter the product id here) \n
         scenes_occurrences (list): List of scenes occurrences for each product id \n
-        overpopulated_scenes (list): List of overpopulated scenes (more than 48 scenes for modis) \n
-        complete_scenes (list): List of complete scenes (48 scenes for modis) \n
-        incomplete_scenes (list): List of incomplete scenes (less than 48 scenes for modis) \n
+        overpopulated_scenes (list): List of overpopulated scenes (more than 48 scenes for imerg) \n
+        complete_scenes (list): List of complete scenes (48 scenes for imerg) \n
+        incomplete_scenes (list): List of incomplete scenes (less than 48 scenes for imerg) \n
         scenes_to_process (list): List of scenes to process (complete scenes no processed) \n
     """
 
@@ -940,9 +940,9 @@ class Gldas_noah:
         product_ids (list): List of product ids. Each product id is str with common tag by date \n
         all_scenes (list): List of all scenes (no matter the product id here) \n
         scenes_occurrences (list): List of scenes occurrences for each product id \n
-        overpopulated_scenes (list): List of overpopulated scenes (more than 8 scenes for modis) \n
-        complete_scenes (list): List of complete scenes (8 scenes for modis) \n
-        incomplete_scenes (list): List of incomplete scenes (less than 8 scenes for modis) \n
+        overpopulated_scenes (list): List of overpopulated scenes (more than 8 scenes for gldas) \n
+        complete_scenes (list): List of complete scenes (8 scenes for gldas) \n
+        incomplete_scenes (list): List of incomplete scenes (less than 8 scenes for gldas) \n
         scenes_to_process (list): List of scenes to process (complete scenes no processed) \n
     """
 
@@ -1080,47 +1080,43 @@ Soil moisture path: {self.soilm.database}
 
             for scene in scenes_to_process:
                 if scene not in self.snow.indatabase:
-                    if scene not in self.snow.indatabase:
-                        e.zonal_stats(scene, scenes_path,
-                                      temp_dir, 'snow_gldas',
-                                      self.snow.catchment_names, self.snow_log,
-                                      database=self.snow.database,
-                                      pcdatabase=self.snow.pcdatabase,
-                                      vector_path=self.vectorpath,
-                                      layer="SWE_inst")
+                    e.zonal_stats(scene, scenes_path,
+                                  temp_dir, 'snow_gldas',
+                                  self.snow.catchment_names, self.snow_log,
+                                  database=self.snow.database,
+                                  pcdatabase=self.snow.pcdatabase,
+                                  vector_path=self.vectorpath,
+                                  layer="SWE_inst")
 
                 if scene not in self.temp.indatabase:
-                    if scene not in self.temp.indatabase:
-                        e.zonal_stats(scene, scenes_path,
-                                      temp_dir, 'temp_gldas',
-                                      self.temp.catchment_names, self.temp_log,
-                                      database=self.temp.database,
-                                      pcdatabase=self.temp.pcdatabase,
-                                      vector_path=self.vectorpath,
-                                      layer="Tair_f_inst")
+                    e.zonal_stats(scene, scenes_path,
+                                  temp_dir, 'temp_gldas',
+                                  self.temp.catchment_names, self.temp_log,
+                                  database=self.temp.database,
+                                  pcdatabase=self.temp.pcdatabase,
+                                  vector_path=self.vectorpath,
+                                  layer="Tair_f_inst")
 
                 if scene not in self.et.indatabase:
-                    if scene not in self.et.indatabase:
-                        e.zonal_stats(scene, scenes_path,
-                                      temp_dir, 'et_gldas',
-                                      self.et.catchment_names, self.et_log,
-                                      database=self.et.database,
-                                      pcdatabase=self.et.pcdatabase,
-                                      vector_path=self.vectorpath,
-                                      layer="ECanop_tavg")
+                    e.zonal_stats(scene, scenes_path,
+                                  temp_dir, 'et_gldas',
+                                  self.et.catchment_names, self.et_log,
+                                  database=self.et.database,
+                                  pcdatabase=self.et.pcdatabase,
+                                  vector_path=self.vectorpath,
+                                  layer="ECanop_tavg")
 
                 if scene not in self.soilm.indatabase:
-                    if scene not in self.soilm.indatabase:
-                        e.zonal_stats(scene, scenes_path,
-                                      temp_dir, 'soilm_gldas',
-                                      self.soilm.catchment_names, self.soilm_log,
-                                      database=self.soilm.database,
-                                      pcdatabase=self.soilm.pcdatabase,
-                                      vector_path=self.vectorpath,
-                                      layer=["SoilMoi0_10cm_inst",
-                                             "SoilMoi10_40cm_inst",
-                                             "SoilMoi40_100cm_inst",
-                                             "SoilMoi100_200cm_inst"])
+                    e.zonal_stats(scene, scenes_path,
+                                  temp_dir, 'soilm_gldas',
+                                  self.soilm.catchment_names, self.soilm_log,
+                                  database=self.soilm.database,
+                                  pcdatabase=self.soilm.pcdatabase,
+                                  vector_path=self.vectorpath,
+                                  layer=["SoilMoi0_10cm_inst",
+                                         "SoilMoi10_40cm_inst",
+                                         "SoilMoi40_100cm_inst",
+                                         "SoilMoi100_200cm_inst"])
 
     def run_maintainer(self, log_file, limit=None):
         """
@@ -1474,4 +1470,358 @@ PERSIANN-CCS-CDR precipitation database path: {self.pp.database}
             m.file_maintainer(scene=scene,
                               scenes_path=scenes_path,
                               name='persiann',
+                              log_file=log_file)
+
+"""
+Extraction of ERA5-Land hourly data product:
+"""
+
+
+class Era5_land:
+    """
+    A class to process ERA5-Land hourly to hidrocl variables
+
+    temperature: t2m -> temp (10 * ºC) mean \n
+    potential evapotranspiration: pev -> pet (10000 * m) sum \n
+    snow albedo: asn -> snwa (10 * frac) mean \n
+    snow cover: snowc -> snw (10 * frac) mean \n
+    snow density: rsn -> snwdn (10 * kg/m3) mean \n
+    snow depth: sd -> snwdt (10 * m) mean \n
+    evapotranspiration: e -> et (10000 * m) sum \n
+    total precipitation: tp -> pp (10000 * m) sum \n
+    volumetric soil water: swvl1+swvl2+swvl3+swvl4 -> soilm (1000 * m3/m3) mean \n
+
+    temp, pp, et, pet, snow, snowa, snowdn, snowdt, soilm
+
+    Attributes:
+        temp (HidroCLVariable): HidroCLVariable object with ERA5 temperature data \n
+        pp (HidroCLVariable): HidroCLVariable object with ERA5 precipitation data \n
+        et (HidroCLVariable): HidroCLVariable object with ERA5 evapotranspiration data \n
+        pet (HidroCLVariable): HidroCLVariable object with ERA5 potential evapotranspiration data \n
+        snw (HidroCLVariable): HidroCLVariable object with ERA5 snow cover data \n
+        snwa (HidroCLVariable): HidroCLVariable object with ERA5 snow albedo data \n
+        snwdn (HidroCLVariable): HidroCLVariable object with ERA5 snow density data \n
+        snwdt (HidroCLVariable): HidroCLVariable object with ERA5 snow depth data \n
+        soilm (HidroCLVariable): HidroCLVariable object with ERA5 volumetric soil water data \n
+        temp_log (str): Log file path for temperature data \n
+        pp_log (str): Log file path for precipitation data \n
+        et_log (str): Log file path for evapotranspiration data \n
+        pet_log (str): Log file path for potential evapotranspiration data \n
+        snw_log (str): Log file path for snow cover data \n
+        snwa_log (str): Log file path for snow albedo data \n
+        snwdn_log (str): Log file path for snow density data \n
+        snwdt_log (str): Log file path for snow depth data \n
+        soilm_log (str): Log file path for volumetric soil water data \n
+        productname (str): Name of the remote sensing product to be processed \n
+        productpath (str): Path to the product folder where the product files are located \n
+        vectorpath (str): Path to the vector folder with Shapefile with areas to be processed \n
+        common_elements (list): List of common elements between the snow, temp, et and soilm databases \n
+        product_files (list): List of product files in the product folder \n
+        product_ids (list): List of product ids. Each product id is str with common tag by date \n
+        all_scenes (list): List of all scenes (no matter the product id here) \n
+        scenes_occurrences (list): List of scenes occurrences for each product id \n
+        overpopulated_scenes (list): List of overpopulated scenes (more than 1 scenes for era5) \n
+        complete_scenes (list): List of complete scenes (1 scenes for era5) \n
+        incomplete_scenes (list): List of incomplete scenes (less than 1 scenes for era5) \n
+        scenes_to_process (list): List of scenes to process (complete scenes no processed) \n
+    """
+
+    def __init__(self, temp, pp, et, pet, snw, snwa, snwdn, snwdt,
+                 soilm, product_path, vector_path, temp_log,
+                 pp_log, et_log, pet_log, snw_log, snwa_log, snwdn_log,
+                 snwdt_log, soilm_log):
+        """
+        Examples:
+
+
+        Args:
+            temp (HidroCLVariable): HidroCLVariable object with ERA5 temperature data \n
+            pp (HidroCLVariable): HidroCLVariable object with ERA5 precipitation data \n
+            et (HidroCLVariable): HidroCLVariable object with ERA5 evapotranspiration data \n
+            pet (HidroCLVariable): HidroCLVariable object with ERA5 potential evapotranspiration data \n
+            snw (HidroCLVariable): HidroCLVariable object with ERA5 snow cover data \n
+            snwa (HidroCLVariable): HidroCLVariable object with ERA5 snow albedo data \n
+            snwdn (HidroCLVariable): HidroCLVariable object with ERA5 snow density data \n
+            snwdt (HidroCLVariable): HidroCLVariable object with ERA5 snow depth data \n
+            soilm (HidroCLVariable): HidroCLVariable object with ERA5 volumetric soil water data \n
+            product_path (str): Path to the product folder where the product files are located \n
+            vector_path (str): Path to the vector folder with Shapefile with areas to be processed \n
+            temp_log (str): Log file path for temperature data \n
+            pp_log (str): Log file path for precipitation data \n
+            et_log (str): Log file path for evapotranspiration data \n
+            pet_log (str): Log file path for potential evapotranspiration data \n
+            snw_log (str): Log file path for snow cover data \n
+            snwa_log (str): Log file path for snow albedo data \n
+            snwdn_log (str): Log file path for snow density data \n
+            snwdt_log (str): Log file path for snow depth data \n
+            soilm_log (str): Log file path for volumetric soil water data \n
+
+        Raises:
+            TypeError: If temp, pp, et, pet, snow, snowa, snowdn, snowdt or soilm is not HidroCLVariable objects \n
+        """
+        if t.check_instance(temp, pp, et, pet, snw, snwa, snwdn, snwdt, soilm):
+            self.temp = temp
+            self.pp = pp
+            self.et = et
+            self.pet = pet
+            self.snw = snw
+            self.snwa = snwa
+            self.snwdn = snwdn
+            self.snwdt = snwdt
+            self.soilm = soilm
+            self.temp_log = temp_log
+            self.pp_log = pp_log
+            self.et_log = et_log
+            self.pet_log = pet_log
+            self.snw_log = snw_log
+            self.snwa_log = snwa_log
+            self.snwdn_log = snwdn_log
+            self.snwdt_log = snwdt_log
+            self.soilm_log = soilm_log
+            self.productname = "ERA5-Land Hourly 0.1 degree"
+            self.productpath = product_path
+            self.vectorpath = vector_path
+            self.common_elements = t.compare_indatabase(self.temp.indatabase,
+                                                        self.pp.indatabase,
+                                                        self.et.indatabase,
+                                                        self.pet.indatabase,
+                                                        self.snw.indatabase,
+                                                        self.snwa.indatabase,
+                                                        self.snwdn.indatabase,
+                                                        self.snwdt.indatabase,
+                                                        self.soilm.indatabase)
+            self.product_files = t.read_product_files(self.productpath, "era5")
+            self.product_ids = t.get_product_ids(self.product_files, "era5")
+            self.all_scenes = t.check_product_files(self.product_ids)
+            self.scenes_occurrences = t.count_scenes_occurrences(self.all_scenes, self.product_ids)
+            (self.overpopulated_scenes,
+             self.complete_scenes,
+             self.incomplete_scenes) = t.classify_occurrences(self.scenes_occurrences, "era5")
+            self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes,
+                                                            self.common_elements, what="era5")
+        else:
+            raise TypeError('temp, pp, et, pet, snw, snwa, snwdn, snwdt and soilm must be HidroCLVariable objects')
+
+    def __repr__(self):
+        """
+        Return a string representation of the object
+
+        Returns:
+             str: String representation of the object
+        """
+        return f'Class to extract {self.productname}'
+
+    def __str__(self):
+        """
+        Return a string representation of the object
+
+        Returns:
+            str: String representation of the object
+        """
+        return f'''
+Product: {self.productname}
+
+Temperature records: {len(self.temp.indatabase)}.
+Temperature path: {self.temp.database}
+
+Precipitation records: {len(self.pp.indatabase)}.
+Precipitation path: {self.pp.database}
+
+Evapotranspiration records: {len(self.et.indatabase)}.
+Evapotranspiration path: {self.et.database}
+
+Potential evapotranspiration records: {len(self.pet.indatabase)}.
+Potential evapotranspiration path: {self.pet.database}
+
+Snow cover records: {len(self.snw.indatabase)}.
+Snow cover path: {self.snw.database}
+
+Snow albedo records: {len(self.snwa.indatabase)}.
+Snow albedo path: {self.snwa.database}
+
+Snow density records: {len(self.snwdn.indatabase)}.
+Snow density path: {self.snwdn.database}
+
+Snow depth records: {len(self.snwdt.indatabase)}.
+Snow depth path: {self.snwdt.database}
+
+Volumetric soil water records: {len(self.soilm.indatabase)}.
+Volumetric soil water path: {self.soilm.database}
+                '''
+
+    def run_extraction(self, limit=None):
+        """
+        Run the extraction of the product.
+        If limit is None, all scenes will be processed.
+        If limit is a number, only the first limit scenes will be processed.
+
+        Args:
+            limit (int): length of the scenes_to_process
+
+        Returns:
+            str: Print
+        """
+
+        with t.HiddenPrints():
+            self.temp.checkdatabase()
+            self.pp.checkdatabase()
+            self.et.checkdatabase()
+            self.pet.checkdatabase()
+            self.snw.checkdatabase()
+            self.snwa.checkdatabase()
+            self.snwdn.checkdatabase()
+            self.snwdt.checkdatabase()
+            self.soilm.checkdatabase()
+
+
+        self.common_elements = t.compare_indatabase(self.temp.indatabase,
+                                                    self.pp.indatabase,
+                                                    self.et.indatabase,
+                                                    self.pet.indatabase,
+                                                    self.snw.indatabase,
+                                                    self.snwa.indatabase,
+                                                    self.snwdn.indatabase,
+                                                    self.snwdt.indatabase,
+                                                    self.soilm.indatabase)
+
+        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.common_elements, "era5")
+
+        scenes_path = t.get_scenes_path(self.product_files, self.productpath)
+
+        with TemporaryDirectory() as tempdirname:
+            temp_dir = Path(tempdirname)
+
+            if limit is not None:
+                scenes_to_process = self.scenes_to_process[:limit]
+            else:
+                scenes_to_process = self.scenes_to_process
+
+            for scene in scenes_to_process:
+                if scene not in self.temp.indatabase:
+                    e.zonal_stats(scene, scenes_path,
+                                  temp_dir, 'temp_era5',
+                                  self.temp.catchment_names, self.temp_log,
+                                  database=self.temp.database,
+                                  pcdatabase=self.temp.pcdatabase,
+                                  vector_path=self.vectorpath,
+                                  layer="t2m")
+
+                if scene not in self.pp.indatabase:
+                    e.zonal_stats(scene, scenes_path,
+                                  temp_dir, 'pp_era5',
+                                  self.pp.catchment_names, self.pp_log,
+                                  database=self.pp.database,
+                                  pcdatabase=self.pp.pcdatabase,
+                                  vector_path=self.vectorpath,
+                                  layer="tp")
+
+                if scene not in self.et.indatabase:
+                    e.zonal_stats(scene, scenes_path,
+                                  temp_dir, 'et_era5',
+                                  self.et.catchment_names, self.et_log,
+                                  database=self.et.database,
+                                  pcdatabase=self.et.pcdatabase,
+                                  vector_path=self.vectorpath,
+                                  layer="e")
+
+                if scene not in self.pet.indatabase:
+                    e.zonal_stats(scene, scenes_path,
+                                  temp_dir, 'pet_era5',
+                                  self.pet.catchment_names, self.pet_log,
+                                  database=self.pet.database,
+                                  pcdatabase=self.pet.pcdatabase,
+                                  vector_path=self.vectorpath,
+                                  layer="pev")
+
+                if scene not in self.snw.indatabase:
+                    e.zonal_stats(scene, scenes_path,
+                                  temp_dir, 'snw_era5',
+                                  self.snw.catchment_names, self.snw_log,
+                                  database=self.snw.database,
+                                  pcdatabase=self.snw.pcdatabase,
+                                  vector_path=self.vectorpath,
+                                  layer="snowc")
+
+                if scene not in self.snwa.indatabase:
+                    e.zonal_stats(scene, scenes_path,
+                                  temp_dir, 'snwa_era5',
+                                  self.snwa.catchment_names, self.snwa_log,
+                                  database=self.snwa.database,
+                                  pcdatabase=self.snwa.pcdatabase,
+                                  vector_path=self.vectorpath,
+                                  layer="asn")
+
+                if scene not in self.snwdn.indatabase:
+                    e.zonal_stats(scene, scenes_path,
+                                  temp_dir, 'snwdn_era5',
+                                  self.snwdn.catchment_names, self.snwdn_log,
+                                  database=self.snwdn.database,
+                                  pcdatabase=self.snwdn.pcdatabase,
+                                  vector_path=self.vectorpath,
+                                  layer="rsn")
+
+                if scene not in self.snwdt.indatabase:
+                    e.zonal_stats(scene, scenes_path,
+                                  temp_dir, 'snwdt_era5',
+                                  self.snwdt.catchment_names, self.snwdt_log,
+                                  database=self.snwdt.database,
+                                  pcdatabase=self.snwdt.pcdatabase,
+                                  vector_path=self.vectorpath,
+                                  layer="sd")
+
+                if scene not in self.soilm.indatabase:
+                    e.zonal_stats(scene, scenes_path,
+                                  temp_dir, 'soilm_era5',
+                                  self.soilm.catchment_names, self.soilm_log,
+                                  database=self.soilm.database,
+                                  pcdatabase=self.soilm.pcdatabase,
+                                  vector_path=self.vectorpath,
+                                  layer=["swvl1", "swvl2", "swvl3", "swvl4"])
+
+    def run_maintainer(self, log_file, limit=None):
+        """
+        Run file maintainer. It will remove any file with problems
+
+        Args:
+            log_file (str): log file path
+            limit (int): length of the scenes_to_process
+
+        Returns:
+            str: Print
+        """
+
+        with t.HiddenPrints():
+            self.temp.checkdatabase()
+            self.pp.checkdatabase()
+            self.et.checkdatabase()
+            self.pet.checkdatabase()
+            self.snw.checkdatabase()
+            self.snwa.checkdatabase()
+            self.snwdn.checkdatabase()
+            self.snwdt.checkdatabase()
+            self.soilm.checkdatabase()
+
+        self.common_elements = t.compare_indatabase(self.temp.indatabase,
+                                                    self.pp.indatabase,
+                                                    self.et.indatabase,
+                                                    self.pet.indatabase,
+                                                    self.snw.indatabase,
+                                                    self.snwa.indatabase,
+                                                    self.snwdn.indatabase,
+                                                    self.snwdt.indatabase,
+                                                    self.soilm.indatabase)
+
+        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.common_elements, "era5")
+
+        scenes_path = t.get_scenes_path(self.product_files, self.productpath)
+
+        if limit is not None:
+            scenes_to_process = self.scenes_to_process[:limit]
+        else:
+            scenes_to_process = self.scenes_to_process
+
+        for scene in scenes_to_process:
+            m.file_maintainer(scene=scene,
+                              scenes_path=scenes_path,
+                              name='era5',
                               log_file=log_file)
