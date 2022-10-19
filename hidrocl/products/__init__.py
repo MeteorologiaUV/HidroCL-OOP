@@ -55,7 +55,7 @@ class Mod13q1:
             >>> mod13q1 = Mod13q1(ndvi, evi, nbr, product_path, vector_path,
             ...                   ndvi_log, evi_log, nbr_log)
             >>> mod13q1
-            Class to extract MODIS MOD13Q1 Version 6.1
+            "Class to extract MODIS MOD13Q1 Version 6.1"
 
         Args:
             ndvi (HidroCLVariable): Object with the NDVI data
@@ -267,7 +267,7 @@ class Mod10a2:
             >>> mod10a2 = Mod10a2(nsnow, ssnow, product_path,
             ...                   north_vector_path, south_vector_path, snow_log)
             >>> mod10a2
-            Class to extract MODIS MOD10A2 Version 6.1
+            "Class to extract MODIS MOD10A2 Version 6.1"
 
 
         Args:
@@ -446,7 +446,7 @@ class Mod16a2:
             >>> pet_log = '/home/user/log/pet.log'
             >>> mod16a2 = Mod16a2(pet, product_path, vector_path, pet_log)
             >>> mod16a2
-            Class to extract MODIS MOD16A2 Version 6.1
+            "Class to extract MODIS MOD16A2 Version 6.1"
 
         Args:
             pet (HidroCLVariable): Object with the potential evapotranspiration data
@@ -611,7 +611,7 @@ class Mcd15a2h:
             >>> mcd15a2h = Mcd15a2h(lai, fpar, product_path, vector_path,
             ...                     lai_log, fpar_log)
             >>> mcd15a2h
-            Class to extract MODIS MCD15A2H Version 6.0
+            "Class to extract MODIS MCD15A2H Version 6.0"
 
         Args:
             lai (HidroCLVariable): HidroCLVariable object with the LAI data
@@ -789,10 +789,10 @@ class Gpm_3imrghhl:
         Examples:
             >>> from hidrocl import HidroCLVariable
             >>> from hidrocl import Gpm_3imrghhl
-            >>> pp = HidroCLVariable('pp', 'imerg', 'pp.db', 'pp_pc.db')
+            >>> pp = HidroCLVariable('pp', 'pp.db', 'pp_pc.db')
             >>> gpm = Gpm_3imrghhl(pp, product_path, vector_path, pp_log)
             >>> gpm
-            Class to extract GPM IMERG Late Precipitation L3 Half Hourly 0.1 degree Version 0.6
+            "Class to extract GPM IMERG Late Precipitation L3 Half Hourly 0.1 degree Version 0.6"
 
         Args:
             pp (HidroCLVariable): HidroCLVariable object with IMERG precipitation data \n
@@ -965,7 +965,7 @@ class Gldas_noah:
             >>> gldas = Gldas_noah(snow, temp, et, soilm, product_path,
             ...                    vector_path, snow_log, temp_log, et_log, soilm_log)
             >>> gldas
-            Class to extract GLDAS Noah Land Surface Model L4 3 hourly 0.25 degree Version 2.1
+            "Class to extract GLDAS Noah Land Surface Model L4 3 hourly 0.25 degree Version 2.1"
 
         Args:
             snow (HidroCLVariable): HidroCLVariable with the GLDAS snow data \n
@@ -1188,13 +1188,13 @@ class Persiann_ccs:
         Examples:
             >>> from hidrocl import HidroCLVariable
             >>> from hidrocl import Persiann_ccs
-            >>> pp = HidroCLVariable('pp', 'PERSIANN-CCS', 'pp.db', 'pp_pc.db')
+            >>> pp = HidroCLVariable('pp', 'pp.db', 'pp_pc.db')
             >>> product_path = '/home/user/data/PERSIANN-CCS'
             >>> vector_path = '/home/user/data/vector.shp'
             >>> pp_log = '/home/user/data/logs/pp_log.txt'
             >>> persiann_ccs = Persiann_ccs(pp, product_path, vector_path, pp_log)
             >>> persiann_ccs
-            Class to extract PERSIANN-CCS 0.04º
+            "Class to extract PERSIANN-CCS 0.04º"
 
         Args:
             pp (HidroCLVariable): HidroCLVariable object with PERSIANN-CCS precipitation data \n
@@ -1346,13 +1346,13 @@ class Persiann_ccs_cdr:
         Examples:
             >>> from hidrocl import HidroCLVariable
             >>> from hidrocl import Persiann_ccs_cdr
-            >>> pp = HidroCLVariable('pp', 'PERSIANN-CCS-CDR', 'pp.db', 'pp_pc.db')
+            >>> pp = HidroCLVariable('pp', 'pp.db', 'pp_pc.db')
             >>> product_path = '/home/user/data/PERSIANN-CCS-CDR'
             >>> vector_path = '/home/user/data/vector.shp'
             >>> pp_log = '/home/user/data/logs/pp_log.txt'
             >>> persiann_ccs_cdr = Persiann_ccs_cdr(pp, product_path, vector_path, pp_log)
             >>> persiann_ccs_cdr
-            Class to extract PERSIANN-CCS-CDR 0.04º
+            "Class to extract PERSIANN-CCS-CDR 0.04º"
 
         Args:
             pp (HidroCLVariable): HidroCLVariable object with PERSIANN-CCS-CDR precipitation data \n
@@ -1479,7 +1479,7 @@ Extraction of ERA5-Land hourly data product:
 
 class Era5_land:
     """
-    A class to process ERA5-Land hourly to hidrocl variables
+    A class to process ERA5-Land hourly to hidrocl variables. Where:
 
     temperature: t2m -> temp (10 * ºC) mean \n
     potential evapotranspiration: pev -> pet (10000 * m) sum \n
@@ -1491,7 +1491,7 @@ class Era5_land:
     total precipitation: tp -> pp (10000 * m) sum \n
     volumetric soil water: swvl1+swvl2+swvl3+swvl4 -> soilm (1000 * m3/m3) mean \n
 
-    temp, pp, et, pet, snow, snowa, snowdn, snowdt, soilm
+    temp, pp, et, pet, snow, snowa, snowdn, snowdt, soilm \n
 
     Attributes:
         temp (HidroCLVariable): HidroCLVariable object with ERA5 temperature data \n
@@ -1532,6 +1532,35 @@ class Era5_land:
                  snwdt_log, soilm_log):
         """
         Examples:
+            >>> from hidrocl import HidroCLVariable
+            >>> from hidrocl import Era5_land
+            >>> temp = HidroCLVariable('temp',temp.db, temppc.db)
+            >>> pp = HidroCLVariable('pp', pp.db, pppc.db)
+            >>> et = HidroCLVariable('et', et.db, etpc.db)
+            >>> pet = HidroCLVariable('pet', pet.db, petpc.db)
+            >>> snw = HidroCLVariable('snw', snw.db, snwpc.db)
+            >>> snwa = HidroCLVariable('snwa', snwa.db, snwapc.db)
+            >>> snwdn = HidroCLVariable('snwdn', snwdn.db, snwdnpc.db)
+            >>> snwdt = HidroCLVariable('snwdt', snwdt.db, snwdtpc.db)
+            >>> soilm = HidroCLVariable('soilm', soilm.db, soilmdb.db)
+            >>> product_path = '/home/user/era5-land'
+            >>> vector_path = '/home/user/shapefiles'
+            >>> temp_log = '/home/user/temp.log'
+            >>> pp_log = '/home/user/pp.log'
+            >>> et_log = '/home/user/et.log'
+            >>> pet_log = '/home/user/pet.log'
+            >>> snw_log = '/home/user/snw.log'
+            >>> snwa_log = '/home/user/snwa.log'
+            >>> snwdn_log = '/home/user/snwdn.log'
+            >>> snwdt_log = '/home/user/snwdt.log'
+            >>> soilm_log = '/home/user/soilm.log'
+            >>> era5 = Era5_land(temp, pp, et, pet, snw, snwa, snwdn, snwdt,
+                    soilm, product_path, vector_path, temp_log,
+                    pp_log, et_log, pet_log, snw_log, snwa_log, snwdn_log,
+                    snwdt_log, soilm_log)
+            >>> era5
+            "Class to extract ERA5-Land Hourly 0.1 degree"
+            >>> era5.run_extraction()
 
 
         Args:
