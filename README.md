@@ -114,7 +114,7 @@
 [![packageversion](https://img.shields.io/badge/matplotlib-v3.5.3-green?style=plastic)](https://anaconda.org/conda-forge/matplotlib)
 [![packageversion](https://img.shields.io/badge/geopandas-v0.11.1-green?style=plastic)](https://anaconda.org/conda-forge/geopandas)
 [![packageversion](https://img.shields.io/badge/netCDF4-v1.6.0-green?style=plastic)](https://anaconda.org/conda-forge/netcdf4)
-
+[![packageversion](https://img.shields.io/badge/earthdata-v0.4.1-green?style=plastic)](https://anaconda.org/conda-forge/earthdata)
 
 *Documentation*
 
@@ -134,7 +134,7 @@ conda install -c conda-forge r-sf r-terra r-exactextractr r-tibble
 # for running tests
 conda install -c conda-forge jupyter
 #  installing python libraries
-conda install -c conda-forge pandas rioxarray matplotlib geopandas netCDF4
+conda install -c conda-forge pandas rioxarray matplotlib geopandas netCDF4 earthdata
 # installing CDS api
 pip install cdsapi
 # documenting with mkdocs
