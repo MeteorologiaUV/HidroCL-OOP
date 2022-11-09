@@ -49,6 +49,7 @@ def test_load_persiann(file):
         da = open(file, 'rb')
         pass
 
+
 def test_load_era5(file):
     """
     Load .nc to test file
@@ -85,8 +86,12 @@ def test_open_raster(raster_list):
     :return: None
     """
 
-    for raster in raster_list:
-        with rioxr.open_rasterio(raster, masked=True) as src:
+    if isinstance(raster_list, list):
+        for raster in raster_list:
+            with rioxr.open_rasterio(raster, masked=True) as src:
+                pass
+    else:
+        with rioxr.open_rasterio(raster_list, masked=True) as src:
             pass
 
 
