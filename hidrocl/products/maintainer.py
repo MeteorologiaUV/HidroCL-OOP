@@ -65,6 +65,22 @@ def test_load_era5(file):
         pass
 
 
+def test_load_imerggis(file):
+    """
+    Load .tiff to test file
+
+    Args:
+        file (str): file path
+
+    Returns:
+        None
+    """
+
+    with t.HiddenPrints():
+        da = rioxr.open_rasterio(file)
+        pass
+
+
 def load_tif(file):
     """
     Load .tif to test file
@@ -130,6 +146,13 @@ def file_maintainer(scene, scenes_path, name, log_file):
                 try:
                     test_load_hdf5(file)
                 except OSError:
+                    print(f'Removing {file}')
+                    os.remove(file)
+                    write_del_log(log_file, file)
+            case 'imgis':
+                try:
+                    test_load_imerggis(file)
+                except (rioe.RasterioIOError, rxre.RasterioIOError):
                     print(f'Removing {file}')
                     os.remove(file)
                     write_del_log(log_file, file)
