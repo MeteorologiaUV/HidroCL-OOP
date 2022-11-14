@@ -16,7 +16,7 @@ pp.checkdatabase()
 pp.checkpcdatabase()
 
 imerg = hidrocl.ImergGIS(pp,
-                         product_path=hcl.imerghhl_path,
+                         product_path=hcl.imerggis_path,
                          vector_path=hcl.hidrocl_wgs84,
                          pp_log=hcl.log_pp_o_imerg_pp_mean)
 
