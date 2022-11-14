@@ -8,6 +8,7 @@ import time
 import xarray
 import subprocess
 import numpy as np
+import pandas as pd
 from math import ceil
 from array import array
 from . import tools as t
@@ -67,6 +68,7 @@ def load_nc(file, var):
         da = xarray.open_dataset(file, engine="netcdf4")
         da = da[var]
         return da.sel(lat=slice(-55, -15), lon=slice(-75, -65))
+
 
 def load_era5(file, var, reducer='mean'):
     """
@@ -146,6 +148,47 @@ def load_persiann(file):
         return persiann.sortby(persiann.lon)\
             .sortby(persiann.lat).sel(lat=slice(-55, -15), lon=slice(-75, -65))\
             .rename({'lon': 'x', 'lat': 'y'})
+
+
+def load_gfs(file, var, day=0):
+    """
+    Load .nc files from GFS product
+
+    Args:
+        file (str): file path
+        var (str): variable to extract
+        day (int): day to extract
+
+    Returns:
+        xarray.DataArray: xarray.DataArray with the variable
+    """
+
+    with t.HiddenPrints():
+        da = xarray.open_dataset(file, mask_and_scale=True)
+        da = da[var]
+        da = da.sel(valid_time=slice(da.time+pd.to_timedelta(24*day, unit='H'),
+                                     da.time+pd.to_timedelta(24*day + 23, unit='H')))\
+            .transpose('valid_time', 'latitude', 'longitude')
+        da.coords['longitude'] = (da.coords['longitude'] + 180) % 360 - 180
+        return da
+
+
+def load_imerggis(file, nodata=29999):
+    """
+    Load .tif files from IMERG product
+
+    Args:
+        file (str): file path
+        nodata (int, float): nodata value
+
+    Returns:
+        xarray.DataArray: xarray.DataArray with the variable
+    """
+
+    with t.HiddenPrints():
+        da = rioxr.open_rasterio(file)
+        da = da.sel(x=slice(-75, -65), y=slice(-15, -55))
+        return da.where(da != nodata)
 
 
 def sum_datasets(dataset_list):
@@ -323,6 +366,8 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
     match name:
         case "imerg":
             file_date = datetime.strptime(scene, '%Y%m%d').strftime('%Y-%m-%d')
+        case "imgis":
+            file_date = datetime.strptime(scene, '%Y%m%d').strftime('%Y-%m-%d')
         case name if "gldas" in name:
             file_date = datetime.strptime(scene, 'A%Y%m%d').strftime('%Y-%m-%d')
         case "persiann_ccs":
@@ -357,6 +402,13 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
                 datasets_list = [load_hdf5(ds, kwargs.get("layer")) for ds in selected_files]
                 mos = sum_datasets(datasets_list)
             except OSError:
+                return print(f"Error in scene {scene}")
+
+        case 'imgis':
+            try:
+                datasets_list = [load_imerggis(ds) for ds in selected_files]
+                mos = sum_datasets(datasets_list)
+            except (rxre.RioXarrayError, rioe.RasterioIOError):
                 return print(f"Error in scene {scene}")
 
         case name if "gldas" in name:

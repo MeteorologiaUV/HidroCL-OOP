@@ -41,6 +41,8 @@ def read_product_files(productpath, what="modis"):
             return [value for value in os.listdir(productpath) if ".hdf" in value]
         case "imerg":
             return [value for value in os.listdir(productpath) if ".HDF5" in value]
+        case "imgis":
+            return [value for value in os.listdir(productpath) if ".tif" in value]
         case "gldas":
             return [value for value in os.listdir(productpath) if ".nc4" in value]
         case "persiann_ccs_cdr":
@@ -68,6 +70,8 @@ def get_product_ids(product_files, what="modis"):
         case "modis":
             return [value.split(".")[1] for value in product_files]
         case "imerg":
+            return [value.split(".")[4].split("-")[0] for value in product_files]
+        case "imgis":
             return [value.split(".")[4].split("-")[0] for value in product_files]
         case "gldas":
             return [value.split(".")[1] for value in product_files]
@@ -123,6 +127,8 @@ def classify_occurrences(scenes_occurrences, what="modis"):
             correctvalue = 9
         case "imerg":
             correctvalue = 48
+        case "imgis":
+            correctvalue = 48
         case "gldas":
             correctvalue = 8
         case ("persiann_ccs_cdr" | "persiann_ccs" | "era5"):
@@ -156,6 +162,8 @@ def get_scenes_out_of_db(complete_scenes, common_elements, what='modis'):
         case "modis":
             idlenght = 7
         case "imerg":
+            idlenght = 8
+        case "imgis":
             idlenght = 8
         case "gldas":
             idlenght = 8

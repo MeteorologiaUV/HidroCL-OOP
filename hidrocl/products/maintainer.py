@@ -65,6 +65,22 @@ def test_load_era5(file):
         pass
 
 
+def load_tif(file):
+    """
+    Load .tif to test file
+
+    Args:
+        file (str): file path
+
+    Returns:
+        None
+    """
+
+    with t.HiddenPrints():
+        da = rioxr.open_rasterio(file)
+        pass
+
+
 def write_del_log(log_file, file):
     """
     Write log file for deleted files
