@@ -408,7 +408,7 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
             try:
                 datasets_list = [load_imerggis(ds) for ds in selected_files]
                 mos = sum_datasets(datasets_list)
-            except (rxre.RioXarrayError, rioe.RasterioIOError):
+            except (rxre.RioXarrayError, rioe.RasterioIOError, ValueError):
                 return print(f"Error in scene {scene}")
 
         case name if "gldas" in name:

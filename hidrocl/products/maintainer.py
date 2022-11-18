@@ -152,7 +152,7 @@ def file_maintainer(scene, scenes_path, name, log_file):
             case 'imgis':
                 try:
                     test_load_imerggis(file)
-                except (rxre.RioXarrayError, rioe.RasterioIOError):
+                except (rxre.RioXarrayError, rioe.RasterioIOError, ValueError):
                     print(f'Removing {file}')
                     os.remove(file)
                     write_del_log(log_file, file)
