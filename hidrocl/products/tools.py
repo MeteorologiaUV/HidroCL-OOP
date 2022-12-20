@@ -2,6 +2,7 @@
 
 import os
 import sys
+from pathlib import Path
 from functools import reduce
 from ..variables import HidroCLVariable
 
@@ -28,7 +29,7 @@ def compare_indatabase(*args):
     return list(reduce((lambda x, y: x & y), indb))
 
 
-def read_product_files(productpath, what="modis"):
+def read_product_files(productpath, what="modis", variable = None):
     """
     Read remote sensing/modeling product files
 
@@ -45,6 +46,12 @@ def read_product_files(productpath, what="modis"):
             return [value for value in os.listdir(productpath) if ".tif" in value]
         case "gldas":
             return [value for value in os.listdir(productpath) if ".nc4" in value]
+        case "gfs":
+            if variable:
+                return [str(value.relative_to(productpath)) for value in Path(productpath).rglob('*'+variable+'*.nc')]
+            else:
+                print('Variable not defined')
+                return None
         case "persiann_ccs_cdr":
             return [value for value in os.listdir(productpath) if "PCCSCDR" in value
                     and ".bin" in value and ".gz" not in value]
@@ -77,6 +84,8 @@ def get_product_ids(product_files, what="modis"):
             return [value.split(".")[1] for value in product_files]
         case ("persiann_ccs_cdr" | "persiann_ccs"):
             return [value.split(".")[0].split('1d')[1] for value in product_files]
+        case "gfs":
+            return [value.split("_")[-1].split('.')[0] for value in product_files]
         case "era5":
             return [value.split("_")[1].split(".")[0] for value in product_files]
         case _:
@@ -131,7 +140,7 @@ def classify_occurrences(scenes_occurrences, what="modis"):
             correctvalue = 48
         case "gldas":
             correctvalue = 8
-        case ("persiann_ccs_cdr" | "persiann_ccs" | "era5"):
+        case ("persiann_ccs_cdr" | "persiann_ccs" | "era5" | "gfs"):
             correctvalue = 1
         case _:
             print("Unknown product type")
@@ -173,6 +182,8 @@ def get_scenes_out_of_db(complete_scenes, common_elements, what='modis'):
             idlenght = 6
         case "era5":
             idlenght = 8
+        case "gfs":
+            idlenght = 10
         case _:
             idlenght = 7
 

@@ -2019,36 +2019,34 @@ Extraction of GFS data product:
 
 class Gfs:
     """
-    A class to process GFS to hidrocl variables. Where:
+    A class to process GFS to hidrocl variables. The used variables are:
+    - gh: Geopotential height
+    - prate: Precipitation rate
+    - r2m: 2m relative humidity
+    - t2m: 2m temperature
+    - u10: 10m U wind component
+    - v10: 10m V wind component
 
     Attributes:
-        pp_mean (HidroCLVariable: HidroCLVariable object with GFS precipitation mean (from Prate) \n
-        pp_max (HidroCLVariable: HidroCLVariable object with GFS precipitation max (from Prate) \n
-        pp_max3h (HidroCLVariable: HidroCLVariable object with GFS 3-hour precipitation max (from Prate) \n
+        db0 (HidroCLVariable): HidroCLVariable object with GFS variable (see avobe) of day 0 \n
+        db1 (HidroCLVariable): HidroCLVariable object with GFS variable (see avobe) of day 1 \n
+        db2 (HidroCLVariable): HidroCLVariable object with GFS variable (see avobe) of day 2 \n
+        db3 (HidroCLVariable): HidroCLVariable object with GFS variable (see avobe) of day 3 \n
+        db4 (HidroCLVariable): HidroCLVariable object with GFS variable (see avobe) of day 4 \n
 
+        db_log (str): Log file path for temperature data \n
 
-        temp (HidroCLVariable): HidroCLVariable object with ERA5 temperature data (t2m variable) \n
-        pp (HidroCLVariable): HidroCLVariable object with ERA5 precipitation data (tp variable) \n
-        et (HidroCLVariable): HidroCLVariable object with ERA5 evapotranspiration data (e variable) \n
-        pet (HidroCLVariable): HidroCLVariable object with ERA5 potential evapotranspiration data (pev variable) \n
-        snw (HidroCLVariable): HidroCLVariable object with ERA5 snow cover data \n
-        snwa (HidroCLVariable): HidroCLVariable object with ERA5 snow albedo data \n
-        snwdn (HidroCLVariable): HidroCLVariable object with ERA5 snow density data \n
-        snwdt (HidroCLVariable): HidroCLVariable object with ERA5 snow depth data \n
-        soilm (HidroCLVariable): HidroCLVariable object with ERA5 volumetric soil water data \n
-        temp_log (str): Log file path for temperature data \n
-        pp_log (str): Log file path for precipitation data \n
-        et_log (str): Log file path for evapotranspiration data \n
-        pet_log (str): Log file path for potential evapotranspiration data \n
-        snw_log (str): Log file path for snow cover data \n
-        snwa_log (str): Log file path for snow albedo data \n
-        snwdn_log (str): Log file path for snow density data \n
-        snwdt_log (str): Log file path for snow depth data \n
-        soilm_log (str): Log file path for volumetric soil water data \n
+        valid_time (int): Valid time for extracting the product \n
+
+        variable (str): Variable name \n
+
         productname (str): Name of the remote sensing product to be processed \n
         productpath (str): Path to the product folder where the product files are located \n
+
         vectorpath (str): Path to the vector folder with Shapefile with areas to be processed \n
-        common_elements (list): List of common elements between the snow, temp, et and soilm databases \n
+
+
+
         product_files (list): List of product files in the product folder \n
         product_ids (list): List of product ids. Each product id is str with common tag by date \n
         all_scenes (list): List of all scenes (no matter the product id here) \n
@@ -2059,110 +2057,49 @@ class Gfs:
         scenes_to_process (list): List of scenes to process (complete scenes no processed) \n
     """
 
-    def __init__(self, temp, pp, et, pet, snw, snwa, snwdn, snwdt,
-                 soilm, product_path, vector_path, temp_log,
-                 pp_log, et_log, pet_log, snw_log, snwa_log, snwdn_log,
-                 snwdt_log, soilm_log):
+    def __init__(self, db0, db1, db2, db3, db4,
+                 db_log, variable,
+                 product_path, vectorpath):
         """
         Examples:
-            >>> from hidrocl import HidroCLVariable
-            >>> from hidrocl import Era5_land
-            >>> temp = HidroCLVariable('temp',temp.db, temppc.db)
-            >>> pp = HidroCLVariable('pp', pp.db, pppc.db)
-            >>> et = HidroCLVariable('et', et.db, etpc.db)
-            >>> pet = HidroCLVariable('pet', pet.db, petpc.db)
-            >>> snw = HidroCLVariable('snw', snw.db, snwpc.db)
-            >>> snwa = HidroCLVariable('snwa', snwa.db, snwapc.db)
-            >>> snwdn = HidroCLVariable('snwdn', snwdn.db, snwdnpc.db)
-            >>> snwdt = HidroCLVariable('snwdt', snwdt.db, snwdtpc.db)
-            >>> soilm = HidroCLVariable('soilm', soilm.db, soilmdb.db)
-            >>> product_path = '/home/user/era5-land'
-            >>> vector_path = '/home/user/shapefiles'
-            >>> temp_log = '/home/user/temp.log'
-            >>> pp_log = '/home/user/pp.log'
-            >>> et_log = '/home/user/et.log'
-            >>> pet_log = '/home/user/pet.log'
-            >>> snw_log = '/home/user/snw.log'
-            >>> snwa_log = '/home/user/snwa.log'
-            >>> snwdn_log = '/home/user/snwdn.log'
-            >>> snwdt_log = '/home/user/snwdt.log'
-            >>> soilm_log = '/home/user/soilm.log'
-            >>> era5 = Era5_land(temp, pp, et, pet, snw, snwa, snwdn, snwdt,
-                    soilm, product_path, vector_path, temp_log,
-                    pp_log, et_log, pet_log, snw_log, snwa_log, snwdn_log,
-                    snwdt_log, soilm_log)
-            >>> era5
-            "Class to extract ERA5-Land Hourly 0.1 degree"
-            >>> era5.run_extraction()
-
 
         Args:
-            temp (HidroCLVariable): HidroCLVariable object with ERA5 temperature data \n
-            pp (HidroCLVariable): HidroCLVariable object with ERA5 precipitation data \n
-            et (HidroCLVariable): HidroCLVariable object with ERA5 evapotranspiration data \n
-            pet (HidroCLVariable): HidroCLVariable object with ERA5 potential evapotranspiration data \n
-            snw (HidroCLVariable): HidroCLVariable object with ERA5 snow cover data \n
-            snwa (HidroCLVariable): HidroCLVariable object with ERA5 snow albedo data \n
-            snwdn (HidroCLVariable): HidroCLVariable object with ERA5 snow density data \n
-            snwdt (HidroCLVariable): HidroCLVariable object with ERA5 snow depth data \n
-            soilm (HidroCLVariable): HidroCLVariable object with ERA5 volumetric soil water data \n
+            db (HidroCLVariable): HidroCLVariable object with GFS variable (see avobe) \n
+            db_log (str): Log file path for extracted data \n
+            valid_time (int): Valid time for extracting the product \n
+            variable (str): Variable name \n
             product_path (str): Path to the product folder where the product files are located \n
-            vector_path (str): Path to the vector folder with Shapefile with areas to be processed \n
-            temp_log (str): Log file path for temperature data \n
-            pp_log (str): Log file path for precipitation data \n
-            et_log (str): Log file path for evapotranspiration data \n
-            pet_log (str): Log file path for potential evapotranspiration data \n
-            snw_log (str): Log file path for snow cover data \n
-            snwa_log (str): Log file path for snow albedo data \n
-            snwdn_log (str): Log file path for snow density data \n
-            snwdt_log (str): Log file path for snow depth data \n
-            soilm_log (str): Log file path for volumetric soil water data \n
+            vectorpath (str): Path to the vector folder with Shapefile with areas to be processed \n
 
         Raises:
-            TypeError: If temp, pp, et, pet, snow, snowa, snowdn, snowdt or soilm is not HidroCLVariable objects \n
+            TypeError: If db is not HidroCLVariable objects \n
         """
-        if t.check_instance(temp, pp, et, pet, snw, snwa, snwdn, snwdt, soilm):
-            self.temp = temp
-            self.pp = pp
-            self.et = et
-            self.pet = pet
-            self.snw = snw
-            self.snwa = snwa
-            self.snwdn = snwdn
-            self.snwdt = snwdt
-            self.soilm = soilm
-            self.temp_log = temp_log
-            self.pp_log = pp_log
-            self.et_log = et_log
-            self.pet_log = pet_log
-            self.snw_log = snw_log
-            self.snwa_log = snwa_log
-            self.snwdn_log = snwdn_log
-            self.snwdt_log = snwdt_log
-            self.soilm_log = soilm_log
-            self.productname = "ERA5-Land Hourly 0.1 degree"
+        if t.check_instance(db0, db1, db2, db3, db4):
+            self.db0 = db0
+            self.db1 = db1
+            self.db2 = db2
+            self.db3 = db3
+            self.db4 = db4
+            self.db_log = db_log
+            self.variable = variable
+            self.productname = "GFS 0.5º"
             self.productpath = product_path
-            self.vectorpath = vector_path
-            self.common_elements = t.compare_indatabase(self.temp.indatabase,
-                                                        self.pp.indatabase,
-                                                        self.et.indatabase,
-                                                        self.pet.indatabase,
-                                                        self.snw.indatabase,
-                                                        self.snwa.indatabase,
-                                                        self.snwdn.indatabase,
-                                                        self.snwdt.indatabase,
-                                                        self.soilm.indatabase)
-            self.product_files = t.read_product_files(self.productpath, "era5")
-            self.product_ids = t.get_product_ids(self.product_files, "era5")
+            self.vectorpath = vectorpath
+            self.common_elements = t.compare_indatabase(self.db0.indatabase, self.db1.indatabase,
+                                                        self.db2.indatabase, self.db3.indatabase, self.db4.indatabase)
+            self.product_files = t.read_product_files(self.productpath, "gfs", variable=self.variable)
+            self.product_ids = t.get_product_ids(self.product_files, "gfs")
+
             self.all_scenes = t.check_product_files(self.product_ids)
+
             self.scenes_occurrences = t.count_scenes_occurrences(self.all_scenes, self.product_ids)
             (self.overpopulated_scenes,
              self.complete_scenes,
-             self.incomplete_scenes) = t.classify_occurrences(self.scenes_occurrences, "era5")
+             self.incomplete_scenes) = t.classify_occurrences(self.scenes_occurrences, "gfs")
             self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes,
-                                                            self.common_elements, what="era5")
+                                                            self.common_elements, what="gfs")
         else:
-            raise TypeError('temp, pp, et, pet, snw, snwa, snwdn, snwdt and soilm must be HidroCLVariable objects')
+            raise TypeError('db0, db1, db2, db3, db4 must be HidroCLVariable objects')
 
     def __repr__(self):
         """
@@ -2183,32 +2120,20 @@ class Gfs:
         return f'''
 Product: {self.productname}
 
-Temperature records: {len(self.temp.indatabase)}.
-Temperature path: {self.temp.database}
+Database records day0: {len(self.db0.indatabase)}.
+Database path day 0: {self.db0.database}
 
-Precipitation records: {len(self.pp.indatabase)}.
-Precipitation path: {self.pp.database}
+Database records day1: {len(self.db1.indatabase)}.
+Database path day 1: {self.db1.database}
 
-Evapotranspiration records: {len(self.et.indatabase)}.
-Evapotranspiration path: {self.et.database}
+Database records day2: {len(self.db2.indatabase)}.
+Database path day 2: {self.db2.database}
 
-Potential evapotranspiration records: {len(self.pet.indatabase)}.
-Potential evapotranspiration path: {self.pet.database}
+Database records day3: {len(self.db3.indatabase)}.
+Database path day 3: {self.db3.database}
 
-Snow cover records: {len(self.snw.indatabase)}.
-Snow cover path: {self.snw.database}
-
-Snow albedo records: {len(self.snwa.indatabase)}.
-Snow albedo path: {self.snwa.database}
-
-Snow density records: {len(self.snwdn.indatabase)}.
-Snow density path: {self.snwdn.database}
-
-Snow depth records: {len(self.snwdt.indatabase)}.
-Snow depth path: {self.snwdt.database}
-
-Volumetric soil water records: {len(self.soilm.indatabase)}.
-Volumetric soil water path: {self.soilm.database}
+Database records day4: {len(self.db4.indatabase)}.
+Database path day 4: {self.db4.database}
                 '''
 
     def run_extraction(self, limit=None):
@@ -2225,27 +2150,13 @@ Volumetric soil water path: {self.soilm.database}
         """
 
         with t.HiddenPrints():
-            self.temp.checkdatabase()
-            self.pp.checkdatabase()
-            self.et.checkdatabase()
-            self.pet.checkdatabase()
-            self.snw.checkdatabase()
-            self.snwa.checkdatabase()
-            self.snwdn.checkdatabase()
-            self.snwdt.checkdatabase()
-            self.soilm.checkdatabase()
+            self.db0.checkdatabase()
+            self.db1.checkdatabase()
+            self.db2.checkdatabase()
+            self.db3.checkdatabase()
+            self.db4.checkdatabase()
 
-        self.common_elements = t.compare_indatabase(self.temp.indatabase,
-                                                    self.pp.indatabase,
-                                                    self.et.indatabase,
-                                                    self.pet.indatabase,
-                                                    self.snw.indatabase,
-                                                    self.snwa.indatabase,
-                                                    self.snwdn.indatabase,
-                                                    self.snwdt.indatabase,
-                                                    self.soilm.indatabase)
-
-        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.common_elements, "era5")
+        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.common_elements, what="gfs")
 
         scenes_path = t.get_scenes_path(self.product_files, self.productpath)
 
@@ -2258,86 +2169,38 @@ Volumetric soil water path: {self.soilm.database}
                 scenes_to_process = self.scenes_to_process
 
             for scene in scenes_to_process:
-                if scene not in self.temp.indatabase:
-                    e.zonal_stats(scene, scenes_path,
-                                  temp_dir, 'temp_era5',
-                                  self.temp.catchment_names, self.temp_log,
-                                  database=self.temp.database,
-                                  pcdatabase=self.temp.pcdatabase,
-                                  vector_path=self.vectorpath,
-                                  layer="t2m")
+                days = []
+                if scene not in self.db0.indatabase:
+                    days.append(0)
+                if scene not in self.db1.indatabase:
+                    days.append(1)
+                if scene not in self.db2.indatabase:
+                    days.append(2)
+                if scene not in self.db3.indatabase:
+                    days.append(3)
+                if scene not in self.db4.indatabase:
+                    days.append(4)
 
-                if scene not in self.pp.indatabase:
-                    e.zonal_stats(scene, scenes_path,
-                                  temp_dir, 'pp_era5',
-                                  self.pp.catchment_names, self.pp_log,
-                                  database=self.pp.database,
-                                  pcdatabase=self.pp.pcdatabase,
-                                  vector_path=self.vectorpath,
-                                  layer="tp")
+                e.zonal_stats(scene, scenes_path,
+                              temp_dir, 'gfs',
+                              self.db0.catchment_names, self.db_log,
+                              database=None,
+                              databases=[self.db0.database,
+                                         self.db1.database,
+                                         self.db2.database,
+                                         self.db3.database,
+                                         self.db4.database],
+                              pcdatabase=None,
+                              pcdatabases=[self.db0.pcdatabase,
+                                           self.db1.pcdatabase,
+                                           self.db2.pcdatabase,
+                                           self.db3.pcdatabase,
+                                           self.db4.pcdatabase],
+                              vector_path=self.vectorpath,
+                              layer=self.variable,
+                              aggregation="sum",
+                              days=days)
 
-                if scene not in self.et.indatabase:
-                    e.zonal_stats(scene, scenes_path,
-                                  temp_dir, 'et_era5',
-                                  self.et.catchment_names, self.et_log,
-                                  database=self.et.database,
-                                  pcdatabase=self.et.pcdatabase,
-                                  vector_path=self.vectorpath,
-                                  layer="e")
-
-                if scene not in self.pet.indatabase:
-                    e.zonal_stats(scene, scenes_path,
-                                  temp_dir, 'pet_era5',
-                                  self.pet.catchment_names, self.pet_log,
-                                  database=self.pet.database,
-                                  pcdatabase=self.pet.pcdatabase,
-                                  vector_path=self.vectorpath,
-                                  layer="pev")
-
-                if scene not in self.snw.indatabase:
-                    e.zonal_stats(scene, scenes_path,
-                                  temp_dir, 'snw_era5',
-                                  self.snw.catchment_names, self.snw_log,
-                                  database=self.snw.database,
-                                  pcdatabase=self.snw.pcdatabase,
-                                  vector_path=self.vectorpath,
-                                  layer="snowc")
-
-                if scene not in self.snwa.indatabase:
-                    e.zonal_stats(scene, scenes_path,
-                                  temp_dir, 'snwa_era5',
-                                  self.snwa.catchment_names, self.snwa_log,
-                                  database=self.snwa.database,
-                                  pcdatabase=self.snwa.pcdatabase,
-                                  vector_path=self.vectorpath,
-                                  layer="asn")
-
-                if scene not in self.snwdn.indatabase:
-                    e.zonal_stats(scene, scenes_path,
-                                  temp_dir, 'snwdn_era5',
-                                  self.snwdn.catchment_names, self.snwdn_log,
-                                  database=self.snwdn.database,
-                                  pcdatabase=self.snwdn.pcdatabase,
-                                  vector_path=self.vectorpath,
-                                  layer="rsn")
-
-                if scene not in self.snwdt.indatabase:
-                    e.zonal_stats(scene, scenes_path,
-                                  temp_dir, 'snwdt_era5',
-                                  self.snwdt.catchment_names, self.snwdt_log,
-                                  database=self.snwdt.database,
-                                  pcdatabase=self.snwdt.pcdatabase,
-                                  vector_path=self.vectorpath,
-                                  layer="sd")
-
-                if scene not in self.soilm.indatabase:
-                    e.zonal_stats(scene, scenes_path,
-                                  temp_dir, 'soilm_era5',
-                                  self.soilm.catchment_names, self.soilm_log,
-                                  database=self.soilm.database,
-                                  pcdatabase=self.soilm.pcdatabase,
-                                  vector_path=self.vectorpath,
-                                  layer=["swvl1", "swvl2", "swvl3", "swvl4"])
 
     def run_maintainer(self, log_file, limit=None):
         """

@@ -223,6 +223,22 @@ def mean_datasets(dataset_list):
     return template
 
 
+def max_datasets(dataset_list):
+    """
+    Function to get max from xarray datasets
+
+    Args:
+        dataset_list (list): list of xarray datasets
+
+    Returns:
+        xarray.Dataset: xarray dataset with the max of the datasets
+    """
+    template = dataset_list[0].copy()
+    max_values = np.max([d.values for d in dataset_list], axis=0)
+    template.values = max_values
+    return template
+
+
 def mosaic_raster(raster_list, layer):
     """
     Function to compute mosaic files with rioxarray library
@@ -354,7 +370,8 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
         north_vector_path (str): north vector path
         south_vector_path (str): south vector path
         layer (Union[str,list]): with layer/layers to extract
-
+        *** Add GFS kwargs ***
+        gfs_path (str): GFS path
     Returns:
         Print
     """
@@ -376,6 +393,8 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
             file_date = datetime.strptime(scene, '%y%m%d').strftime('%Y-%m-%d')
         case name if "era5" in name:
             file_date = datetime.strptime(scene, '%Y%m%d').strftime('%Y-%m-%d')
+        case "gfs":
+            file_date = datetime.strptime(scene, '%Y%m%d%H').strftime('%Y-%m-%d')
         case _:
             file_date = datetime.strptime(scene, 'A%Y%j').strftime('%Y-%m-%d')
 
@@ -408,6 +427,32 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
             try:
                 datasets_list = [load_imerggis(ds) for ds in selected_files]
                 mos = sum_datasets(datasets_list)
+            except (rxre.RioXarrayError, rioe.RasterioIOError, ValueError):
+                return print(f"Error in scene {scene}")
+
+        case 'gfs':
+            try:
+                days = kwargs.get("days")
+                mos_list = []
+                for i in range(0,5):
+                    if i in days:
+                        dataset = load_gfs(selected_files[0], kwargs.get("layer"), day=i)
+                        if kwargs.get("aggregation") == "sum":
+                            mos_pre = sum_datasets(dataset) * 10
+                        elif kwargs.get("aggregation") == "mean":
+                            mos_pre = mean_datasets(dataset) * 10
+                        elif kwargs.get("aggregation") == "max":
+                            mos_pre = max_datasets(dataset) * 10
+                        else:
+                            print("aggregation argument must be sum, mean or max, and it's needed")
+                            return None
+                        mos_list.append(mos_pre)
+                mos = xarray.Dataset()
+
+                for i in range(0, len(mos_list)):
+                    mos[f"day_{i}"] = mos_list[i]
+
+
             except (rxre.RioXarrayError, rioe.RasterioIOError, ValueError):
                 return print(f"Error in scene {scene}")
 
@@ -496,10 +541,10 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
             except (rxre.RioXarrayError, rioe.RasterioIOError):
                 return print(f"Error in scene {scene}")
 
-    temporal_raster = os.path.join(tempfolder, name + "_" + scene + ".tif")
-    # temporal_raster = os.path.join("/Users/aldotapia/hidrocl_test/", name + "_" + scene + ".tif")
-    # result_file = os.path.join("/Users/aldotapia/hidrocl_test/", name + "_" + scene + ".csv")
-    result_file = os.path.join(tempfolder, name + "_" + scene + ".csv")
+    # temporal_raster = os.path.join(tempfolder, name + "_" + scene + ".tif")
+    temporal_raster = os.path.join("/Users/aldotapia/hidrocl_test/", name + "_" + scene + ".tif")
+    result_file = os.path.join("/Users/aldotapia/hidrocl_test/", name + "_" + scene + ".csv")
+    # result_file = os.path.join(tempfolder, name + "_" + scene + ".csv")
     mos.rio.to_raster(temporal_raster, compress="LZW")
     match name:
         case 'snow':
@@ -523,6 +568,43 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
             write_line(kwargs.get("south_database"), result_file, catchment_names, scene, file_date, ncol=1)
             write_line(kwargs.get("south_pcdatabase"), result_file, catchment_names, scene, file_date, ncol=2)
 
+        case 'gfs':
+            subprocess.call([rscript,
+                             "--vanilla",
+                             "./hidrocl/products/Rfiles/WeightedMeanExtractionGFS.R",
+                             kwargs.get("vector_path"),
+                             temporal_raster,
+                             result_file])
+
+
+            days = kwargs.get("days")
+
+            if 0 in days:
+                write_line(kwargs.get("databases")[0], result_file, catchment_names, scene,
+                           file_date, ncol=(days.index(0)+1))
+                write_line(kwargs.get("pcdatabases")[0], result_file, catchment_names, scene,
+                           file_date, ncol=(days.index(0)+1)+len(days))
+            if 1 in days:
+                write_line(kwargs.get("databases")[1], result_file, catchment_names, scene,
+                           file_date, ncol=(days.index(1)+1))
+                write_line(kwargs.get("pcdatabases")[1], result_file, catchment_names, scene,
+                           file_date, ncol=(days.index(1)+1)+len(days))
+            if 2 in days:
+                write_line(kwargs.get("databases")[2], result_file, catchment_names, scene,
+                           file_date, ncol=(days.index(2)+1))
+                write_line(kwargs.get("pcdatabases")[2], result_file, catchment_names, scene,
+                           file_date, ncol=(days.index(2)+1)+len(days))
+            if 3 in days:
+                write_line(kwargs.get("databases")[3], result_file, catchment_names, scene,
+                           file_date, ncol=(days.index(3)+1))
+                write_line(kwargs.get("pcdatabases")[3], result_file, catchment_names, scene,
+                           file_date, ncol=(days.index(3)+1)+len(days))
+            if 4 in days:
+                write_line(kwargs.get("databases")[4], result_file, catchment_names, scene,
+                           file_date, ncol=(days.index(4)+1))
+                write_line(kwargs.get("pcdatabases")[4], result_file, catchment_names, scene,
+                           file_date, ncol=(days.index(4)+1)+len(days))
+
         case _:
             subprocess.call([rscript,
                              "--vanilla",
@@ -539,6 +621,6 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
     currenttime = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
     print(f"Time elapsed for {scene}: {str(round(end - start))} seconds")
     write_log(log_file, scene, currenttime, time_dif, kwargs.get("database"))
-    os.remove(temporal_raster)
-    os.remove(result_file)
+    #os.remove(temporal_raster)
+    #os.remove(result_file)
     gc.collect()
