@@ -32,6 +32,7 @@ era5_land_hourly_path = os.path.join(nas_path, 'observed/ERA5_LAND_HOURLY/')  # 
 satellite_soil_moisture = os.path.join(nas_path, 'observed/SATELLITE_SOIL_MOISTURE/')  # satellite soil moisture
 
 # forecasted
+gfs = os.path.join(nas_path, 'forecasted')  # only forecasted variable
 
 # path to files
 hidrocl_sinusoidal = os.path.join(nas_path,
@@ -83,6 +84,42 @@ sm_o_era5_sm_mean_b_d_p0d = os.path.join(nas_path, 'databases/observed/sm_o_era5
 
 
 # forecasted
+pp_f_gfs_pp_mean_b_none_d1_p0d = os.path.join(nas_path, 'databases/forecasted/pp_f_gfs_pp_mean_b_none_d1_p0d.csv')
+pp_f_gfs_pp_mean_b_none_d1_p1d = os.path.join(nas_path, 'databases/forecasted/pp_f_gfs_pp_mean_b_none_d1_p1d.csv')
+pp_f_gfs_pp_mean_b_none_d1_p2d = os.path.join(nas_path, 'databases/forecasted/pp_f_gfs_pp_mean_b_none_d1_p2d.csv')
+pp_f_gfs_pp_mean_b_none_d1_p3d = os.path.join(nas_path, 'databases/forecasted/pp_f_gfs_pp_mean_b_none_d1_p3d.csv')
+pp_f_gfs_pp_mean_b_none_d1_p4d = os.path.join(nas_path, 'databases/forecasted/pp_f_gfs_pp_mean_b_none_d1_p4d.csv')
+pp_f_gfs_pp_max_b_none_d1_p0d = os.path.join(nas_path, 'databases/forecasted/pp_f_gfs_pp_max_b_none_d1_p0d.csv')
+pp_f_gfs_pp_max_b_none_d1_p1d = os.path.join(nas_path, 'databases/forecasted/pp_f_gfs_pp_max_b_none_d1_p1d.csv')
+pp_f_gfs_pp_max_b_none_d1_p2d = os.path.join(nas_path, 'databases/forecasted/pp_f_gfs_pp_max_b_none_d1_p2d.csv')
+pp_f_gfs_pp_max_b_none_d1_p3d = os.path.join(nas_path, 'databases/forecasted/pp_f_gfs_pp_max_b_none_d1_p3d.csv')
+pp_f_gfs_pp_max_b_none_d1_p4d = os.path.join(nas_path, 'databases/forecasted/pp_f_gfs_pp_max_b_none_d1_p4d.csv')
+awc_f_gfs_rh_mean_b_none_d1_p0d = os.path.join(nas_path, 'databases/forecasted/awc_f_gfs_rh_mean_b_none_d1_p0d.csv')
+awc_f_gfs_rh_mean_b_none_d1_p1d = os.path.join(nas_path, 'databases/forecasted/awc_f_gfs_rh_mean_b_none_d1_p1d.csv')
+awc_f_gfs_rh_mean_b_none_d1_p2d = os.path.join(nas_path, 'databases/forecasted/awc_f_gfs_rh_mean_b_none_d1_p2d.csv')
+awc_f_gfs_rh_mean_b_none_d1_p3d = os.path.join(nas_path, 'databases/forecasted/awc_f_gfs_rh_mean_b_none_d1_p3d.csv')
+awc_f_gfs_rh_mean_b_none_d1_p4d = os.path.join(nas_path, 'databases/forecasted/awc_f_gfs_rh_mean_b_none_d1_p4d.csv')
+tmp_f_gfs_tmp_mean_b_none_d1_p0d = os.path.join(nas_path, 'databases/forecasted/tmp_f_gfs_tmp_mean_b_none_d1_p0d.csv')
+tmp_f_gfs_tmp_mean_b_none_d1_p1d = os.path.join(nas_path, 'databases/forecasted/tmp_f_gfs_tmp_mean_b_none_d1_p1d.csv')
+tmp_f_gfs_tmp_mean_b_none_d1_p2d = os.path.join(nas_path, 'databases/forecasted/tmp_f_gfs_tmp_mean_b_none_d1_p2d.csv')
+tmp_f_gfs_tmp_mean_b_none_d1_p3d = os.path.join(nas_path, 'databases/forecasted/tmp_f_gfs_tmp_mean_b_none_d1_p3d.csv')
+tmp_f_gfs_tmp_mean_b_none_d1_p4d = os.path.join(nas_path, 'databases/forecasted/tmp_f_gfs_tmp_mean_b_none_d1_p4d.csv')
+atm_f_gfs_gh_mean_b_none_d1_p0d = os.path.join(nas_path, 'databases/forecasted/atm_f_gfs_gh_mean_b_none_d1_p0d.csv')
+atm_f_gfs_gh_mean_b_none_d1_p1d = os.path.join(nas_path, 'databases/forecasted/atm_f_gfs_gh_mean_b_none_d1_p1d.csv')
+atm_f_gfs_gh_mean_b_none_d1_p2d = os.path.join(nas_path, 'databases/forecasted/atm_f_gfs_gh_mean_b_none_d1_p2d.csv')
+atm_f_gfs_gh_mean_b_none_d1_p3d = os.path.join(nas_path, 'databases/forecasted/atm_f_gfs_gh_mean_b_none_d1_p3d.csv')
+atm_f_gfs_gh_mean_b_none_d1_p4d = os.path.join(nas_path, 'databases/forecasted/atm_f_gfs_gh_mean_b_none_d1_p4d.csv')
+atm_f_gfs_uw_mean_b_none_d1_p0d = os.path.join(nas_path, 'databases/forecasted/atm_f_gfs_uw_mean_b_none_d1_p0d.csv')
+atm_f_gfs_uw_mean_b_none_d1_p1d = os.path.join(nas_path, 'databases/forecasted/atm_f_gfs_uw_mean_b_none_d1_p1d.csv')
+atm_f_gfs_uw_mean_b_none_d1_p2d = os.path.join(nas_path, 'databases/forecasted/atm_f_gfs_uw_mean_b_none_d1_p2d.csv')
+atm_f_gfs_uw_mean_b_none_d1_p3d = os.path.join(nas_path, 'databases/forecasted/atm_f_gfs_uw_mean_b_none_d1_p3d.csv')
+atm_f_gfs_uw_mean_b_none_d1_p4d = os.path.join(nas_path, 'databases/forecasted/atm_f_gfs_uw_mean_b_none_d1_p4d.csv')
+atm_f_gfs_vw_mean_b_none_d1_p0d = os.path.join(nas_path, 'databases/forecasted/atm_f_gfs_vw_mean_b_none_d1_p0d.csv')
+atm_f_gfs_vw_mean_b_none_d1_p1d = os.path.join(nas_path, 'databases/forecasted/atm_f_gfs_vw_mean_b_none_d1_p1d.csv')
+atm_f_gfs_vw_mean_b_none_d1_p2d = os.path.join(nas_path, 'databases/forecasted/atm_f_gfs_vw_mean_b_none_d1_p2d.csv')
+atm_f_gfs_vw_mean_b_none_d1_p3d = os.path.join(nas_path, 'databases/forecasted/atm_f_gfs_vw_mean_b_none_d1_p3d.csv')
+atm_f_gfs_vw_mean_b_none_d1_p4d = os.path.join(nas_path, 'databases/forecasted/atm_f_gfs_vw_mean_b_none_d1_p4d.csv')
+
 
 # ----
 # pixel count databases
@@ -118,6 +155,41 @@ snow_o_era5_snd_mean_b_pc = os.path.join(nas_path, 'pcdatabases/observed/snow_o_
 sm_o_era5_sm_mean_b_pc = os.path.join(nas_path, 'pcdatabases/observed/sm_o_era5_sm_mean_b_pc.csv') # soil moisture
 
 # forecasted
+pp_f_gfs_pp_max_pc_p0d = os.path.join(nas_path, 'databases/forecasted/pp_f_gfs_pp_max_pc_p0d.csv')
+pp_f_gfs_pp_max_pc_p1d = os.path.join(nas_path, 'databases/forecasted/pp_f_gfs_pp_max_pc_p1d.csv')
+pp_f_gfs_pp_max_pc_p2d = os.path.join(nas_path, 'databases/forecasted/pp_f_gfs_pp_max_pc_p2d.csv')
+pp_f_gfs_pp_max_pc_p3d = os.path.join(nas_path, 'databases/forecasted/pp_f_gfs_pp_max_pc_p3d.csv')
+pp_f_gfs_pp_max_pc_p4d = os.path.join(nas_path, 'databases/forecasted/pp_f_gfs_pp_max_pc_p4d.csv')
+pp_f_gfs_pp_mean_pc_p0d = os.path.join(nas_path, 'databases/forecasted/pp_f_gfs_pp_mean_pc_p0d.csv')
+pp_f_gfs_pp_mean_pc_p1d = os.path.join(nas_path, 'databases/forecasted/pp_f_gfs_pp_mean_pc_p1d.csv')
+pp_f_gfs_pp_mean_pc_p2d = os.path.join(nas_path, 'databases/forecasted/pp_f_gfs_pp_mean_pc_p2d.csv')
+pp_f_gfs_pp_mean_pc_p3d = os.path.join(nas_path, 'databases/forecasted/pp_f_gfs_pp_mean_pc_p3d.csv')
+pp_f_gfs_pp_mean_pc_p4d = os.path.join(nas_path, 'databases/forecasted/pp_f_gfs_pp_mean_pc_p4d.csv')
+awc_f_gfs_rh_mean_pc_p0d = os.path.join(nas_path, 'databases/forecasted/awc_f_gfs_rh_mean_pc_p0d.csv')
+awc_f_gfs_rh_mean_pc_p1d = os.path.join(nas_path, 'databases/forecasted/awc_f_gfs_rh_mean_pc_p1d.csv')
+awc_f_gfs_rh_mean_pc_p2d = os.path.join(nas_path, 'databases/forecasted/awc_f_gfs_rh_mean_pc_p2d.csv')
+awc_f_gfs_rh_mean_pc_p3d = os.path.join(nas_path, 'databases/forecasted/awc_f_gfs_rh_mean_pc_p3d.csv')
+awc_f_gfs_rh_mean_pc_p4d = os.path.join(nas_path, 'databases/forecasted/awc_f_gfs_rh_mean_pc_p4d.csv')
+atm_f_gfs_gh_mean_pc_p0d = os.path.join(nas_path, 'databases/forecasted/atm_f_gfs_gh_mean_pc_p0d.csv')
+atm_f_gfs_gh_mean_pc_p1d = os.path.join(nas_path, 'databases/forecasted/atm_f_gfs_gh_mean_pc_p1d.csv')
+atm_f_gfs_gh_mean_pc_p2d = os.path.join(nas_path, 'databases/forecasted/atm_f_gfs_gh_mean_pc_p2d.csv')
+atm_f_gfs_gh_mean_pc_p3d = os.path.join(nas_path, 'databases/forecasted/atm_f_gfs_gh_mean_pc_p3d.csv')
+atm_f_gfs_gh_mean_pc_p4d = os.path.join(nas_path, 'databases/forecasted/atm_f_gfs_gh_mean_pc_p4d.csv')
+atm_f_gfs_uw_mean_pc_p0d = os.path.join(nas_path, 'databases/forecasted/atm_f_gfs_uw_mean_pc_p0d.csv')
+atm_f_gfs_uw_mean_pc_p1d = os.path.join(nas_path, 'databases/forecasted/atm_f_gfs_uw_mean_pc_p1d.csv')
+atm_f_gfs_uw_mean_pc_p2d = os.path.join(nas_path, 'databases/forecasted/atm_f_gfs_uw_mean_pc_p2d.csv')
+atm_f_gfs_uw_mean_pc_p3d = os.path.join(nas_path, 'databases/forecasted/atm_f_gfs_uw_mean_pc_p3d.csv')
+atm_f_gfs_uw_mean_pc_p4d = os.path.join(nas_path, 'databases/forecasted/atm_f_gfs_uw_mean_pc_p4d.csv')
+atm_f_gfs_vw_mean_pc_p0d = os.path.join(nas_path, 'databases/forecasted/atm_f_gfs_vw_mean_pc_p0d.csv')
+atm_f_gfs_vw_mean_pc_p1d = os.path.join(nas_path, 'databases/forecasted/atm_f_gfs_vw_mean_pc_p1d.csv')
+atm_f_gfs_vw_mean_pc_p2d = os.path.join(nas_path, 'databases/forecasted/atm_f_gfs_vw_mean_pc_p2d.csv')
+atm_f_gfs_vw_mean_pc_p3d = os.path.join(nas_path, 'databases/forecasted/atm_f_gfs_vw_mean_pc_p3d.csv')
+atm_f_gfs_vw_mean_pc_p4d = os.path.join(nas_path, 'databases/forecasted/atm_f_gfs_vw_mean_pc_p4d.csv')
+tmp_f_gfs_tmp_mean_pc_p0d = os.path.join(nas_path, 'databases/forecasted/tmp_f_gfs_tmp_mean_pc_p0d.csv')
+tmp_f_gfs_tmp_mean_pc_p1d = os.path.join(nas_path, 'databases/forecasted/tmp_f_gfs_tmp_mean_pc_p1d.csv')
+tmp_f_gfs_tmp_mean_pc_p2d = os.path.join(nas_path, 'databases/forecasted/tmp_f_gfs_tmp_mean_pc_p2d.csv')
+tmp_f_gfs_tmp_mean_pc_p3d = os.path.join(nas_path, 'databases/forecasted/tmp_f_gfs_tmp_mean_pc_p3d.csv')
+tmp_f_gfs_tmp_mean_pc_p4d = os.path.join(nas_path, 'databases/forecasted/tmp_f_gfs_tmp_mean_pc_p4d.csv')
 
 # ----
 # log files
@@ -158,6 +230,13 @@ log_sm_o_era5_sm_mean = os.path.join(nas_path, 'logs/log_sm_o_era5_sm_mean.txt')
 log_file_maintainer = os.path.join(nas_path, 'logs/file_maintainer.txt')
 
 # forecasted
+log_pp_f_gfs_pp_max_log = os.path.join(nas_path, 'logs/pp_f_gfs_pp_max_log.txt')
+log_pp_f_gfs_pp_mean_log = os.path.join(nas_path, 'logs/pp_f_gfs_pp_mean_log.txt')
+log_awc_f_gfs_rh_mean_log = os.path.join(nas_path, 'logs/awc_f_gfs_rh_mean_log.txt')
+log_atm_f_gfs_gh_mean_log = os.path.join(nas_path, 'logs/atm_f_gfs_gh_mean_log.txt')
+log_atm_f_gfs_uw_mean_log = os.path.join(nas_path, 'logs/atm_f_gfs_uw_mean_log.txt')
+log_atm_f_gfs_vw_mean_log = os.path.join(nas_path, 'logs/atm_f_gfs_vw_mean_log.txt')
+log_tmp_f_gfs_tmp_mean_log = os.path.join(nas_path, 'logs/tmp_f_gfs_tmp_mean_log.txt')
 
 """
 polys = gpd.read_file(hidrocl_sinusoidal)  # for getting gauge_id values

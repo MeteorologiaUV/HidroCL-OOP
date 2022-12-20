@@ -438,14 +438,23 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
                     if i in days:
                         dataset = load_gfs(selected_files[0], kwargs.get("layer"), day=i)
                         if kwargs.get("aggregation") == "sum":
-                            mos_pre = sum_datasets(dataset) * 10
+                            mos_pre = sum_datasets(dataset)
                         elif kwargs.get("aggregation") == "mean":
-                            mos_pre = mean_datasets(dataset) * 10
+                            mos_pre = mean_datasets(dataset)
                         elif kwargs.get("aggregation") == "max":
-                            mos_pre = max_datasets(dataset) * 10
+                            mos_pre = max_datasets(dataset)
                         else:
                             print("aggregation argument must be sum, mean or max, and it's needed")
                             return None
+                        # scale and unit conversions
+                        if kwargs.get("layer") == 'prate':
+                            mos_pre = mos_pre * 3600 * 30
+                        if kwargs.get("layer") == 'gh':
+                            pass
+                        if kwargs.get("layer") == 't2m':
+                            mos_pre = (mos_pre - 273.15)*10
+                        else:
+                            mos_pre = mos_pre * 10
                         mos_list.append(mos_pre)
                 mos = xarray.Dataset()
 
@@ -453,7 +462,7 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
                     mos[f"day_{i}"] = mos_list[i]
 
 
-            except (rxre.RioXarrayError, rioe.RasterioIOError, ValueError):
+            except (rxre.RioXarrayError, rioe.RasterioIOError, ValueError, IndexError):
                 return print(f"Error in scene {scene}")
 
         case name if "gldas" in name:
@@ -541,10 +550,10 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
             except (rxre.RioXarrayError, rioe.RasterioIOError):
                 return print(f"Error in scene {scene}")
 
-    # temporal_raster = os.path.join(tempfolder, name + "_" + scene + ".tif")
-    temporal_raster = os.path.join("/Users/aldotapia/hidrocl_test/", name + "_" + scene + ".tif")
-    result_file = os.path.join("/Users/aldotapia/hidrocl_test/", name + "_" + scene + ".csv")
-    # result_file = os.path.join(tempfolder, name + "_" + scene + ".csv")
+    temporal_raster = os.path.join(tempfolder, name + "_" + scene + ".tif")
+    # temporal_raster = os.path.join("/Users/aldotapia/hidrocl_test/", name + "_" + scene + ".tif")
+    # result_file = os.path.join("/Users/aldotapia/hidrocl_test/", name + "_" + scene + ".csv")
+    result_file = os.path.join(tempfolder, name + "_" + scene + ".csv")
     mos.rio.to_raster(temporal_raster, compress="LZW")
     match name:
         case 'snow':
@@ -621,6 +630,6 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
     currenttime = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
     print(f"Time elapsed for {scene}: {str(round(end - start))} seconds")
     write_log(log_file, scene, currenttime, time_dif, kwargs.get("database"))
-    #os.remove(temporal_raster)
-    #os.remove(result_file)
+    os.remove(temporal_raster)
+    os.remove(result_file)
     gc.collect()

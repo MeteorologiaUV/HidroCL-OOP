@@ -4,7 +4,7 @@
 
 [![pythonversion](https://img.shields.io/badge/python-v3.10-blue?style=plastic&logo=python&logoColor=yellow)](https://www.python.org/downloads/release/python-3100/)
 [![packageversion](https://img.shields.io/badge/r-v4.1.2-blue?style=plastic&logo=r&logoColor=9cf)](https://anaconda.org/conda-forge/r-base?version=4.2.1)
-![packageversion](https://img.shields.io/badge/version-v0.0.7-blue?style=plastic)
+![packageversion](https://img.shields.io/badge/version-v0.0.10-blue?style=plastic)
 
 ## Data download
 
@@ -20,7 +20,7 @@
 
 ----
 
-## To do list
+## TODO list
 
 - [ ] complete README.md
 - [x] hidrocl basic variable
@@ -63,6 +63,9 @@
   - [x] test locally
   - [x] test on nas
 - [x] ERA5-Land processing
+  - [x] test locally
+  - [x] test on nas
+- [x] GFS processing
   - [x] test locally
   - [x] test on nas
 - [ ] Download functions refactoring
@@ -154,6 +157,11 @@ install.packages("tibble", dependencies = TRUE)
 ----
 
 ## Changelog
+
+### [0.0.10] - 2022-12-20
+#### Added
+- **GFS processing**: processing of GFS to multiple databases depending of valid time (up to 5 days)
+- **IMERG GIS processing**: processing of TIF files to multiple
 
 ### [0.0.9] - 2022-10-19
 #### Added
