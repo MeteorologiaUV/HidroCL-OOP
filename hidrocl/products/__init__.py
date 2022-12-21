@@ -1629,6 +1629,164 @@ PERSIANN-CCS-CDR precipitation database path: {self.pp.database}
                               name='persiann',
                               log_file=log_file)
 
+
+"""
+Extraction of PDIR-NOW 0.04º degree product:
+"""
+
+class Pdirnow:
+    """
+    A class to process PDIR-Now to hidrocl variables
+
+    Attributes:
+        pp (HidroCLVariable): HidroCLVariable object with PDIR-Now precipitation data \n
+        pp_log (str): Path to the log file for PDIR-Now precipitation data \n
+        productname (str): Name of the remote sensing product to be processed \n
+        productpath (str): Path to the product folder where the product files are located \n
+        vectorpath (str): Path to the vector folder with Shapefile with areas to be processed \n
+        common_elements (list): common_elements (list): Elements in precipitation database \n
+        product_files (list): List of product files in the product folder \n
+        product_ids (list): List of product ids. Each product id is str with common tag by date \n
+        all_scenes (list): List of all scenes (no matter the product id here) \n
+        scenes_occurrences (list): List of scenes occurrences for each product id \n
+        overpopulated_scenes (list): List of overpopulated scenes (more than 1 scenes for modis) \n
+        complete_scenes (list): List of complete scenes (1 scenes for modis) \n
+        incomplete_scenes (list): List of incomplete scenes (less than 1 scenes for modis) \n
+        scenes_to_process (list): List of scenes to process (complete scenes no processed) \n
+    """
+
+    def __init__(self, pp, product_path, vector_path, pp_log):
+        """
+        Examples:
+            >>> from hidrocl import HidroCLVariable
+            >>> from hidrocl import Pdirnow
+            >>> pp = HidroCLVariable('pp', 'pp.db', 'pp_pc.db')
+            >>> product_path = '/home/user/data/PDIR-Now'
+            >>> vector_path = '/home/user/data/vector.shp'
+            >>> pp_log = '/home/user/data/logs/pp_log.txt'
+            >>> pdirnow = Pdirnow(pp, product_path, vector_path, pp_log)
+            >>> pdirnow
+            "Class to extract PDIR-Now 0.04º"
+
+        Args:
+            pp (HidroCLVariable): HidroCLVariable object with PDIR-Now precipitation data \n
+            product_path (str): Path to the product folder where the product files are located \n
+            vector_path (str): Path to the vector folder with Shapefile with areas to be processed \n
+            pp_log (str): Path to the log file for PDIR-Now precipitation data \n
+
+        Raises:
+            TypeError: If pp is not a HidroCLVariable object
+        """
+        if t.check_instance(pp):
+            self.pp = pp
+            self.pp_log = pp_log
+            self.productname = "PDIR-Now 0.04º"
+            self.productpath = product_path
+            self.vectorpath = vector_path
+            self.common_elements = self.pp.indatabase
+            self.product_files = t.read_product_files(self.productpath, 'pdirnow')
+            self.product_ids = t.get_product_ids(self.product_files, 'pdirnow')
+            self.all_scenes = t.check_product_files(self.product_ids)
+            self.scenes_occurrences = t.count_scenes_occurrences(self.all_scenes, self.product_ids)
+            (self.overpopulated_scenes,
+             self.complete_scenes,
+             self.incomplete_scenes) = t.classify_occurrences(self.scenes_occurrences, 'pdirnow')
+            self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes,
+                                                            self.common_elements, what='pdirnow')
+        else:
+            raise TypeError('pp must be HidroCLVariable object')
+
+    def __repr__(self):
+        """
+        Return a string representation of the object
+
+        Returns:
+             str: String representation of the object
+        """
+        return f'Class to extract {self.productname}'
+
+    def __str__(self):
+        """
+        Return a string representation of the object
+
+        Returns:
+            str: String representation of the object
+        """
+        return f'''
+Product: {self.productname}
+
+PDIR-Now precipitation records: {len(self.pp.indatabase)}.
+PDIR-Now precipitation database path: {self.pp.database}
+        '''
+
+    def run_extraction(self, limit=None):
+        """
+        Run the extraction of the product.
+        If limit is None, all scenes will be processed.
+        If limit is a number, only the first limit scenes will be processed.
+
+        Args:
+            limit (int): length of the scenes_to_process
+
+        Returns:
+            str: Print
+        """
+
+        with t.HiddenPrints():
+            self.pp.checkdatabase()
+
+        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.pp.indatabase, 'pdirnow')
+
+        scenes_path = t.get_scenes_path(self.product_files, self.productpath)
+
+        with TemporaryDirectory() as tempdirname:
+            temp_dir = Path(tempdirname)
+
+            if limit is not None:
+                scenes_to_process = self.scenes_to_process[:limit]
+            else:
+                scenes_to_process = self.scenes_to_process
+
+            for scene in scenes_to_process:
+                if scene not in self.pp.indatabase:
+                    e.zonal_stats(scene, scenes_path,
+                                  temp_dir, "pdirnow",
+                                  self.pp.catchment_names, self.pp_log,
+                                  database=self.pp.database,
+                                  pcdatabase=self.pp.pcdatabase,
+                                  vector_path=self.vectorpath)
+
+    def run_maintainer(self, log_file, limit=None):
+        """
+        Run file maintainer. It will remove any file with problems
+
+        Args:
+            log_file (str): log file path
+            limit (int): length of the scenes_to_process
+
+        Returns:
+            str: Print
+        """
+
+        with t.HiddenPrints():
+            self.pp.checkdatabase()
+
+        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.pp.indatabase, 'pdirnow')
+
+        scenes_path = t.get_scenes_path(self.product_files, self.productpath)
+
+        if limit is not None:
+            scenes_to_process = self.scenes_to_process[:limit]
+        else:
+            scenes_to_process = self.scenes_to_process
+
+        for scene in scenes_to_process:
+            m.file_maintainer(scene=scene,
+                              scenes_path=scenes_path,
+                              name='persiann',
+                              log_file=log_file)
+
+
 """
 Extraction of ERA5-Land hourly data product:
 """
@@ -2022,7 +2180,7 @@ class Gfs:
     A class to process GFS to hidrocl variables. The used variables are:
     - gh: Geopotential height
     - prate: Precipitation rate
-    - r2m: 2m relative humidity
+    - r2: 2m relative humidity
     - t2m: 2m temperature
     - u10: 10m U wind component
     - v10: 10m V wind component
@@ -2033,20 +2191,12 @@ class Gfs:
         db2 (HidroCLVariable): HidroCLVariable object with GFS variable (see avobe) of day 2 \n
         db3 (HidroCLVariable): HidroCLVariable object with GFS variable (see avobe) of day 3 \n
         db4 (HidroCLVariable): HidroCLVariable object with GFS variable (see avobe) of day 4 \n
-
         db_log (str): Log file path for temperature data \n
-
         valid_time (int): Valid time for extracting the product \n
-
         variable (str): Variable name \n
-
         productname (str): Name of the remote sensing product to be processed \n
         productpath (str): Path to the product folder where the product files are located \n
-
         vectorpath (str): Path to the vector folder with Shapefile with areas to be processed \n
-
-
-
         product_files (list): List of product files in the product folder \n
         product_ids (list): List of product ids. Each product id is str with common tag by date \n
         all_scenes (list): List of all scenes (no matter the product id here) \n
@@ -2058,7 +2208,7 @@ class Gfs:
     """
 
     def __init__(self, db0, db1, db2, db3, db4,
-                 db_log, variable,
+                 db_log, variable, aggregation,
                  product_path, vectorpath):
         """
         Examples:
@@ -2082,6 +2232,7 @@ class Gfs:
             self.db4 = db4
             self.db_log = db_log
             self.variable = variable
+            self.aggregation = aggregation
             self.productname = "GFS 0.5º"
             self.productpath = product_path
             self.vectorpath = vectorpath
@@ -2198,7 +2349,7 @@ Database path day 4: {self.db4.database}
                                            self.db4.pcdatabase],
                               vector_path=self.vectorpath,
                               layer=self.variable,
-                              aggregation="sum",
+                              aggregation=self.aggregation,
                               days=days)
 
 

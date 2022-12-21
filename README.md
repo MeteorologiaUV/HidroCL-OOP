@@ -158,6 +158,13 @@ install.packages("tibble", dependencies = TRUE)
 
 ## Changelog
 
+### [0.0.11] - 2022-12-21
+#### Added
+- **PDIR-Nor**: Added support to PDIR-Now product
+
+#### Changed
+- Fixed some GFS bugs, now it's working pro
+
 ### [0.0.10] - 2022-12-20
 #### Added
 - **GFS processing**: processing of GFS to multiple databases depending of valid time (up to 5 days)

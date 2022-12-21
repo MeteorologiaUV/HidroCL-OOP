@@ -48,7 +48,7 @@ def read_product_files(productpath, what="modis", variable = None):
             return [value for value in os.listdir(productpath) if ".nc4" in value]
         case "gfs":
             if variable:
-                return [str(value.relative_to(productpath)) for value in Path(productpath).rglob('*'+variable+'*.nc')]
+                return [str(value.relative_to(productpath)) for value in Path(productpath).rglob('*_'+variable+'_*.nc')]
             else:
                 print('Variable not defined')
                 return None
@@ -57,6 +57,9 @@ def read_product_files(productpath, what="modis", variable = None):
                     and ".bin" in value and ".gz" not in value]
         case "persiann_ccs":
             return [value for value in os.listdir(productpath) if "rgccs" in value
+                    and ".bin" in value and ".gz" not in value]
+        case "pdirnow":
+            return [value for value in os.listdir(productpath) if "pdirnow" in value
                     and ".bin" in value and ".gz" not in value]
         case "era5":
             return [value for value in os.listdir(productpath) if ".nc" in value]
@@ -82,7 +85,7 @@ def get_product_ids(product_files, what="modis"):
             return [value.split(".")[4].split("-")[0] for value in product_files]
         case "gldas":
             return [value.split(".")[1] for value in product_files]
-        case ("persiann_ccs_cdr" | "persiann_ccs"):
+        case ("persiann_ccs_cdr" | "persiann_ccs" | "pdirnow"):
             return [value.split(".")[0].split('1d')[1] for value in product_files]
         case "gfs":
             return [value.split("_")[-1].split('.')[0] for value in product_files]
@@ -140,7 +143,7 @@ def classify_occurrences(scenes_occurrences, what="modis"):
             correctvalue = 48
         case "gldas":
             correctvalue = 8
-        case ("persiann_ccs_cdr" | "persiann_ccs" | "era5" | "gfs"):
+        case ("persiann_ccs_cdr" | "persiann_ccs" | "era5" | "gfs" | "pdirnow"):
             correctvalue = 1
         case _:
             print("Unknown product type")
@@ -179,6 +182,8 @@ def get_scenes_out_of_db(complete_scenes, common_elements, what='modis'):
         case "persiann_ccs":
             idlenght = 5
         case "persiann_ccs_cdr":
+            idlenght = 6
+        case "pdirnow":
             idlenght = 6
         case "era5":
             idlenght = 8

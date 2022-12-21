@@ -391,6 +391,8 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
             file_date = datetime.strptime(scene, '%y%j').strftime('%Y-%m-%d')
         case "persiann_ccs_cdr":
             file_date = datetime.strptime(scene, '%y%m%d').strftime('%Y-%m-%d')
+        case "pdirnow":
+            file_date = datetime.strptime(scene, '%y%m%d').strftime('%Y-%m-%d')
         case name if "era5" in name:
             file_date = datetime.strptime(scene, '%Y%m%d').strftime('%Y-%m-%d')
         case "gfs":
@@ -534,6 +536,16 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
                     else:
                         return print("layer argument must be a list")
         case name if "persiann" in name:
+            if len(selected_files) == 1:
+                try:
+                    file = selected_files[0]
+                    mos = load_persiann(file)
+                    mos = mos * 10
+                except (OSError, ValueError):
+                    return print(f"Error in scene {scene}")
+            else:
+                print('More than one file for scene, please check files')
+        case "pdirnow":
             if len(selected_files) == 1:
                 try:
                     file = selected_files[0]

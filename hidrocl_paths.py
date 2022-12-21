@@ -30,6 +30,7 @@ persiann = os.path.join(nas_path, 'observed/PERSIANN/')  # pp
 gldas_noah025_3h_path = os.path.join(nas_path, 'observed/GLDAS_NOAH025_3H/')  # land data
 era5_land_hourly_path = os.path.join(nas_path, 'observed/ERA5_LAND_HOURLY/')  # era5 land data
 satellite_soil_moisture = os.path.join(nas_path, 'observed/SATELLITE_SOIL_MOISTURE/')  # satellite soil moisture
+pdirnow = os.path.join(nas_path, 'observed/PDIRNOW/')  # pdirnow
 
 # forecasted
 gfs = os.path.join(nas_path, 'forecasted')  # only forecasted variable
@@ -81,7 +82,7 @@ snow_o_era5_sna_mean_b_d_p0d = os.path.join(nas_path, 'databases/observed/snow_o
 snow_o_era5_snr_mean_b_d_p0d = os.path.join(nas_path, 'databases/observed/snow_o_era5_snr_mean_b_d_p0d.csv') # snow density
 snow_o_era5_snd_mean_b_d_p0d = os.path.join(nas_path, 'databases/observed/snow_o_era5_snd_mean_b_d_p0d.csv') # snow depth
 sm_o_era5_sm_mean_b_d_p0d = os.path.join(nas_path, 'databases/observed/sm_o_era5_sm_mean_b_d_p0d.csv') # soil moisture
-
+pp_o_pdir_pp_mean_b_none_d1_p0d = os.path.join(nas_path, 'databases/observed/pp_o_pdir_pp_mean_b_none_d1_p0d.csv') # new persiann
 
 # forecasted
 pp_f_gfs_pp_mean_b_none_d1_p0d = os.path.join(nas_path, 'databases/forecasted/pp_f_gfs_pp_mean_b_none_d1_p0d.csv')
@@ -143,6 +144,7 @@ et_o_gldas_eta_cum_b_pc = os.path.join(nas_path, 'pcdatabases/observed/et_o_glda
 sm_o_gldas_sm_mean_b_pc = os.path.join(nas_path, 'pcdatabases/observed/sm_o_gldas_sm_mean_b_pc.csv')
 pp_o_pers_pp_mean_b_pc = os.path.join(nas_path, 'pcdatabases/observed/pp_o_pers_pp_mean_b_pc.csv')
 pp_o_pcdr_pp_mean_b_pc = os.path.join(nas_path, 'pcdatabases/observed/pp_o_pcdr_pp_mean_b_pc.csv')
+pp_o_pdir_pp_mean_b_pc = os.path.join(nas_path, 'pcdatabases/observed/pp_o_pdir_pp_mean_b_pc.csv')
 # ERA5 products:
 tmp_o_era5_tmp_mean_b_pc = os.path.join(nas_path, 'pcdatabases/observed/tmp_o_era5_tmp_mean_b_pc.csv')
 pp_o_era5_pp_mean_b_pc = os.path.join(nas_path, 'pcdatabases/observed/pp_o_era5_pp_mean_b_pc.csv')
@@ -216,6 +218,7 @@ log_et_o_gldas_eta_cum = os.path.join(nas_path, 'logs/log_et_o_gldas_eta_cum.txt
 log_sm_o_gldas_sm_mean = os.path.join(nas_path, 'logs/log_sm_o_gldas_sm_mean.txt')
 log_pp_o_pers_pp_mean = os.path.join(nas_path, 'logs/log_pp_o_pers_pp_mean.txt')
 log_pp_o_pcdr_pp_mean = os.path.join(nas_path, 'logs/log_pp_o_pcdr_pp_mean.txt')
+log_pp_o_pdir_pp_mean = os.path.join(nas_path, 'logs/log_pp_o_pdir_pp_mean.txt')
 # ERA5 products:
 log_tmp_o_era5_tmp_mean = os.path.join(nas_path, 'logs/log_tmp_o_era5_tmp_mean.txt')
 log_pp_o_era5_pp_mean = os.path.join(nas_path, 'logs/log_pp_o_era5_pp_mean.txt')

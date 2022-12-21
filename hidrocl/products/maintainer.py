@@ -170,6 +170,13 @@ def file_maintainer(scene, scenes_path, name, log_file):
                     print(f'Removing {file}')
                     os.remove(file)
                     write_del_log(log_file, file)
+            case name if "pdirnow" in name:
+                try:
+                    test_load_persiann(file)
+                except (OSError, ValueError):
+                    print(f'Removing {file}')
+                    os.remove(file)
+                    write_del_log(log_file, file)
             case "era5":
                 try:
                     test_load_era5(file)
