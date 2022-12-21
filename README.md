@@ -163,7 +163,10 @@ install.packages("tibble", dependencies = TRUE)
 - **PDIR-Nor**: Added support to PDIR-Now product
 
 #### Changed
-- Fixed some GFS bugs, now it's working pro
+- Fixed some GFS bugs, now it's working properly
+
+#### To do
+- Add GFS maintainer
 
 ### [0.0.10] - 2022-12-20
 #### Added

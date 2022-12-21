@@ -16,7 +16,7 @@ def checkdatabase(database, catchment_names=None):
 
     if os.path.exists(database):  # check if db exists
         print('Database found, using ' + database)
-        observations = pd.read_csv(database)
+        observations = pd.read_csv(database, dtype={'name_id':str})
         observations.date = pd.to_datetime(observations.date, format='%Y-%m-%d')
         observations.set_index(['date'], inplace=True)
         return observations
