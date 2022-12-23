@@ -463,8 +463,7 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
                 for i in range(0, len(mos_list)):
                     mos[f"day_{i}"] = mos_list[i]
 
-
-            except (rxre.RioXarrayError, rioe.RasterioIOError, ValueError, IndexError):
+            except (rxre.RioXarrayError, rioe.RasterioIOError, ValueError, IndexError, KeyError):
                 return print(f"Error in scene {scene}")
 
         case name if "gldas" in name:
