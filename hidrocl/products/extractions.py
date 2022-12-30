@@ -166,6 +166,7 @@ def load_gfs(file, var, day=0):
     with t.HiddenPrints():
         da = xarray.open_dataset(file, mask_and_scale=True)
         da = da[var]
+        da.load()
         da = da.sel(valid_time=slice(da.time+pd.to_timedelta(24*day, unit='H'),
                                      da.time+pd.to_timedelta(24*day + 23, unit='H')))\
             .transpose('valid_time', 'latitude', 'longitude')
