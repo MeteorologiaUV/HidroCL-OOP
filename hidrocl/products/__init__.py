@@ -420,7 +420,9 @@ class Mod16a2:
 
     Attributes:
         pet (HidroCLVariable): HidroCLVariable object with the potential evapotranspiration \n
+        et (HidroCLVariable): HidroCLVariable object with the actual evapotranspiration \n
         pet_log (str): Path to the log file for the pet extraction \n
+        et_log (str): Path to the log file for the et extraction \n
         productname (str): Name of the remote sensing product to be processed \n
         productpath (str): Path to the product folder where the product files are located \n
         vectorpath (str): Path to the vector folder with Shapefile with areas to be processed \n
@@ -435,35 +437,42 @@ class Mod16a2:
         scenes_to_process (list): List of scenes to process (complete scenes no processed) \n
     """
 
-    def __init__(self, pet, product_path, vector_path, pet_log):
+    def __init__(self, pet, et, product_path, vector_path, pet_log, et_log):
         """
         Examples:
             >>> from hidrocl import HidroCLVariable
             >>> from hidrocl import Mod16a2
             >>> pet = HidroCLVariable('pet', 'pet.db', 'pet_pc.db')
+            >>> et = HidroCLVariable('et', 'et.db', 'et_pc.db')
             >>> product_path = '/home/user/modis/mod16a2'
             >>> vector_path = '/home/user/vector.shp'
             >>> pet_log = '/home/user/log/pet.log'
-            >>> mod16a2 = Mod16a2(pet, product_path, vector_path, pet_log)
+            >>> et_log = '/home/user/log/et.log'
+            >>> mod16a2 = Mod16a2(pet, et, product_path, vector_path, pet_log, et_log)
             >>> mod16a2
             "Class to extract MODIS MOD16A2 Version 6.1"
 
         Args:
             pet (HidroCLVariable): Object with the potential evapotranspiration data
+            et (HidroCLVariable): Object with the actual evapotranspiration data
             product_path (str): Path to the product folder
             vector_path (str): Path to the vector folder
             pet_log (str): Path to the log file for the pet extraction
+            et_log (str): Path to the log file for the et extraction
 
         Raises:
             TypeError: If pet is not a HidroCLVariable object
         """
         if t.check_instance(pet):
             self.pet = pet
+            self.et = et
             self.pet_log = pet_log
+            self.et_log = et_log
             self.productname = "MODIS MOD16A2 Version 6.1"
             self.productpath = product_path
             self.vectorpath = vector_path
-            self.common_elements = self.pet.indatabase
+            self.common_elements = t.compare_indatabase(self.pet.indatabase,
+                                                        self.et.indatabase)
             self.product_files = t.read_product_files(self.productpath, "modis")
             self.product_ids = t.get_product_ids(self.product_files, "modis")
             self.all_scenes = t.check_product_files(self.product_ids)
@@ -497,6 +506,9 @@ Product: {self.productname}
 
 PET records: {len(self.pet.indatabase)}.
 PET database path: {self.pet.database}
+
+ET records: {len(self.et.indatabase)}.
+ET database path: {self.et.database}
         '''
 
     def run_extraction(self, limit=None):
@@ -514,8 +526,12 @@ PET database path: {self.pet.database}
 
         with t.HiddenPrints():
             self.pet.checkdatabase()
+            self.et.checkdatabase()
 
-        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.pet.indatabase)
+        self.common_elements = t.compare_indatabase(self.pet.indatabase,
+                                                    self.et.indatabase)
+
+        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.common_elements)
 
         scenes_path = t.get_scenes_path(self.product_files, self.productpath)
 
@@ -530,12 +546,21 @@ PET database path: {self.pet.database}
             for scene in scenes_to_process:
                 if scene not in self.pet.indatabase:
                     e.zonal_stats(scene, scenes_path,
-                                  temp_dir, 'pet',
+                                  temp_dir, 'et',
                                   self.pet.catchment_names, self.pet_log,
                                   database=self.pet.database,
                                   pcdatabase=self.pet.pcdatabase,
                                   vector_path=self.vectorpath,
                                   layer="PET_500m", )
+
+                if scene not in self.pet.indatabase:
+                    e.zonal_stats(scene, scenes_path,
+                                  temp_dir, 'et',
+                                  self.et.catchment_names, self.et_log,
+                                  database=self.et.database,
+                                  pcdatabase=self.et.pcdatabase,
+                                  vector_path=self.vectorpath,
+                                  layer="ET_500m", )
 
     def run_maintainer(self, log_file, limit=None):
         """
