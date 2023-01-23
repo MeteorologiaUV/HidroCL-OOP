@@ -91,6 +91,10 @@ def load_era5(file, var, reducer='mean'):
                 da = da.mean(dim='time')
             case 'sum':
                 da = da.sum(dim='time')
+            case 'min':
+                da = da.min(dim='time')
+            case 'max':
+                da = da.max(dim='time')
             case _:
                 raise ValueError("Reducer not supported")
         match var:
@@ -240,6 +244,22 @@ def max_datasets(dataset_list):
     return template
 
 
+def min_datasets(dataset_list):
+    """
+    Function to get min from xarray datasets
+
+    Args:
+        dataset_list (list): list of xarray datasets
+
+    Returns:
+        xarray.Dataset: xarray dataset with the min of the datasets
+    """
+    template = dataset_list[0].copy()
+    min_values = np.min([d.values for d in dataset_list], axis=0)
+    template.values = min_values
+    return template
+
+
 def mosaic_raster(raster_list, layer):
     """
     Function to compute mosaic files with rioxarray library
@@ -297,7 +317,7 @@ def write_line(database, result, catchment_names, file_id, file_date, ncol=1):
 
     Args:
         database (str): database path
-        result (list): list of results
+        result (str): result path
         catchment_names (list): list of catchment names
         file_id (str): file id
         file_date (str): file date
@@ -455,6 +475,8 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
                             mos_pre = mean_datasets(dataset)
                         elif kwargs.get("aggregation") == "max":
                             mos_pre = max_datasets(dataset)
+                        elif kwargs.get("aggregation") == "min":
+                            mos_pre = min_datasets(dataset)
                         else:
                             print("aggregation argument must be sum, mean or max, and it's needed")
                             return None
@@ -509,7 +531,17 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
                     if isinstance(kwargs.get("layer"), str):
                         try:
                             file = selected_files[0]
-                            mos = load_era5(file, kwargs.get("layer"), "mean")
+
+                            match name:
+                                case name if "mean" in name:
+                                    mos = load_era5(file, kwargs.get("layer"), "mean")
+                                case name if "min" in name:
+                                    mos = load_era5(file, kwargs.get("layer"), "min")
+                                case name if "max" in name:
+                                    mos = load_era5(file, kwargs.get("layer"), "max")
+                                case _:
+                                    print('Reducer not found')
+                                    return None
                             mos = mos * 10
                         except (OSError, ValueError):
                             return print(f"Error in scene {scene}")

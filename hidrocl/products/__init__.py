@@ -1339,320 +1339,320 @@ Soil moisture path: {self.soilm.database}
                               log_file=log_file)
 
 
-"""
-Extraction of PERSIANN-CCS 0.04º degree product:
-"""
-
-
-class Persiann_ccs:
-    """
-    A class to process PERSIANN-CCS to hidrocl variables
-
-    Attributes:
-        pp (HidroCLVariable): HidroCLVariable object with PERSIANN-CCS precipitation data \n
-        pp_log (str): Path to the log file for PERSIANN-CCS precipitation data \n
-        productname (str): Name of the remote sensing product to be processed \n
-        productpath (str): Path to the product folder where the product files are located \n
-        vectorpath (str): Path to the vector folder with Shapefile with areas to be processed \n
-        common_elements (list): common_elements (list): Elements in precipitation database \n
-        product_files (list): List of product files in the product folder \n
-        product_ids (list): List of product ids. Each product id is str with common tag by date \n
-        all_scenes (list): List of all scenes (no matter the product id here) \n
-        scenes_occurrences (list): List of scenes occurrences for each product id \n
-        overpopulated_scenes (list): List of overpopulated scenes (more than 1 scenes for modis) \n
-        complete_scenes (list): List of complete scenes (1 scenes for modis) \n
-        incomplete_scenes (list): List of incomplete scenes (less than 1 scenes for modis) \n
-        scenes_to_process (list): List of scenes to process (complete scenes no processed) \n
-    """
-
-    def __init__(self, pp, product_path, vector_path, pp_log):
-        """
-        Examples:
-            >>> from hidrocl import HidroCLVariable
-            >>> from hidrocl import Persiann_ccs
-            >>> pp = HidroCLVariable('pp', 'pp.db', 'pp_pc.db')
-            >>> product_path = '/home/user/data/PERSIANN-CCS'
-            >>> vector_path = '/home/user/data/vector.shp'
-            >>> pp_log = '/home/user/data/logs/pp_log.txt'
-            >>> persiann_ccs = Persiann_ccs(pp, product_path, vector_path, pp_log)
-            >>> persiann_ccs
-            "Class to extract PERSIANN-CCS 0.04º"
-
-        Args:
-            pp (HidroCLVariable): HidroCLVariable object with PERSIANN-CCS precipitation data \n
-            product_path (str): Path to the product folder where the product files are located \n
-            vector_path (str): Path to the vector folder with Shapefile with areas to be processed \n
-            pp_log (str): Path to the log file for PERSIANN-CCS precipitation data \n
-
-        Raises:
-            TypeError: If pp is not a HidroCLVariable object
-        """
-        if t.check_instance(pp):
-            self.pp = pp
-            self.pp_log = pp_log
-            self.productname = "PERSIANN-CCS 0.04º"
-            self.productpath = product_path
-            self.vectorpath = vector_path
-            self.common_elements = self.pp.indatabase
-            self.product_files = t.read_product_files(self.productpath, "persiann_ccs")
-            self.product_ids = t.get_product_ids(self.product_files, "persiann_ccs")
-            self.all_scenes = t.check_product_files(self.product_ids)
-            self.scenes_occurrences = t.count_scenes_occurrences(self.all_scenes, self.product_ids)
-            (self.overpopulated_scenes,
-             self.complete_scenes,
-             self.incomplete_scenes) = t.classify_occurrences(self.scenes_occurrences, "persiann_ccs")
-            self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes,
-                                                            self.common_elements, what='persiann_ccs')
-        else:
-            raise TypeError('pp must be HidroCLVariable object')
-
-    def __repr__(self):
-        """
-        Return a string representation of the object
-
-        Returns:
-             str: String representation of the object
-        """
-        return f'Class to extract {self.productname}'
-
-    def __str__(self):
-        """
-        Return a string representation of the object
-
-        Returns:
-            str: String representation of the object
-        """
-        return f'''
-Product: {self.productname}
-
-PERSIANN-CCS precipitation records: {len(self.pp.indatabase)}.
-PERSIANN-CCS precipitation database path: {self.pp.database}
-        '''
-
-    def run_extraction(self, limit=None):
-        """
-        Run the extraction of the product.
-        If limit is None, all scenes will be processed.
-        If limit is a number, only the first limit scenes will be processed.
-
-        Args:
-            limit (int): length of the scenes_to_process
-
-        Returns:
-            str: Print
-        """
-
-        with t.HiddenPrints():
-            self.pp.checkdatabase()
-
-        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.pp.indatabase, "persiann_ccs")
-
-        scenes_path = t.get_scenes_path(self.product_files, self.productpath)
-
-        with TemporaryDirectory() as tempdirname:
-            temp_dir = Path(tempdirname)
-
-            if limit is not None:
-                scenes_to_process = self.scenes_to_process[:limit]
-            else:
-                scenes_to_process = self.scenes_to_process
-
-            for scene in scenes_to_process:
-                if scene not in self.pp.indatabase:
-                    e.zonal_stats(scene, scenes_path,
-                                  temp_dir, "persiann_ccs",
-                                  self.pp.catchment_names, self.pp_log,
-                                  database=self.pp.database,
-                                  pcdatabase=self.pp.pcdatabase,
-                                  vector_path=self.vectorpath)
-
-    def run_maintainer(self, log_file, limit=None):
-        """
-        Run file maintainer. It will remove any file with problems
-
-        Args:
-            log_file (str): log file path
-            limit (int): length of the scenes_to_process
-
-        Returns:
-            str: Print
-        """
-
-        with t.HiddenPrints():
-            self.pp.checkdatabase()
-
-        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.pp.indatabase, "persiann_ccs")
-
-        scenes_path = t.get_scenes_path(self.product_files, self.productpath)
-
-        if limit is not None:
-            scenes_to_process = self.scenes_to_process[:limit]
-        else:
-            scenes_to_process = self.scenes_to_process
-
-        for scene in scenes_to_process:
-            m.file_maintainer(scene=scene,
-                              scenes_path=scenes_path,
-                              name='persiann',
-                              log_file=log_file)
-
-
-"""
-Extraction of PERSIANN-CCS-CDR 0.04º degree product:
-"""
-
-
-class Persiann_ccs_cdr:
-    """
-    A class to process PERSIANN-CCS-CDR to hidrocl variables
-
-    Attributes:
-        pp (HidroCLVariable): HidroCLVariable object with PERSIANN-CCS-CDR precipitation data \n
-        pp_log (str): Path to the log file for PERSIANN-CCS-CDR precipitation data \n
-        productname (str): Name of the remote sensing product to be processed \n
-        productpath (str): Path to the product folder where the product files are located \n
-        vectorpath (str): Path to the vector folder with Shapefile with areas to be processed \n
-        common_elements (list): common_elements (list): Elements in precipitation database \n
-        product_files (list): List of product files in the product folder \n
-        product_ids (list): List of product ids. Each product id is str with common tag by date \n
-        all_scenes (list): List of all scenes (no matter the product id here) \n
-        scenes_occurrences (list): List of scenes occurrences for each product id \n
-        overpopulated_scenes (list): List of overpopulated scenes (more than 1 scenes for modis) \n
-        complete_scenes (list): List of complete scenes (1 scenes for modis) \n
-        incomplete_scenes (list): List of incomplete scenes (less than 1 scenes for modis) \n
-        scenes_to_process (list): List of scenes to process (complete scenes no processed) \n
-    """
-
-    def __init__(self, pp, product_path, vector_path, pp_log):
-        """
-        Examples:
-            >>> from hidrocl import HidroCLVariable
-            >>> from hidrocl import Persiann_ccs_cdr
-            >>> pp = HidroCLVariable('pp', 'pp.db', 'pp_pc.db')
-            >>> product_path = '/home/user/data/PERSIANN-CCS-CDR'
-            >>> vector_path = '/home/user/data/vector.shp'
-            >>> pp_log = '/home/user/data/logs/pp_log.txt'
-            >>> persiann_ccs_cdr = Persiann_ccs_cdr(pp, product_path, vector_path, pp_log)
-            >>> persiann_ccs_cdr
-            "Class to extract PERSIANN-CCS-CDR 0.04º"
-
-        Args:
-            pp (HidroCLVariable): HidroCLVariable object with PERSIANN-CCS-CDR precipitation data \n
-            product_path (str): Path to the product folder where the product files are located \n
-            vector_path (str): Path to the vector folder with Shapefile with areas to be processed \n
-            pp_log (str): Path to the log file for PERSIANN-CCS-CDR precipitation data \n
-
-        Raises:
-            TypeError: If pp is not a HidroCLVariable object
-        """
-        if t.check_instance(pp):
-            self.pp = pp
-            self.pp_log = pp_log
-            self.productname = "PERSIANN-CCS-CDR 0.04º"
-            self.productpath = product_path
-            self.vectorpath = vector_path
-            self.common_elements = self.pp.indatabase
-            self.product_files = t.read_product_files(self.productpath, "persiann_ccs_cdr")
-            self.product_ids = t.get_product_ids(self.product_files, "persiann_ccs_cdr")
-            self.all_scenes = t.check_product_files(self.product_ids)
-            self.scenes_occurrences = t.count_scenes_occurrences(self.all_scenes, self.product_ids)
-            (self.overpopulated_scenes,
-             self.complete_scenes,
-             self.incomplete_scenes) = t.classify_occurrences(self.scenes_occurrences, "persiann_ccs_cdr")
-            self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes,
-                                                            self.common_elements, what='persiann_ccs_cdr')
-        else:
-            raise TypeError('pp must be HidroCLVariable object')
-
-    def __repr__(self):
-        """
-        Return a string representation of the object
-
-        Returns:
-             str: String representation of the object
-        """
-        return f'Class to extract {self.productname}'
-
-    def __str__(self):
-        """
-        Return a string representation of the object
-
-        Returns:
-            str: String representation of the object
-        """
-        return f'''
-Product: {self.productname}
-
-PERSIANN-CCS-CDR precipitation records: {len(self.pp.indatabase)}.
-PERSIANN-CCS-CDR precipitation database path: {self.pp.database}
-        '''
-
-    def run_extraction(self, limit=None):
-        """
-        Run the extraction of the product.
-        If limit is None, all scenes will be processed.
-        If limit is a number, only the first limit scenes will be processed.
-
-        Args:
-            limit (int): length of the scenes_to_process
-
-        Returns:
-            str: Print
-        """
-
-        with t.HiddenPrints():
-            self.pp.checkdatabase()
-
-        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.pp.indatabase, 'persiann_ccs_cdr')
-
-        scenes_path = t.get_scenes_path(self.product_files, self.productpath)
-
-        with TemporaryDirectory() as tempdirname:
-            temp_dir = Path(tempdirname)
-
-            if limit is not None:
-                scenes_to_process = self.scenes_to_process[:limit]
-            else:
-                scenes_to_process = self.scenes_to_process
-
-            for scene in scenes_to_process:
-                if scene not in self.pp.indatabase:
-                    e.zonal_stats(scene, scenes_path,
-                                  temp_dir, "persiann_ccs_cdr",
-                                  self.pp.catchment_names, self.pp_log,
-                                  database=self.pp.database,
-                                  pcdatabase=self.pp.pcdatabase,
-                                  vector_path=self.vectorpath)
-
-    def run_maintainer(self, log_file, limit=None):
-        """
-        Run file maintainer. It will remove any file with problems
-
-        Args:
-            log_file (str): log file path
-            limit (int): length of the scenes_to_process
-
-        Returns:
-            str: Print
-        """
-
-        with t.HiddenPrints():
-            self.pp.checkdatabase()
-
-        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.pp.indatabase, 'persiann_ccs_cdr')
-
-        scenes_path = t.get_scenes_path(self.product_files, self.productpath)
-
-        if limit is not None:
-            scenes_to_process = self.scenes_to_process[:limit]
-        else:
-            scenes_to_process = self.scenes_to_process
-
-        for scene in scenes_to_process:
-            m.file_maintainer(scene=scene,
-                              scenes_path=scenes_path,
-                              name='persiann',
-                              log_file=log_file)
+# """
+# Extraction of PERSIANN-CCS 0.04º degree product:
+# """
+#
+#
+# class Persiann_ccs:
+#     """
+#     A class to process PERSIANN-CCS to hidrocl variables
+#
+#     Attributes:
+#         pp (HidroCLVariable): HidroCLVariable object with PERSIANN-CCS precipitation data \n
+#         pp_log (str): Path to the log file for PERSIANN-CCS precipitation data \n
+#         productname (str): Name of the remote sensing product to be processed \n
+#         productpath (str): Path to the product folder where the product files are located \n
+#         vectorpath (str): Path to the vector folder with Shapefile with areas to be processed \n
+#         common_elements (list): common_elements (list): Elements in precipitation database \n
+#         product_files (list): List of product files in the product folder \n
+#         product_ids (list): List of product ids. Each product id is str with common tag by date \n
+#         all_scenes (list): List of all scenes (no matter the product id here) \n
+#         scenes_occurrences (list): List of scenes occurrences for each product id \n
+#         overpopulated_scenes (list): List of overpopulated scenes (more than 1 scenes for modis) \n
+#         complete_scenes (list): List of complete scenes (1 scenes for modis) \n
+#         incomplete_scenes (list): List of incomplete scenes (less than 1 scenes for modis) \n
+#         scenes_to_process (list): List of scenes to process (complete scenes no processed) \n
+#     """
+#
+#     def __init__(self, pp, product_path, vector_path, pp_log):
+#         """
+#         Examples:
+#             >>> from hidrocl import HidroCLVariable
+#             >>> from hidrocl import Persiann_ccs
+#             >>> pp = HidroCLVariable('pp', 'pp.db', 'pp_pc.db')
+#             >>> product_path = '/home/user/data/PERSIANN-CCS'
+#             >>> vector_path = '/home/user/data/vector.shp'
+#             >>> pp_log = '/home/user/data/logs/pp_log.txt'
+#             >>> persiann_ccs = Persiann_ccs(pp, product_path, vector_path, pp_log)
+#             >>> persiann_ccs
+#             "Class to extract PERSIANN-CCS 0.04º"
+#
+#         Args:
+#             pp (HidroCLVariable): HidroCLVariable object with PERSIANN-CCS precipitation data \n
+#             product_path (str): Path to the product folder where the product files are located \n
+#             vector_path (str): Path to the vector folder with Shapefile with areas to be processed \n
+#             pp_log (str): Path to the log file for PERSIANN-CCS precipitation data \n
+#
+#         Raises:
+#             TypeError: If pp is not a HidroCLVariable object
+#         """
+#         if t.check_instance(pp):
+#             self.pp = pp
+#             self.pp_log = pp_log
+#             self.productname = "PERSIANN-CCS 0.04º"
+#             self.productpath = product_path
+#             self.vectorpath = vector_path
+#             self.common_elements = self.pp.indatabase
+#             self.product_files = t.read_product_files(self.productpath, "persiann_ccs")
+#             self.product_ids = t.get_product_ids(self.product_files, "persiann_ccs")
+#             self.all_scenes = t.check_product_files(self.product_ids)
+#             self.scenes_occurrences = t.count_scenes_occurrences(self.all_scenes, self.product_ids)
+#             (self.overpopulated_scenes,
+#              self.complete_scenes,
+#              self.incomplete_scenes) = t.classify_occurrences(self.scenes_occurrences, "persiann_ccs")
+#             self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes,
+#                                                             self.common_elements, what='persiann_ccs')
+#         else:
+#             raise TypeError('pp must be HidroCLVariable object')
+#
+#     def __repr__(self):
+#         """
+#         Return a string representation of the object
+#
+#         Returns:
+#              str: String representation of the object
+#         """
+#         return f'Class to extract {self.productname}'
+#
+#     def __str__(self):
+#         """
+#         Return a string representation of the object
+#
+#         Returns:
+#             str: String representation of the object
+#         """
+#         return f'''
+# Product: {self.productname}
+#
+# PERSIANN-CCS precipitation records: {len(self.pp.indatabase)}.
+# PERSIANN-CCS precipitation database path: {self.pp.database}
+#         '''
+#
+#     def run_extraction(self, limit=None):
+#         """
+#         Run the extraction of the product.
+#         If limit is None, all scenes will be processed.
+#         If limit is a number, only the first limit scenes will be processed.
+#
+#         Args:
+#             limit (int): length of the scenes_to_process
+#
+#         Returns:
+#             str: Print
+#         """
+#
+#         with t.HiddenPrints():
+#             self.pp.checkdatabase()
+#
+#         self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.pp.indatabase, "persiann_ccs")
+#
+#         scenes_path = t.get_scenes_path(self.product_files, self.productpath)
+#
+#         with TemporaryDirectory() as tempdirname:
+#             temp_dir = Path(tempdirname)
+#
+#             if limit is not None:
+#                 scenes_to_process = self.scenes_to_process[:limit]
+#             else:
+#                 scenes_to_process = self.scenes_to_process
+#
+#             for scene in scenes_to_process:
+#                 if scene not in self.pp.indatabase:
+#                     e.zonal_stats(scene, scenes_path,
+#                                   temp_dir, "persiann_ccs",
+#                                   self.pp.catchment_names, self.pp_log,
+#                                   database=self.pp.database,
+#                                   pcdatabase=self.pp.pcdatabase,
+#                                   vector_path=self.vectorpath)
+#
+#     def run_maintainer(self, log_file, limit=None):
+#         """
+#         Run file maintainer. It will remove any file with problems
+#
+#         Args:
+#             log_file (str): log file path
+#             limit (int): length of the scenes_to_process
+#
+#         Returns:
+#             str: Print
+#         """
+#
+#         with t.HiddenPrints():
+#             self.pp.checkdatabase()
+#
+#         self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.pp.indatabase, "persiann_ccs")
+#
+#         scenes_path = t.get_scenes_path(self.product_files, self.productpath)
+#
+#         if limit is not None:
+#             scenes_to_process = self.scenes_to_process[:limit]
+#         else:
+#             scenes_to_process = self.scenes_to_process
+#
+#         for scene in scenes_to_process:
+#             m.file_maintainer(scene=scene,
+#                               scenes_path=scenes_path,
+#                               name='persiann',
+#                               log_file=log_file)
+#
+#
+# """
+# Extraction of PERSIANN-CCS-CDR 0.04º degree product:
+# """
+#
+#
+# class Persiann_ccs_cdr:
+#     """
+#     A class to process PERSIANN-CCS-CDR to hidrocl variables
+#
+#     Attributes:
+#         pp (HidroCLVariable): HidroCLVariable object with PERSIANN-CCS-CDR precipitation data \n
+#         pp_log (str): Path to the log file for PERSIANN-CCS-CDR precipitation data \n
+#         productname (str): Name of the remote sensing product to be processed \n
+#         productpath (str): Path to the product folder where the product files are located \n
+#         vectorpath (str): Path to the vector folder with Shapefile with areas to be processed \n
+#         common_elements (list): common_elements (list): Elements in precipitation database \n
+#         product_files (list): List of product files in the product folder \n
+#         product_ids (list): List of product ids. Each product id is str with common tag by date \n
+#         all_scenes (list): List of all scenes (no matter the product id here) \n
+#         scenes_occurrences (list): List of scenes occurrences for each product id \n
+#         overpopulated_scenes (list): List of overpopulated scenes (more than 1 scenes for modis) \n
+#         complete_scenes (list): List of complete scenes (1 scenes for modis) \n
+#         incomplete_scenes (list): List of incomplete scenes (less than 1 scenes for modis) \n
+#         scenes_to_process (list): List of scenes to process (complete scenes no processed) \n
+#     """
+#
+#     def __init__(self, pp, product_path, vector_path, pp_log):
+#         """
+#         Examples:
+#             >>> from hidrocl import HidroCLVariable
+#             >>> from hidrocl import Persiann_ccs_cdr
+#             >>> pp = HidroCLVariable('pp', 'pp.db', 'pp_pc.db')
+#             >>> product_path = '/home/user/data/PERSIANN-CCS-CDR'
+#             >>> vector_path = '/home/user/data/vector.shp'
+#             >>> pp_log = '/home/user/data/logs/pp_log.txt'
+#             >>> persiann_ccs_cdr = Persiann_ccs_cdr(pp, product_path, vector_path, pp_log)
+#             >>> persiann_ccs_cdr
+#             "Class to extract PERSIANN-CCS-CDR 0.04º"
+#
+#         Args:
+#             pp (HidroCLVariable): HidroCLVariable object with PERSIANN-CCS-CDR precipitation data \n
+#             product_path (str): Path to the product folder where the product files are located \n
+#             vector_path (str): Path to the vector folder with Shapefile with areas to be processed \n
+#             pp_log (str): Path to the log file for PERSIANN-CCS-CDR precipitation data \n
+#
+#         Raises:
+#             TypeError: If pp is not a HidroCLVariable object
+#         """
+#         if t.check_instance(pp):
+#             self.pp = pp
+#             self.pp_log = pp_log
+#             self.productname = "PERSIANN-CCS-CDR 0.04º"
+#             self.productpath = product_path
+#             self.vectorpath = vector_path
+#             self.common_elements = self.pp.indatabase
+#             self.product_files = t.read_product_files(self.productpath, "persiann_ccs_cdr")
+#             self.product_ids = t.get_product_ids(self.product_files, "persiann_ccs_cdr")
+#             self.all_scenes = t.check_product_files(self.product_ids)
+#             self.scenes_occurrences = t.count_scenes_occurrences(self.all_scenes, self.product_ids)
+#             (self.overpopulated_scenes,
+#              self.complete_scenes,
+#              self.incomplete_scenes) = t.classify_occurrences(self.scenes_occurrences, "persiann_ccs_cdr")
+#             self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes,
+#                                                             self.common_elements, what='persiann_ccs_cdr')
+#         else:
+#             raise TypeError('pp must be HidroCLVariable object')
+#
+#     def __repr__(self):
+#         """
+#         Return a string representation of the object
+#
+#         Returns:
+#              str: String representation of the object
+#         """
+#         return f'Class to extract {self.productname}'
+#
+#     def __str__(self):
+#         """
+#         Return a string representation of the object
+#
+#         Returns:
+#             str: String representation of the object
+#         """
+#         return f'''
+# Product: {self.productname}
+#
+# PERSIANN-CCS-CDR precipitation records: {len(self.pp.indatabase)}.
+# PERSIANN-CCS-CDR precipitation database path: {self.pp.database}
+#         '''
+#
+#     def run_extraction(self, limit=None):
+#         """
+#         Run the extraction of the product.
+#         If limit is None, all scenes will be processed.
+#         If limit is a number, only the first limit scenes will be processed.
+#
+#         Args:
+#             limit (int): length of the scenes_to_process
+#
+#         Returns:
+#             str: Print
+#         """
+#
+#         with t.HiddenPrints():
+#             self.pp.checkdatabase()
+#
+#         self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.pp.indatabase, 'persiann_ccs_cdr')
+#
+#         scenes_path = t.get_scenes_path(self.product_files, self.productpath)
+#
+#         with TemporaryDirectory() as tempdirname:
+#             temp_dir = Path(tempdirname)
+#
+#             if limit is not None:
+#                 scenes_to_process = self.scenes_to_process[:limit]
+#             else:
+#                 scenes_to_process = self.scenes_to_process
+#
+#             for scene in scenes_to_process:
+#                 if scene not in self.pp.indatabase:
+#                     e.zonal_stats(scene, scenes_path,
+#                                   temp_dir, "persiann_ccs_cdr",
+#                                   self.pp.catchment_names, self.pp_log,
+#                                   database=self.pp.database,
+#                                   pcdatabase=self.pp.pcdatabase,
+#                                   vector_path=self.vectorpath)
+#
+#     def run_maintainer(self, log_file, limit=None):
+#         """
+#         Run file maintainer. It will remove any file with problems
+#
+#         Args:
+#             log_file (str): log file path
+#             limit (int): length of the scenes_to_process
+#
+#         Returns:
+#             str: Print
+#         """
+#
+#         with t.HiddenPrints():
+#             self.pp.checkdatabase()
+#
+#         self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.pp.indatabase, 'persiann_ccs_cdr')
+#
+#         scenes_path = t.get_scenes_path(self.product_files, self.productpath)
+#
+#         if limit is not None:
+#             scenes_to_process = self.scenes_to_process[:limit]
+#         else:
+#             scenes_to_process = self.scenes_to_process
+#
+#         for scene in scenes_to_process:
+#             m.file_maintainer(scene=scene,
+#                               scenes_path=scenes_path,
+#                               name='persiann',
+#                               log_file=log_file)
 
 
 """
@@ -1835,6 +1835,8 @@ class Era5_land:
 
     Attributes:
         temp (HidroCLVariable): HidroCLVariable object with ERA5 temperature data \n
+        tempmin (HidroCLVariable): HidroCLVariable object with ERA5 minimum temperature data \n
+        tempmax (HidroCLVariable): HidroCLVariable object with ERA5 maximum temperature data \n
         pp (HidroCLVariable): HidroCLVariable object with ERA5 precipitation data \n
         et (HidroCLVariable): HidroCLVariable object with ERA5 evapotranspiration data \n
         pet (HidroCLVariable): HidroCLVariable object with ERA5 potential evapotranspiration data \n
@@ -1844,6 +1846,8 @@ class Era5_land:
         snwdt (HidroCLVariable): HidroCLVariable object with ERA5 snow depth data \n
         soilm (HidroCLVariable): HidroCLVariable object with ERA5 volumetric soil water data \n
         temp_log (str): Log file path for temperature data \n
+        tempmin_log (str): Log file path for minimum temperature data \n
+        tempmax_log (str): Log file path for maximum temperature data \n
         pp_log (str): Log file path for precipitation data \n
         et_log (str): Log file path for evapotranspiration data \n
         pet_log (str): Log file path for potential evapotranspiration data \n
@@ -1866,8 +1870,10 @@ class Era5_land:
         scenes_to_process (list): List of scenes to process (complete scenes no processed) \n
     """
 
-    def __init__(self, temp, pp, et, pet, snw, snwa, snwdn, snwdt,
+    def __init__(self, temp, tempmin, tempmax,
+                 pp, et, pet, snw, snwa, snwdn, snwdt,
                  soilm, product_path, vector_path, temp_log,
+                 tempmin_log, tempmax_log,
                  pp_log, et_log, pet_log, snw_log, snwa_log, snwdn_log,
                  snwdt_log, soilm_log):
         """
@@ -1875,6 +1881,8 @@ class Era5_land:
             >>> from hidrocl import HidroCLVariable
             >>> from hidrocl import Era5_land
             >>> temp = HidroCLVariable('temp',temp.db, temppc.db)
+            >>> tempmin = HidroCLVariable('tempmin',tempmin.db, tempminpc.db)
+            >>> tempmax = HidroCLVariable('tempmax',tempmax.db, tempmaxpc.db)
             >>> pp = HidroCLVariable('pp', pp.db, pppc.db)
             >>> et = HidroCLVariable('et', et.db, etpc.db)
             >>> pet = HidroCLVariable('pet', pet.db, petpc.db)
@@ -1886,6 +1894,8 @@ class Era5_land:
             >>> product_path = '/home/user/era5-land'
             >>> vector_path = '/home/user/shapefiles'
             >>> temp_log = '/home/user/temp.log'
+            >>> tempmax_log = '/home/user/tempmax.log'
+            >>> tempmin_log = '/home/user/tempmin.log'
             >>> pp_log = '/home/user/pp.log'
             >>> et_log = '/home/user/et.log'
             >>> pet_log = '/home/user/pet.log'
@@ -1894,10 +1904,11 @@ class Era5_land:
             >>> snwdn_log = '/home/user/snwdn.log'
             >>> snwdt_log = '/home/user/snwdt.log'
             >>> soilm_log = '/home/user/soilm.log'
-            >>> era5 = Era5_land(temp, pp, et, pet, snw, snwa, snwdn, snwdt,
-                    soilm, product_path, vector_path, temp_log,
-                    pp_log, et_log, pet_log, snw_log, snwa_log, snwdn_log,
-                    snwdt_log, soilm_log)
+            >>> era5 = Era5_land(temp, tempmin, tempmax, pp, et, pet,
+                                 snw, snwa, snwdn, snwdt,
+                                 soilm, product_path, vector_path, temp_log,
+                                 pp_log, et_log, pet_log, snw_log, snwa_log,
+                                 snwdn_log, snwdt_log, soilm_log)
             >>> era5
             "Class to extract ERA5-Land Hourly 0.1 degree"
             >>> era5.run_extraction()
@@ -1905,6 +1916,8 @@ class Era5_land:
 
         Args:
             temp (HidroCLVariable): HidroCLVariable object with ERA5 temperature data \n
+            tempmin (HidroCLVariable): HidroCLVariable object with ERA5 min temperature data \n
+            tempmax (HidroCLVariable): HidroCLVariable object with ERA5 max temperature data \n
             pp (HidroCLVariable): HidroCLVariable object with ERA5 precipitation data \n
             et (HidroCLVariable): HidroCLVariable object with ERA5 evapotranspiration data \n
             pet (HidroCLVariable): HidroCLVariable object with ERA5 potential evapotranspiration data \n
@@ -1916,6 +1929,8 @@ class Era5_land:
             product_path (str): Path to the product folder where the product files are located \n
             vector_path (str): Path to the vector folder with Shapefile with areas to be processed \n
             temp_log (str): Log file path for temperature data \n
+            tempmin_log (str): Log file path for min temperature data \n
+            tempmax_log (str): Log file path for max temperature data \n
             pp_log (str): Log file path for precipitation data \n
             et_log (str): Log file path for evapotranspiration data \n
             pet_log (str): Log file path for potential evapotranspiration data \n
@@ -1930,6 +1945,8 @@ class Era5_land:
         """
         if t.check_instance(temp, pp, et, pet, snw, snwa, snwdn, snwdt, soilm):
             self.temp = temp
+            self.tempmin = tempmin
+            self.tempmax = tempmax
             self.pp = pp
             self.et = et
             self.pet = pet
@@ -1939,6 +1956,8 @@ class Era5_land:
             self.snwdt = snwdt
             self.soilm = soilm
             self.temp_log = temp_log
+            self.tempmin_log = tempmin_log
+            self.tempmax_log = tempmax_log
             self.pp_log = pp_log
             self.et_log = et_log
             self.pet_log = pet_log
@@ -1951,6 +1970,8 @@ class Era5_land:
             self.productpath = product_path
             self.vectorpath = vector_path
             self.common_elements = t.compare_indatabase(self.temp.indatabase,
+                                                        self.tempmin.indatabase,
+                                                        self.tempmax.indatabase,
                                                         self.pp.indatabase,
                                                         self.et.indatabase,
                                                         self.pet.indatabase,
@@ -1969,7 +1990,8 @@ class Era5_land:
             self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes,
                                                             self.common_elements, what="era5")
         else:
-            raise TypeError('temp, pp, et, pet, snw, snwa, snwdn, snwdt and soilm must be HidroCLVariable objects')
+            raise TypeError('temp, tempmin, tempmax, pp, et, pet, snw, snwa, snwdn, snwdt ' +
+                            'and soilm must be HidroCLVariable objects')
 
     def __repr__(self):
         """
@@ -1992,6 +2014,12 @@ Product: {self.productname}
 
 Temperature records: {len(self.temp.indatabase)}.
 Temperature path: {self.temp.database}
+
+Minimum temperature records: {len(self.tempmin.indatabase)}.
+Minimum temperature path: {self.tempmin.database}
+
+Maximum temperature records: {len(self.tempmax.indatabase)}.
+Maximum temperature path: {self.tempmax.database}
 
 Precipitation records: {len(self.pp.indatabase)}.
 Precipitation path: {self.pp.database}
@@ -2033,6 +2061,8 @@ Volumetric soil water path: {self.soilm.database}
 
         with t.HiddenPrints():
             self.temp.checkdatabase()
+            self.tempmin.checkdatabase()
+            self.tempmax.checkdatabase()
             self.pp.checkdatabase()
             self.et.checkdatabase()
             self.pet.checkdatabase()
@@ -2043,6 +2073,8 @@ Volumetric soil water path: {self.soilm.database}
             self.soilm.checkdatabase()
 
         self.common_elements = t.compare_indatabase(self.temp.indatabase,
+                                                    self.tempmin.indatabase,
+                                                    self.tempmax.indatabase,
                                                     self.pp.indatabase,
                                                     self.et.indatabase,
                                                     self.pet.indatabase,
@@ -2067,12 +2099,32 @@ Volumetric soil water path: {self.soilm.database}
             for scene in scenes_to_process:
                 if scene not in self.temp.indatabase:
                     e.zonal_stats(scene, scenes_path,
-                                  temp_dir, 'temp_era5',
+                                  temp_dir, 'tempmean_era5',
                                   self.temp.catchment_names, self.temp_log,
                                   database=self.temp.database,
                                   pcdatabase=self.temp.pcdatabase,
                                   vector_path=self.vectorpath,
                                   layer="t2m")
+
+                for scene in scenes_to_process:
+                    if scene not in self.tempmin.indatabase:
+                        e.zonal_stats(scene, scenes_path,
+                                      temp_dir, 'tempmin_era5',
+                                      self.temp.catchment_names, self.temp_log,
+                                      database=self.temp.database,
+                                      pcdatabase=self.temp.pcdatabase,
+                                      vector_path=self.vectorpath,
+                                      layer="t2m")
+
+                for scene in scenes_to_process:
+                    if scene not in self.tempmax.indatabase:
+                        e.zonal_stats(scene, scenes_path,
+                                      temp_dir, 'tempmax_era5',
+                                      self.temp.catchment_names, self.temp_log,
+                                      database=self.temp.database,
+                                      pcdatabase=self.temp.pcdatabase,
+                                      vector_path=self.vectorpath,
+                                      layer="t2m")
 
                 if scene not in self.pp.indatabase:
                     e.zonal_stats(scene, scenes_path,

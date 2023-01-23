@@ -62,7 +62,7 @@ def read_product_files(productpath, what="modis", variable = None):
             return [value for value in os.listdir(productpath) if "pdirnow" in value
                     and ".bin" in value and ".gz" not in value]
         case "era5":
-            return [value for value in os.listdir(productpath) if ".nc" in value]
+            return [str(value.relative_to(productpath)) for value in Path(productpath).rglob('*.nc')]
         case _:
             print("Unknown product type")
             return None
