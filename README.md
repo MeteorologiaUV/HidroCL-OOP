@@ -158,6 +158,14 @@ install.packages("tibble", dependencies = TRUE)
 
 ## Changelog
 
+### [0.0.12] - 2023-01-23
+#### Changed
+- **Era5Land**: Added temp min and max in the extraction
+- **GFS**: added min reducer
+
+#### Removed
+- **PERSIANN**: removed PERSIANN CCS and PERSIANN-CCS-CDR product
+
 ### [0.0.11] - 2022-12-21
 #### Added
 - **PDIR-Nor**: Added support to PDIR-Now product

@@ -1943,7 +1943,7 @@ class Era5_land:
         Raises:
             TypeError: If temp, pp, et, pet, snow, snowa, snowdn, snowdt or soilm is not HidroCLVariable objects \n
         """
-        if t.check_instance(temp, pp, et, pet, snw, snwa, snwdn, snwdt, soilm):
+        if t.check_instance(temp, tempmin, tempmax, pp, et, pet, snw, snwa, snwdn, snwdt, soilm):
             self.temp = temp
             self.tempmin = tempmin
             self.tempmax = tempmax
@@ -2099,32 +2099,33 @@ Volumetric soil water path: {self.soilm.database}
             for scene in scenes_to_process:
                 if scene not in self.temp.indatabase:
                     e.zonal_stats(scene, scenes_path,
-                                  temp_dir, 'tempmean_era5',
+                                  temp_dir, 'temp_era5',
                                   self.temp.catchment_names, self.temp_log,
                                   database=self.temp.database,
                                   pcdatabase=self.temp.pcdatabase,
                                   vector_path=self.vectorpath,
+                                  aggregation='mean',
                                   layer="t2m")
 
-                for scene in scenes_to_process:
-                    if scene not in self.tempmin.indatabase:
-                        e.zonal_stats(scene, scenes_path,
-                                      temp_dir, 'tempmin_era5',
-                                      self.temp.catchment_names, self.temp_log,
-                                      database=self.temp.database,
-                                      pcdatabase=self.temp.pcdatabase,
-                                      vector_path=self.vectorpath,
-                                      layer="t2m")
+                if scene not in self.tempmin.indatabase:
+                    e.zonal_stats(scene, scenes_path,
+                                  temp_dir, 'temp_era5',
+                                  self.tempmin.catchment_names, self.tempmin_log,
+                                  database=self.tempmin.database,
+                                  pcdatabase=self.tempmin.pcdatabase,
+                                  vector_path=self.vectorpath,
+                                  aggregation='min',
+                                  layer="t2m")
 
-                for scene in scenes_to_process:
-                    if scene not in self.tempmax.indatabase:
-                        e.zonal_stats(scene, scenes_path,
-                                      temp_dir, 'tempmax_era5',
-                                      self.temp.catchment_names, self.temp_log,
-                                      database=self.temp.database,
-                                      pcdatabase=self.temp.pcdatabase,
-                                      vector_path=self.vectorpath,
-                                      layer="t2m")
+                if scene not in self.tempmax.indatabase:
+                    e.zonal_stats(scene, scenes_path,
+                                  temp_dir, 'temp_era5',
+                                  self.tempmax.catchment_names, self.tempmax_log,
+                                  database=self.tempmax.database,
+                                  pcdatabase=self.tempmax.pcdatabase,
+                                  vector_path=self.vectorpath,
+                                  aggregation='max',
+                                  layer="t2m")
 
                 if scene not in self.pp.indatabase:
                     e.zonal_stats(scene, scenes_path,

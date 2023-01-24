@@ -478,7 +478,7 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
                         elif kwargs.get("aggregation") == "min":
                             mos_pre = min_datasets(dataset)
                         else:
-                            print("aggregation argument must be sum, mean or max, and it's needed")
+                            print("aggregation argument must be sum, mean, min or max, and it's needed")
                             return None
                         # scale and unit conversions
                         if kwargs.get("layer") == 'prate':
@@ -531,17 +531,7 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
                     if isinstance(kwargs.get("layer"), str):
                         try:
                             file = selected_files[0]
-
-                            match name:
-                                case name if "mean" in name:
-                                    mos = load_era5(file, kwargs.get("layer"), "mean")
-                                case name if "min" in name:
-                                    mos = load_era5(file, kwargs.get("layer"), "min")
-                                case name if "max" in name:
-                                    mos = load_era5(file, kwargs.get("layer"), "max")
-                                case _:
-                                    print('Reducer not found')
-                                    return None
+                            mos = load_era5(file, kwargs.get("layer"), kwargs.get("aggregation"))
                             mos = mos * 10
                         except (OSError, ValueError):
                             return print(f"Error in scene {scene}")
