@@ -1,24 +1,22 @@
 import hidrocl
 import hidrocl_paths as hcl
+import geopandas as gpd
 print(hidrocl.__version__)
 
-ndvi = hidrocl.HidroCLVariable("ndvi",
-                               hcl.veg_o_modis_ndvi_mean_b_d16_p0d,
-                               hcl.veg_o_modis_ndvi_mean_pc)
+v = gpd.read_file(hcl.hidrocl_agr_sinu)
+catchment_names = v.gauge_id.tolist()
 
-evi = hidrocl.HidroCLVariable("evi",
-                              hcl.veg_o_modis_evi_mean_b_d16_p0d,
-                              hcl.veg_o_modis_evi_mean_pc)
+agr = hidrocl.HidroCLVariable('agr NDVI',
+                              hcl.veg_o_modis_agr_mean_b_none_d1_p0d,
+                              hcl.veg_o_modis_agr_mean_b_pc)
 
-nbr = hidrocl.HidroCLVariable("nbr",
-                              hcl.veg_o_int_nbr_mean_b_d16_p0d,
-                              hcl.veg_o_int_nbr_mean_pc)
+agr.catchment_names = v.gauge_id.tolist()
 
-mod13 = hidrocl.Mod13q1(ndvi, evi, nbr,
-                        product_path=hcl.mod13q1_path,
-                        vector_path=hcl.hidrocl_sinusoidal,
-                        ndvi_log=hcl.log_veg_o_modis_ndvi_mean,
-                        evi_log=hcl.log_veg_o_modis_evi_mean,
-                        nbr_log=hcl.log_veg_o_int_nbr_mean)
+agr.checkdatabase()
+agr.checkpcdatabase()
 
-mod13.run_extraction()
+agrndvi = hidrocl.Mod13q1agr(ndvi = agr, product_path=hcl.mod13q1_path,
+                             vector_path=hcl.hidrocl_agr_sinu,
+                             ndvi_log=hcl.log_veg_o_agr_ndvi_mean)
+
+agrndvi.run_extraction()
