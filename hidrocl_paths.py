@@ -42,6 +42,7 @@ hidrocl_utm = os.path.join(nas_path, 'base/boundaries/HidroCL_boundaries_utm.shp
 hidrocl_wgs84 = os.path.join(nas_path, 'base/boundaries/HidroCL_boundaries.shp')
 hidrocl_north = os.path.join(nas_path, 'static/DEM/HidroCL_north.shp')
 hidrocl_south = os.path.join(nas_path, 'static/DEM/HidroCL_south.shp')
+hidrocl_agr_sinu = os.path.join(nas_path, 'base/boundaries/Agr_ModisSinu.shp')
 
 # ----
 # databases
@@ -86,6 +87,9 @@ snow_o_era5_snr_mean_b_d_p0d = os.path.join(nas_path, 'databases/observed/snow_o
 snow_o_era5_snd_mean_b_d_p0d = os.path.join(nas_path, 'databases/observed/snow_o_era5_snd_mean_b_d_p0d.csv') # snow depth
 sm_o_era5_sm_mean_b_d_p0d = os.path.join(nas_path, 'databases/observed/sm_o_era5_sm_mean_b_d_p0d.csv') # soil moisture
 pp_o_pdir_pp_mean_b_none_d1_p0d = os.path.join(nas_path, 'databases/observed/pp_o_pdir_pp_mean_b_none_d1_p0d.csv') # new persiann
+## new variables with new names
+veg_o_modis_agr_mean_b_none_d1_p0d = os.path.join(nas_path, 'databases/observed/veg_o_modis_agr_mean_b_none_d1_p0d.csv')
+
 
 # forecasted
 pp_f_gfs_pp_mean_b_none_d1_p0d = os.path.join(nas_path, 'databases/forecasted/pp_f_gfs_pp_mean_b_none_d1_p0d.csv')
@@ -151,6 +155,8 @@ et_o_modis_eta_cum_b_pc = os.path.join(nas_path, 'pcdatabases/observed/et_o_modi
 veg_o_modis_lai_mean_b_pc = os.path.join(nas_path, 'pcdatabases/observed/veg_o_modis_lai_mean_b_pc.csv')
 veg_o_modis_fpar_mean_b_pc = os.path.join(nas_path, 'pcdatabases/observed/veg_o_modis_fpar_mean_b_pc.csv')
 pp_o_imerg_pp_mean_b_pc = os.path.join(nas_path, 'pcdatabases/observed/pp_o_imerg_pp_mean_b_pc.csv')
+## new names
+veg_o_modis_agr_mean_b_pc = os.path.join(nas_path, 'pcdatabases/observed/veg_o_modis_agr_mean_b_pc.csv')
 # GLDAS products:
 snw_o_gldas_swe_cum_b_pc = os.path.join(nas_path, 'pcdatabases/observed/snw_o_gldas_swe_cum_b_pc.csv')
 tmp_f_gldas_tmp_mean_b_pc = os.path.join(nas_path, 'pcdatabases/observed/tmp_f_gldas_tmp_mean_b_pc.csv')
@@ -227,6 +233,7 @@ log_snw_o_modis_sca_cum = os.path.join(nas_path, 'logs/log_snw_o_modis_sca_cum.t
 log_veg_o_modis_ndvi_mean = os.path.join(nas_path, 'logs/log_veg_o_modis_ndvi_mean.txt')
 log_veg_o_modis_evi_mean = os.path.join(nas_path, 'logs/log_veg_o_modis_evi_mean.txt')
 log_veg_o_int_nbr_mean = os.path.join(nas_path, 'logs/log_veg_o_int_nbr_mean.txt')
+log_veg_o_agr_ndvi_mean = os.path.join(nas_path, 'logs/log_veg_o_modis_agr_mean.txt')
 # log_sun_o_modis_al_mean_b_d16_p0d = os.path.join(nas_path, 'logs/log_sun_o_modis_al_mean_b_d16_p0d.txt')
 # log_sun_o_modis_al_median_b_d16_p0d = os.path.join(nas_path, 'logs/log_sun_o_modis_al_median_b_d16_p0d.txt')
 # log_sun_o_modis_al_p90_b_d16_p0d = os.path.join(nas_path, 'logs/log_sun_o_modis_al_p90_b_d16_p0d.txt')

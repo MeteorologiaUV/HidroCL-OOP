@@ -225,6 +225,172 @@ NBR database path: {self.nbr.database}
 
 
 """
+Extraction Agr. NDVI from MODIS MOD13Q1 product:
+"""
+
+
+class Mod13q1agr:
+    """
+    A class to process MOD13Q1 to hidrocl variables
+
+    Attributes:
+        ndvi (HidroCLVariable): HidroCLVariable object with the NDVI data \n
+        ndvi_log (str): Path to the log file for the NDVI extraction \n
+        productname (str): Name of the remote sensing product to be processed \n
+        productpath (str): Path to the product folder where the product files are located \n
+        vectorpath (str): Path to the vector folder with Shapefile with areas to be processed \n
+        common_elements (list): List of common elements between the NDVI, EVI and NBR databases \n
+        product_files (list): List of product files in the product folder \n
+        product_ids (list): List of product ids. Each product id is str with common tag by date \n
+        all_scenes (list): List of all scenes (no matter the product id here) \n
+        scenes_occurrences (list): List of scenes occurrences for each product id \n
+        overpopulated_scenes (list): List of overpopulated scenes (more than 9 scenes for modis) \n
+        complete_scenes (list): List of complete scenes (9 scenes for modis) \n
+        incomplete_scenes (list): List of incomplete scenes (less than 9 scenes for modis) \n
+        scenes_to_process (list): List of scenes to process (complete scenes no processed) \n
+    """
+
+    def __init__(self, ndvi, product_path, vector_path, ndvi_log):
+        """
+        Examples:
+            >>> from hidrocl import HidroCLVariable
+            >>> from hidrocl.products import Mod13q1agr
+            >>> ndvi = HidroCLVariable('ndvi', 'ndvi.db', 'ndvi_pc.db')
+            >>> product_path = '/home/user/mod13q1'
+            >>> vector_path = '/home/user/vector.shp'
+            >>> ndvi_log = '/home/user/ndvi.log'
+            >>> mod13q1agr = Mod13q1agr(ndvi, product_path, vector_path, ndvi_log)
+            >>> mod13q1agr
+            "Class to extract agricultural NDVI from MODIS MOD13Q1 Version 6.1"
+
+        Args:
+            ndvi (HidroCLVariable): Object with the NDVI data
+            evi (HidroCLVariable): Object with the EVI data
+            nbr (HidroCLVariable): Object with the NBR data
+            product_path (str): Path to the product folder
+            vector_path (str): Path to the vector folder
+            ndvi_log (str): Path to the log file for the NDVI extraction
+            evi_log (str): Path to the log file for the EVI extraction
+            nbr_log (str): Path to the log file for the NBR extraction
+
+        Raises:
+              TypeError: If the input is not a HidroCLVariable object
+        """
+        if t.check_instance(ndvi):
+            self.ndvi = ndvi
+            self.ndvi_log = ndvi_log
+            self.productname = "agricultural NDVI from MODIS MOD13Q1 Version 6.1"
+            self.productpath = product_path
+            self.vectorpath = vector_path
+            self.common_elements = t.compare_indatabase(self.ndvi.indatabase)
+            self.product_files = t.read_product_files(self.productpath, "modis")
+            self.product_ids = t.get_product_ids(self.product_files, "modis")
+            self.all_scenes = t.check_product_files(self.product_ids)
+            self.scenes_occurrences = t.count_scenes_occurrences(self.all_scenes, self.product_ids)
+            (self.overpopulated_scenes,
+             self.complete_scenes,
+             self.incomplete_scenes) = t.classify_occurrences(self.scenes_occurrences, "modis")
+            self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes,
+                                                            self.common_elements, what='modis')
+        else:
+            raise TypeError('ndvi, evi and nbr must be HidroCLVariable objects')
+
+    def __repr__(self):
+        """
+        Return a string representation of the object
+
+        Returns:
+             str: String representation of the object
+        """
+        return f'Class to extract {self.productname}'
+
+    def __str__(self):
+        """
+        Return a string representation of the object
+
+        Returns:
+            str: String representation of the object
+        """
+        return f'''
+Product: {self.productname}
+
+NDVI records: {len(self.ndvi.indatabase)}.
+NDVI database path: {self.ndvi.database}
+        '''
+
+    def run_extraction(self, limit=None):
+        """
+        Run the extraction of the product.
+        If limit is None, all scenes will be processed.
+        If limit is a number, only the first limit scenes will be processed.
+
+        Args:
+            limit (int): length of the scenes_to_process
+
+        Returns:
+            str: Print
+        """
+
+        with t.HiddenPrints():
+            self.ndvi.checkdatabase()
+
+        self.common_elements = t.compare_indatabase(self.ndvi.indatabase,)
+
+        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.common_elements)
+
+        scenes_path = t.get_scenes_path(self.product_files, self.productpath)
+
+        with TemporaryDirectory() as tempdirname:
+            temp_dir = Path(tempdirname)
+
+            if limit is not None:
+                scenes_to_process = self.scenes_to_process[:limit]
+            else:
+                scenes_to_process = self.scenes_to_process
+
+            for scene in scenes_to_process:
+                e.zonal_stats(scene, scenes_path,
+                              temp_dir, 'ndvi',
+                              self.ndvi.catchment_names, self.ndvi_log,
+                              database=self.ndvi.database,
+                              pcdatabase=self.ndvi.pcdatabase,
+                              vector_path=self.vectorpath,
+                              layer="250m 16 days NDVI", )
+
+
+    def run_maintainer(self, log_file, limit=None):
+        """
+        Run file maintainer. It will remove any file with problems
+
+        Args:
+            log_file (str): log file path
+            limit (int): length of the scenes_to_process
+
+        Returns:
+            str: Print
+        """
+
+        with t.HiddenPrints():
+            self.ndvi.checkdatabase()
+
+        self.common_elements = t.compare_indatabase(self.ndvi.indatabase)
+
+        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.common_elements)
+
+        scenes_path = t.get_scenes_path(self.product_files, self.productpath)
+
+        if limit is not None:
+            scenes_to_process = self.scenes_to_process[:limit]
+        else:
+            scenes_to_process = self.scenes_to_process
+
+        for scene in scenes_to_process:
+            m.file_maintainer(scene=scene,
+                              scenes_path=scenes_path,
+                              name='modis',
+                              log_file=log_file)
+
+"""
 Extraction of MODIS MOD10A2 product:
 """
 
