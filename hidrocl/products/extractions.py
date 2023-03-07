@@ -86,6 +86,9 @@ def load_era5(file, var, reducer='mean'):
     with t.HiddenPrints():
         da = xarray.open_dataset(file, mask_and_scale=True)
         da = da[var]
+        match var:
+            case 'tp':
+                return da.sel(time=da.time.values[-1])
         match reducer:
             case 'mean':
                 da = da.mean(dim='time')
