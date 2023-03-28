@@ -29,6 +29,8 @@ imerggis_path = os.path.join(nas_path, 'observed/IMERG_GIS')  # pp
 persiann = os.path.join(nas_path, 'observed/PERSIANN/')  # pp
 gldas_noah025_3h_path = os.path.join(nas_path, 'observed/GLDAS_NOAH025_3H/')  # land data
 era5_land_hourly_path = os.path.join(nas_path, 'observed/ERA5_LAND_HOURLY/')  # era5 land data
+era5_hourly_path = os.path.join(nas_path, 'observed/ERA5_HOURLY/')  # era5 data
+era5_pressure_levels_hourly_path = os.path.join(nas_path, 'observed/ERA5_PRESSURE_LEVELS_HOURLY/')  # era5 pressure levels data
 satellite_soil_moisture = os.path.join(nas_path, 'observed/SATELLITE_SOIL_MOISTURE/')  # satellite soil moisture
 pdirnow = os.path.join(nas_path, 'observed/PDIRNOW/')  # pdirnow
 

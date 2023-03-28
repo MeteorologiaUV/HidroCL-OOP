@@ -72,6 +72,126 @@ def download_era5land(year, month, day, path):
         fname)
 
 
+def download_era5(year, month, day, path):
+    """function to download era5 reanalysis data from CDS
+
+    This functions needs a .cdsapirc file in the home directory with the following content:
+    url: https://cds.climate.copernicus.eu/api/v2
+    key: <your key>
+
+    Examples:
+        >>> download_era5(2000, 6, 1, '/path/to/data')
+
+    Args:
+        year (int): year of the data to be downloaded
+        month (int): month of the data to be downloaded
+        day (int): day of the data to be downloaded
+        path (str):path to save the data
+
+    Returns:
+        None
+
+    """
+
+    fname = os.path.join(path, f'era5_{year:04d}{month:02d}{day:02d}.nc')
+
+    c = cdsapi.Client()
+
+    c.retrieve(
+        'reanalysis-era5-single-levels',
+        {
+            'product_type': 'reanalysis',
+            'format': 'netcdf',
+            'variable': [
+                '10m_u_component_of_wind', '10m_v_component_of_wind', '2m_dewpoint_temperature',
+                '2m_temperature', 'surface_pressure', 'total_precipitation',
+            ],
+            'month': [
+                str(month).zfill(2),
+            ],
+            'day': [
+                str(day).zfill(2),
+            ],
+            'time': [
+                '00:00', '01:00', '02:00',
+                '03:00', '04:00', '05:00',
+                '06:00', '07:00', '08:00',
+                '09:00', '10:00', '11:00',
+                '12:00', '13:00', '14:00',
+                '15:00', '16:00', '17:00',
+                '18:00', '19:00', '20:00',
+                '21:00', '22:00', '23:00',
+            ],
+            'year': [
+                str(year).zfill(4),
+            ],
+            'area': [
+                -15, -75, -55,
+                -65,
+            ],
+        },
+        fname)
+
+
+def download_era5pressure(year, month, day, path):
+    """function to download era5 pressure levels reanalysis data from CDS
+
+    This functions needs a .cdsapirc file in the home directory with the following content:
+    url: https://cds.climate.copernicus.eu/api/v2
+    key: <your key>
+
+    Examples:
+        >>> download_era5pressure(2000, 6, 1, '/path/to/data')
+
+    Args:
+        year (int): year of the data to be downloaded
+        month (int): month of the data to be downloaded
+        day (int): day of the data to be downloaded
+        path (str):path to save the data
+
+    Returns:
+        None
+
+    """
+
+    fname = os.path.join(path, f'era5-pressure_{year:04d}{month:02d}{day:02d}.nc')
+
+    c = cdsapi.Client()
+
+    c.retrieve(
+        'reanalysis-era5-single-levels',
+        {
+            'product_type': 'reanalysis',
+            'format': 'netcdf',
+            'variable': 'geopotential',
+            'pressure_level': '500',
+            'month': [
+                str(month).zfill(2),
+            ],
+            'day': [
+                str(day).zfill(2),
+            ],
+            'time': [
+                '00:00', '01:00', '02:00',
+                '03:00', '04:00', '05:00',
+                '06:00', '07:00', '08:00',
+                '09:00', '10:00', '11:00',
+                '12:00', '13:00', '14:00',
+                '15:00', '16:00', '17:00',
+                '18:00', '19:00', '20:00',
+                '21:00', '22:00', '23:00',
+            ],
+            'year': [
+                str(year).zfill(4),
+            ],
+            'area': [
+                -15, -75, -55,
+                -65,
+            ],
+        },
+        fname)
+
+
 def download_satsoilmoist(year, month, day, path):
     """function to download Soil moisture gridded data from CDS
 
