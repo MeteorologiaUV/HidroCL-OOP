@@ -21,7 +21,7 @@ for i in p:
     month = int(i.strftime('%m'))
     day = int(i.strftime('%d'))
 
-    fname = f'era5pressure_{year:04d}{month:02d}{day:02d}.nc'
+    fname = f'era5-pressure_{year:04d}{month:02d}{day:02d}.nc'
     if fname in files:
         print('already downloaded')
     else:
