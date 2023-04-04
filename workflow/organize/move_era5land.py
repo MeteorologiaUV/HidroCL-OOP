@@ -1,7 +1,7 @@
 import os
 import glob
 import shutil
-import hidrocl_paths as hcl
+import hidrocl.paths as hcl
 
 path = hcl.era5_land_hourly_path
 os.chdir(path)

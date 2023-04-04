@@ -1,5 +1,5 @@
 import hidrocl
-import hidrocl_paths as hcl
+import hidrocl.paths as hcl
 print(hidrocl.__version__)
 
 lai = hidrocl.HidroCLVariable("lai",

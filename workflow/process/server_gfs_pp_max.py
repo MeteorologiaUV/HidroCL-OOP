@@ -1,5 +1,5 @@
 import hidrocl
-import hidrocl_paths as hcl
+import hidrocl.paths as hcl
 import geopandas as gpd
 
 gfs_d0 = hidrocl.HidroCLVariable('test gfs día 0',

@@ -1,7 +1,7 @@
 import os
 import hidrocl
 import pandas as pd
-import hidrocl_paths as hcl
+import hidrocl.paths as hcl
 
 fpath = hcl.imerggis_path
 

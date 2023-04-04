@@ -1,5 +1,5 @@
 import hidrocl
-import hidrocl_paths as hcl
+import hidrocl.paths as hcl
 
 gfs_d0 = hidrocl.HidroCLVariable('test gfs día 0',
                                  hcl.pp_f_gfs_pp_mean_b_none_d1_p0d,

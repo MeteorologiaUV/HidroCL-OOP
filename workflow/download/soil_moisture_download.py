@@ -4,7 +4,7 @@
 import os
 import hidrocl
 import pandas as pd
-import hidrocl_paths as hcl
+import hidrocl.paths as hcl
 
 files = os.listdir(hcl.satellite_soil_moisture)
 files = list(set([file.split('-')[6][:8] for file in files]))

@@ -1,5 +1,5 @@
 import hidrocl
-import hidrocl_paths as hcl
+import hidrocl.paths as hcl
 import geopandas as gpd
 print(hidrocl.__version__)
 
