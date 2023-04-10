@@ -11,6 +11,7 @@ import numpy as np
 import pandas as pd
 from math import ceil
 from array import array
+from pathlib import Path
 from . import tools as t
 from sys import platform
 import rioxarray as rioxr
@@ -23,6 +24,8 @@ if platform == "linux" or platform == "linux2":
     rscript = "Rscript"
 elif platform == "darwin":
     rscript = "RScript"
+
+path = Path(__file__).parent.absolute()
 
 
 # elif platform == "win32":
@@ -87,7 +90,7 @@ def load_era5(file, var, reducer='mean'):
         da = xarray.open_dataset(file, mask_and_scale=True)
         da = da[var]
         match var:
-            case ('tp'|'e'|'pev'|'swvl1'|'swvl2'|'swvl3'|'swvl4'):
+            case ('e'|'pev'|'swvl1'|'swvl2'|'swvl3'|'swvl4'):
                 return da.sel(time=da.time.values[-1])
         match reducer:
             case 'mean':
@@ -101,7 +104,7 @@ def load_era5(file, var, reducer='mean'):
             case _:
                 raise ValueError("Reducer not supported")
         match var:
-            case 't2m':
+            case 't2m' | 'd2m':
                 da = da - 273.15
             case _:
                 pass
@@ -546,12 +549,22 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
                             mos = mos * 10000
                         except (OSError, ValueError):
                             return print(f"Error in scene {scene}")
-                case name if "snw" in name:
+                case name if ("snw" in name):
                     if isinstance(kwargs.get("layer"), str):
                         try:
                             file = selected_files[0]
                             mos = load_era5(file, kwargs.get("layer"), "mean")
                             mos = mos * 10000
+                        except (OSError, ValueError):
+                            return print(f"Error in scene {scene}")
+                case name if ("dew" in name) or ("pres" in name) or \
+                             ("u10" in name) or ("v10" in name) or \
+                             ("z" in name):
+                    if isinstance(kwargs.get("layer"), str):
+                        try:
+                            file = selected_files[0]
+                            mos = load_era5(file, kwargs.get("layer"), "mean")
+                            mos = mos * 10
                         except (OSError, ValueError):
                             return print(f"Error in scene {scene}")
                 case name if "soilm" in name:
@@ -605,7 +618,7 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
         case 'snow':
             subprocess.call([rscript,
                              "--vanilla",
-                             "./hidrocl/products/Rfiles/WeightedPercExtraction.R",
+                             os.path.join(path, "Rfiles/WeightedPercExtraction.R"),
                              kwargs.get("north_vector_path"),
                              temporal_raster,
                              result_file])
@@ -615,7 +628,7 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
 
             subprocess.call([rscript,
                              "--vanilla",
-                             "./hidrocl/products/Rfiles/WeightedPercExtraction.R",
+                             os.path.join(path, "Rfiles/WeightedPercExtraction.R"),
                              kwargs.get("south_vector_path"),
                              temporal_raster,
                              result_file])
@@ -626,7 +639,7 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
         case 'gfs':
             subprocess.call([rscript,
                              "--vanilla",
-                             "./hidrocl/products/Rfiles/WeightedMeanExtractionGFS.R",
+                             os.path.join(path, "Rfiles/WeightedMeanExtractionGFS.R"),
                              kwargs.get("vector_path"),
                              temporal_raster,
                              result_file])
@@ -663,7 +676,7 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
         case _:
             subprocess.call([rscript,
                              "--vanilla",
-                             "./hidrocl/products/Rfiles/WeightedMeanExtraction.R",
+                             os.path.join(path, "Rfiles/WeightedMeanExtraction.R"),
                              kwargs.get("vector_path"),
                              temporal_raster,
                              result_file])
