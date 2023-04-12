@@ -64,7 +64,7 @@ def compute_rh(file, output_file):
             es = 6.11 * 10 ** (7.5 * t2m / (237.3 + t2m))
             rh = (e / es * 100)
             rh = rh.rename('rh')
-            rh.mean(dim='time').to_netcdf(output_file)
+            rh.to_netcdf(output_file)
         else:
             raise ValueError(f"t2m or d2m not in file {file}")
 
