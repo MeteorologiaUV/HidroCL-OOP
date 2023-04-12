@@ -96,6 +96,7 @@ tmp_o_era5_dew_mean_b_none_d1_p0d = os.path.join(nas_path, 'databases/observed/t
 wind_o_era5_u10_mean_b_none_d1_p0d = os.path.join(nas_path, 'databases/observed/wind_o_era5_u10_mean_b_none_d1_p0d.csv')
 wind_o_era5_v10_mean_b_none_d1_p0d = os.path.join(nas_path, 'databases/observed/wind_o_era5_v10_mean_b_none_d1_p0d.csv')
 atm_o_era5_pres_mean_b_none_d1_p0d = os.path.join(nas_path, 'databases/observed/atm_o_era5_pres_mean_b_none_d1_p0d.csv')
+atm_o_era5_z_mean_b_none_d1_p0d = os.path.join(nas_path, 'databases/observed/atm_o_era5_z_mean_b_none_d1_p0d.csv')
 
 # forecasted
 pp_f_gfs_pp_mean_b_none_d1_p0d = os.path.join(nas_path, 'databases/forecasted/pp_f_gfs_pp_mean_b_none_d1_p0d.csv')
@@ -184,11 +185,11 @@ snow_o_era5_snr_mean_b_pc = os.path.join(nas_path, 'pcdatabases/observed/snow_o_
 snow_o_era5_snd_mean_b_pc = os.path.join(nas_path, 'pcdatabases/observed/snow_o_era5_snd_b_mean_pc.csv') # snow depth
 sm_o_era5_sm_mean_b_pc = os.path.join(nas_path, 'pcdatabases/observed/sm_o_era5_sm_mean_b_pc.csv') # soil moisture
 # new names
-pp_o_era5_pp_mean_b_pc = os.path.join(nas_path, 'pcdatabases/observed/pp_o_era5_pp_mean_b_pc.csv')
 tmp_o_era5_dew_mean_b_pc = os.path.join(nas_path, 'pcdatabases/observed/tmp_o_era5_dew_mean_b_pc.csv')
 wind_o_era5_u10_mean_b_pc = os.path.join(nas_path, 'pcdatabases/observed/wind_o_era5_u10_mean_b_pc.csv')
 wind_o_era5_v10_mean_b_pc = os.path.join(nas_path, 'pcdatabases/observed/wind_o_era5_v10_mean_b_pc.csv')
 atm_o_era5_pres_mean_b_pc = os.path.join(nas_path, 'pcdatabases/observed/atm_o_era5_pres_mean_b_pc.csv')
+atm_o_era5_z_mean_b_pc = os.path.join(nas_path, 'databases/observed/atm_o_era5_z_mean_b_pc.csv')
 
 # forecasted
 pp_f_gfs_pp_max_pc_p0d = os.path.join(nas_path, 'pcdatabases/forecasted/pp_f_gfs_pp_max_pc_p0d.csv')
@@ -277,11 +278,11 @@ log_snow_o_era5_sna = os.path.join(nas_path, 'logs/log_snow_o_era5_sna.txt')
 log_snow_o_era5_snr = os.path.join(nas_path, 'logs/log_snow_o_era5_snr.txt')
 log_snow_o_era5_snd = os.path.join(nas_path, 'logs/log_snow_o_era5_snd.txt')
 log_sm_o_era5_sm_mean = os.path.join(nas_path, 'logs/log_sm_o_era5_sm_mean.txt')
-log_pp_o_era5_pp_mean = os.path.join(nas_path, 'logs/log_pp_o_era5_pp_mean.txt')
 log_tmp_o_era5_dew_mean = os.path.join(nas_path, 'logs/log_tmp_o_era5_dew_mean.txt')
 log_wind_o_era5_u10_mean = os.path.join(nas_path, 'logs/log_wind_o_era5_u10_mean.txt')
 log_wind_o_era5_v10_mean = os.path.join(nas_path, 'logs/log_wind_o_era5_v10_mean.txt')
 log_atm_o_era5_pres_mean = os.path.join(nas_path, 'logs/log_atm_o_era5_pres_mean.txt')
+log_atm_o_era5_z_mean = os.path.join(nas_path, 'databases/observed/log_atm_o_era5_z_mean.csv')
 
 log_file_maintainer = os.path.join(nas_path, 'logs/file_maintainer.txt')
 
