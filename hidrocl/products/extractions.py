@@ -559,12 +559,16 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
                             return print(f"Error in scene {scene}")
                 case name if ("dew" in name) or ("pres" in name) or \
                              ("u10" in name) or ("v10" in name) or \
-                             ("z" in name):
+                             ("z" in name) or ("rh" in name):
                     if isinstance(kwargs.get("layer"), str):
                         try:
                             file = selected_files[0]
                             mos = load_era5(file, kwargs.get("layer"), "mean")
-                            mos = mos * 10
+                            if "z" in name:
+                                mos = (mos / 9.8066) * 10
+                                mos = mos * 10
+                            else:
+                                mos = mos * 10
                         except (OSError, ValueError):
                             return print(f"Error in scene {scene}")
                 case name if "soilm" in name:

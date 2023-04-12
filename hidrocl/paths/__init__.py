@@ -98,6 +98,7 @@ wind_o_era5_u10_mean_b_none_d1_p0d = os.path.join(nas_path, 'databases/observed/
 wind_o_era5_v10_mean_b_none_d1_p0d = os.path.join(nas_path, 'databases/observed/wind_o_era5_v10_mean_b_none_d1_p0d.csv')
 atm_o_era5_pres_mean_b_none_d1_p0d = os.path.join(nas_path, 'databases/observed/atm_o_era5_pres_mean_b_none_d1_p0d.csv')
 atm_o_era5_z_mean_b_none_d1_p0d = os.path.join(nas_path, 'databases/observed/atm_o_era5_z_mean_b_none_d1_p0d.csv')
+awc_o_era5_rh_mean_b_none_d1_p0d = os.path.join(nas_path, 'databases/observed/awc_o_era5_rh_mean_b_none_d1_p0d.csv')
 
 # forecasted
 pp_f_gfs_pp_mean_b_none_d1_p0d = os.path.join(nas_path, 'databases/forecasted/pp_f_gfs_pp_mean_b_none_d1_p0d.csv')
@@ -190,7 +191,8 @@ tmp_o_era5_dew_mean_b_pc = os.path.join(nas_path, 'pcdatabases/observed/tmp_o_er
 wind_o_era5_u10_mean_b_pc = os.path.join(nas_path, 'pcdatabases/observed/wind_o_era5_u10_mean_b_pc.csv')
 wind_o_era5_v10_mean_b_pc = os.path.join(nas_path, 'pcdatabases/observed/wind_o_era5_v10_mean_b_pc.csv')
 atm_o_era5_pres_mean_b_pc = os.path.join(nas_path, 'pcdatabases/observed/atm_o_era5_pres_mean_b_pc.csv')
-atm_o_era5_z_mean_b_pc = os.path.join(nas_path, 'databases/observed/atm_o_era5_z_mean_b_pc.csv')
+atm_o_era5_z_mean_b_pc = os.path.join(nas_path, 'pcdatabases/observed/atm_o_era5_z_mean_b_pc.csv')
+awc_o_era5_rh_mean_b_pc = os.path.join(nas_path, 'pcdatabases/observed/awc_o_era5_rh_mean_b_pc.csv')
 
 # forecasted
 pp_f_gfs_pp_max_pc_p0d = os.path.join(nas_path, 'pcdatabases/forecasted/pp_f_gfs_pp_max_pc_p0d.csv')
@@ -283,7 +285,8 @@ log_tmp_o_era5_dew_mean = os.path.join(nas_path, 'logs/log_tmp_o_era5_dew_mean.t
 log_wind_o_era5_u10_mean = os.path.join(nas_path, 'logs/log_wind_o_era5_u10_mean.txt')
 log_wind_o_era5_v10_mean = os.path.join(nas_path, 'logs/log_wind_o_era5_v10_mean.txt')
 log_atm_o_era5_pres_mean = os.path.join(nas_path, 'logs/log_atm_o_era5_pres_mean.txt')
-log_atm_o_era5_z_mean = os.path.join(nas_path, 'databases/observed/log_atm_o_era5_z_mean.csv')
+log_atm_o_era5_z_mean = os.path.join(nas_path, 'logs/log_atm_o_era5_z_mean.csv')
+log_awc_o_era5_rh_mean = os.path.join(nas_path, 'logs/log_awc_o_era5_rh_mean.txt')
 
 log_file_maintainer = os.path.join(nas_path, 'logs/file_maintainer.txt')
 

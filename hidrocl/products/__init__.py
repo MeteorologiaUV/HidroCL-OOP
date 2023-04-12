@@ -2420,7 +2420,7 @@ class Era5:
         productname (str): Name of the remote sensing product to be processed \n
         productpath (str): Path to the product folder where the product files are located \n
         vectorpath (str): Path to the vector folder with Shapefile with areas to be processed \n
-        common_elements (list): List of common elements between the snow, temp, et and soilm databases \n
+        common_elements (list): List of common elements between the pp, dew, pres, u and v databases \n
         product_files (list): List of product files in the product folder \n
         product_ids (list): List of product ids. Each product id is str with common tag by date \n
         all_scenes (list): List of all scenes (no matter the product id here) \n
@@ -2437,7 +2437,7 @@ class Era5:
         """
         Examples:
             >>> from hidrocl import HidroCLVariable
-            >>> from hidrocl import Era5_land
+            >>> from hidrocl import Era5
             >>> pp = HidroCLVariable('pp', pp.db, pppc.db)
             >>> dew = HidroCLVariable('dew', dew.db, dewpc.db)
             >>> pres = HidroCLVariable('pres', pres.db, prespc.db)
@@ -2454,7 +2454,7 @@ class Era5:
                             product_path, vector_path, temp_log,
                             pp_log, dew_log, pres_log, u_log, v_log)
             >>> era5
-            "Class to extract ERA5 Hourly 0.1 degree"
+            "Class to extract ERA5 Hourly 0.25 degree"
             >>> era5.run_extraction()
 
 
@@ -2486,7 +2486,7 @@ class Era5:
             self.pres_log = pres_log
             self.u_log = u_log
             self.v_log = v_log
-            self.productname = "ERA5 Hourly 0.1 degree"
+            self.productname = "ERA5 Hourly 0.25 degree"
             self.productpath = product_path
             self.vectorpath = vector_path
             self.common_elements = t.compare_indatabase(self.pp.indatabase,
@@ -2686,7 +2686,7 @@ class Era5_pressure:
         productname (str): Name of the remote sensing product to be processed \n
         productpath (str): Path to the product folder where the product files are located \n
         vectorpath (str): Path to the vector folder with Shapefile with areas to be processed \n
-        common_elements (list): List of common elements between the snow, temp, et and soilm databases \n
+        common_elements (list): List of common elements / this case the same elements \n
         product_files (list): List of product files in the product folder \n
         product_ids (list): List of product ids. Each product id is str with common tag by date \n
         all_scenes (list): List of all scenes (no matter the product id here) \n
@@ -2701,14 +2701,14 @@ class Era5_pressure:
         """
         Examples:
             >>> from hidrocl import HidroCLVariable
-            >>> from hidrocl import Era5_land
+            >>> from hidrocl import Era5_pressure
             >>> z = HidroCLVariable('z', z.db, zpc.db)
             >>> product_path = '/home/user/era5-pressure-levels'
             >>> vector_path = '/home/user/shapefiles'
             >>> z_log = '/home/user/z.log'
             >>> era5 = Era5_pressure(z, product_path, vector_path, z_log)
             >>> era5
-            "Class to extract ERA5 Pressure Levels Hourly 0.1 degree"
+            "Class to extract ERA5 Pressure Levels Hourly 0.25 degree"
             >>> era5.run_extraction()
 
 
@@ -2724,7 +2724,7 @@ class Era5_pressure:
         if t.check_instance(z):
             self.z = z
             self.z_log = z_log
-            self.productname = "ERA5 Pressure Levels Hourly 0.1 degree"
+            self.productname = "ERA5 Pressure Levels Hourly 0.25 degree"
             self.productpath = product_path
             self.vectorpath = vector_path
             self.common_elements = self.z.indatabase
@@ -2835,6 +2835,174 @@ Geo potential height path: {self.z.database}
                               name='era5',
                               log_file=log_file)
 
+
+"""
+Extraction of ERA5 Relative humidity hourly data product:
+"""
+
+
+class Era5_rh:
+    """
+    A class to process ERA5 relative humidity hourly to hidrocl variables. Where:
+
+    relative humidity (%): rh -> rh (10 * m) mean \n
+
+    rh: HidroCLVariable object with ERA5 data \n
+
+    Attributes:
+        rh (HidroCLVariable): HidroCLVariable object with ERA5 relative humidity data \n
+        rh_log (str): Log file path for relative humidity data \n
+        productname (str): Name of the remote sensing product to be processed \n
+        productpath (str): Path to the product folder where the product files are located \n
+        vectorpath (str): Path to the vector folder with Shapefile with areas to be processed \n
+        common_elements (list): List of common elements / this case the same elements \n
+        product_files (list): List of product files in the product folder \n
+        product_ids (list): List of product ids. Each product id is str with common tag by date \n
+        all_scenes (list): List of all scenes (no matter the product id here) \n
+        scenes_occurrences (list): List of scenes occurrences for each product id \n
+        overpopulated_scenes (list): List of overpopulated scenes (more than 1 scenes for era5) \n
+        complete_scenes (list): List of complete scenes (1 scenes for era5) \n
+        incomplete_scenes (list): List of incomplete scenes (less than 1 scenes for era5) \n
+        scenes_to_process (list): List of scenes to process (complete scenes no processed) \n
+    """
+
+    def __init__(self, rh, product_path, vector_path, rh_log):
+        """
+        Examples:
+            >>> from hidrocl import HidroCLVariable
+            >>> from hidrocl import Era5_rh
+            >>> rh = HidroCLVariable('rh', rh.db, rhpc.db)
+            >>> product_path = '/home/user/era5-rh'
+            >>> vector_path = '/home/user/shapefiles'
+            >>> rh_log = '/home/user/rh.log'
+            >>> era5 = Era5_rh(rh, product_path, vector_path, rh_log)
+            >>> era5
+            "Class to extract ERA5 Relative humidity Hourly 0.25 degree"
+            >>> era5.run_extraction()
+
+
+        Args:
+            rh (HidroCLVariable): HidroCLVariable object with ERA5 relative humidity data \n
+            product_path (str): Path to the product folder where the product files are located \n
+            vector_path (str): Path to the vector folder with Shapefile with areas to be processed \n
+            rh_log (str): Log file path for relative humidity data \n
+
+        Raises:
+            TypeError: If rh is not HidroCLVariable object \n
+        """
+        if t.check_instance(rh):
+            self.rh = rh
+            self.rh_log = rh_log
+            self.productname = "ERA5 Relative humidity Hourly 0.25 degree"
+            self.productpath = product_path
+            self.vectorpath = vector_path
+            self.common_elements = self.rh.indatabase
+            self.product_files = t.read_product_files(self.productpath, "era5")
+            self.product_ids = t.get_product_ids(self.product_files, "era5")
+            self.all_scenes = t.check_product_files(self.product_ids)
+            self.scenes_occurrences = t.count_scenes_occurrences(self.all_scenes, self.product_ids)
+            (self.overpopulated_scenes,
+             self.complete_scenes,
+             self.incomplete_scenes) = t.classify_occurrences(self.scenes_occurrences, "era5")
+            self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes,
+                                                            self.common_elements, what="era5")
+        else:
+            raise TypeError('rh must be HidroCLVariable object')
+
+    def __repr__(self):
+        """
+        Return a string representation of the object
+
+        Returns:
+             str: String representation of the object
+        """
+        return f'Class to extract {self.productname}'
+
+    def __str__(self):
+        """
+        Return a string representation of the object
+
+        Returns:
+            str: String representation of the object
+        """
+        return f'''
+Product: {self.productname}
+
+Relative humidity records: {len(self.rh.indatabase)}.
+Relative humidity path: {self.rh.database}
+                '''
+
+    def run_extraction(self, limit=None):
+        """
+        Run the extraction of the product.
+        If limit is None, all scenes will be processed.
+        If limit is a number, only the first limit scenes will be processed.
+
+        Args:
+            limit (int): length of the scenes_to_process
+
+        Returns:
+            str: Print
+        """
+
+        with t.HiddenPrints():
+            self.rh.checkdatabase()
+
+        self.common_elements = self.rh.indatabase
+
+        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.common_elements, "era5")
+
+        scenes_path = t.get_scenes_path(self.product_files, self.productpath)
+
+        with TemporaryDirectory() as tempdirname:
+            temp_dir = Path(tempdirname)
+
+            if limit is not None:
+                scenes_to_process = self.scenes_to_process[:limit]
+            else:
+                scenes_to_process = self.scenes_to_process
+
+            for scene in scenes_to_process:
+                if scene not in self.rh.indatabase:
+                    e.zonal_stats(scene, scenes_path,
+                                  temp_dir, 'rh_era5',
+                                  self.rh.catchment_names, self.rh_log,
+                                  database=self.rh.database,
+                                  pcdatabase=self.rh.pcdatabase,
+                                  vector_path=self.vectorpath,
+                                  layer="rh")
+
+    def run_maintainer(self, log_file, limit=None):
+        """
+        Run file maintainer. It will remove any file with problems
+
+        Args:
+            log_file (str): log file path
+            limit (int): length of the scenes_to_process
+
+        Returns:
+            str: Print
+        """
+
+        with t.HiddenPrints():
+            self.rh.checkdatabase()
+
+        self.common_elements = self.rh.indatabase
+
+        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.common_elements, "era5")
+
+        scenes_path = t.get_scenes_path(self.product_files, self.productpath)
+
+        if limit is not None:
+            scenes_to_process = self.scenes_to_process[:limit]
+        else:
+            scenes_to_process = self.scenes_to_process
+
+        for scene in scenes_to_process:
+            m.file_maintainer(scene=scene,
+                              scenes_path=scenes_path,
+                              name='era5',
+                              log_file=log_file)
 
 """
 Extraction of GFS data product:

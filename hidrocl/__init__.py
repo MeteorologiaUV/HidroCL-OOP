@@ -18,6 +18,6 @@ try:
     from .variables import HidroCLVariable
     from .products import Mod13q1, Mod10a2, Mod16a2, Mcd15a2h,\
         Gpm_3imrghhl, Gldas_noah, Era5_land, ImergGIS, Gfs, Pdirnow, \
-        Mod13q1agr, Era5, Era5_pressure
+        Mod13q1agr, Era5, Era5_pressure, Era5_rh
 except ImportError:
     print("ImportError")
