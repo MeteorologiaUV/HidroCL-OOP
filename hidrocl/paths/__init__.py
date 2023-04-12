@@ -31,6 +31,7 @@ gldas_noah025_3h_path = os.path.join(nas_path, 'observed/GLDAS_NOAH025_3H/')  # 
 era5_land_hourly_path = os.path.join(nas_path, 'observed/ERA5_LAND_HOURLY/')  # era5 land data
 era5_hourly_path = os.path.join(nas_path, 'observed/ERA5_HOURLY/')  # era5 data
 era5_pressure_levels_hourly_path = os.path.join(nas_path, 'observed/ERA5_PRESSURE_LEVELS_HOURLY/')  # era5 pressure levels data
+era5_relative_humidity_path = os.path.join(nas_path, 'observed/ERA5_RH/')  # era5 pressure levels data
 satellite_soil_moisture = os.path.join(nas_path, 'observed/SATELLITE_SOIL_MOISTURE/')  # satellite soil moisture
 pdirnow = os.path.join(nas_path, 'observed/PDIRNOW/')  # pdirnow
 
