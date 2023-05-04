@@ -2486,7 +2486,7 @@ class Era5:
             self.pres_log = pres_log
             self.u_log = u_log
             self.v_log = v_log
-            self.productname = "ERA5 Hourly 0.25 degree"
+            self.productname = "ERA5 Hourly 0.25 degree on single levels"
             self.productpath = product_path
             self.vectorpath = vector_path
             self.common_elements = t.compare_indatabase(self.pp.indatabase,
@@ -2845,7 +2845,7 @@ class Era5_rh:
     """
     A class to process ERA5 relative humidity hourly to hidrocl variables. Where:
 
-    relative humidity (%): rh -> rh (10 * m) mean \n
+    relative humidity (%): rh -> rh (10 * %) mean \n
 
     rh: HidroCLVariable object with ERA5 data \n
 

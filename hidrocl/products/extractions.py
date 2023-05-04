@@ -143,7 +143,7 @@ def load_persiann(file):
         tmp = array('f', da.read(recl))
 
         data = np.reshape(tmp, (nlat, nlon))
-        data[data < -1000] = np.nan
+        data[data < 0] = np.nan
 
         persiann = xarray.DataArray(data,
                                     coords={'lat': lat,
