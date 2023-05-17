@@ -53,6 +53,12 @@ hidrocl_agr_sinu = os.path.join(nas_path, 'base/boundaries/Agr_ModisSinu.shp')
 # static
 # not for this module
 
+# new variables
+pp_o_pdir_pp_mean_b_none_d1_p0d = os.path.join(nas_path, 'databases/observed/pp_o_pdir_pp_mean_b_none_d1_p0d.csv')
+
+
+
+
 # observed
 snw_o_modis_sca_cum_n_d8_p0d = os.path.join(nas_path, 'databases/observed/snw_o_modis_sca_cum_n_d8_p0d.csv')
 snw_o_modis_sca_cum_s_d8_p0d = os.path.join(nas_path, 'databases/observed/snw_o_modis_sca_cum_s_d8_p0d.csv')
@@ -146,6 +152,57 @@ tmp_f_gfs_tmp_max_b_none_d1_p1d = os.path.join(nas_path, 'databases/forecasted/t
 tmp_f_gfs_tmp_max_b_none_d1_p2d = os.path.join(nas_path, 'databases/forecasted/tmp_f_gfs_tmp_max_b_none_d1_p2d.csv')
 tmp_f_gfs_tmp_max_b_none_d1_p3d = os.path.join(nas_path, 'databases/forecasted/tmp_f_gfs_tmp_max_b_none_d1_p3d.csv')
 tmp_f_gfs_tmp_max_b_none_d1_p4d = os.path.join(nas_path, 'databases/forecasted/tmp_f_gfs_tmp_max_b_none_d1_p4d.csv')
+
+
+#
+# new names
+#
+
+pp_o_era5_pp_mean = os.path.join(nas_path, 'databases/observed/pp_o_era5_pp_mean_b_none_d1_p0d.csv')
+snw_o_era5_snr_mean = os.path.join(nas_path, 'databases/observed/snw_o_era5_snr_mean_b_none_d1_p0d.csv')
+snw_o_era5_snd_mean = os.path.join(nas_path, 'databases/observed/snw_o_era5_snd_mean_b_none_d1_p0d.csv')
+snw_o_era5_sca_mean = os.path.join(nas_path, 'databases/observed/snw_o_era5_sca_mean_b_none_d1_p0d.csv')
+snw_o_era5_sna_mean = os.path.join(nas_path, 'databases/observed/snw_o_era5_sna_mean_b_none_d1_p0d.csv')
+atm_o_era5_pres_mean = os.path.join(nas_path, 'databases/observed/atm_o_era5_pres_mean_b_none_d1_p0d.csv')
+atm_o_era5_z_mean = os.path.join(nas_path, 'databases/observed/atm_o_era5_z_mean_b_none_d1_p0d.csv')
+atm_o_era5_uw_mean = os.path.join(nas_path, 'databases/observed/atm_o_era5_uw_mean_b_none_d1_p0d.csv')
+atm_o_era5_vw_mean = os.path.join(nas_path, 'databases/observed/atm_o_era5_vw_mean_b_none_d1_p0d.csv')
+awc_o_era5_rh_mean = os.path.join(nas_path, 'databases/observed/awc_o_era5_rh_mean_b_none_d1_p0d.csv')
+tmp_o_era5_tmp_mean = os.path.join(nas_path, 'databases/observed/tmp_o_era5_tmp_mean_b_none_d1_p0d.csv')
+tmp_o_era5_tmin_mean = os.path.join(nas_path, 'databases/observed/tmp_o_era5_tmin_mean_b_none_d1_p0d.csv')
+tmp_o_era5_tmax_mean = os.path.join(nas_path, 'databases/observed/tmp_o_era5_tmax_mean_b_none_d1_p0d.csv')
+tmp_o_era5_dew_mean = os.path.join(nas_path, 'databases/observed/tmp_o_era5_dew_mean_b_none_d1_p0d.csv')
+et_o_era5_eta_mean = os.path.join(nas_path, 'databases/observed/et_o_era5_eta_mean_b_none_d1_p0d.csv')
+et_o_era5_eto_mean = os.path.join(nas_path, 'databases/observed/et_o_era5_eto_mean_b_none_d1_p0d.csv')
+swc_o_era5_sm_mean = os.path.join(nas_path, 'databases/observed/swc_o_era5_sm_mean_b_none_d1_p0d.csv')
+veg_o_modis_fpar_mean = os.path.join(nas_path, 'databases/observed/veg_o_modis_fpar_mean_b_none_d1_p0d.csv')
+veg_o_modis_lai_mean = os.path.join(nas_path, 'databases/observed/veg_o_modis_lai_mean_b_none_d1_p0d.csv')
+
+pp_o_era5_pp_pc = os.path.join(nas_path, 'pcdatabases/observed/pp_o_era5_pp_pc.csv')
+snw_o_era5_snr_pc = os.path.join(nas_path, 'pcdatabases/observed/snw_o_era5_snr_pc.csv')
+snw_o_era5_snd_pc = os.path.join(nas_path, 'pcdatabases/observed/snw_o_era5_snd_pc.csv')
+snw_o_era5_sca_pc = os.path.join(nas_path, 'pcdatabases/observed/snw_o_era5_sca_pc.csv')
+snw_o_era5_sna_pc = os.path.join(nas_path, 'pcdatabases/observed/snw_o_era5_sna_pc.csv')
+atm_o_era5_pres_pc = os.path.join(nas_path, 'pcdatabases/observed/atm_o_era5_pres_pc.csv')
+atm_o_era5_z_pc = os.path.join(nas_path, 'pcdatabases/observed/atm_o_era5_z_pc.csv')
+atm_o_era5_uw_pc = os.path.join(nas_path, 'pcdatabases/observed/atm_o_era5_uw_pc.csv')
+atm_o_era5_vw_pc = os.path.join(nas_path, 'pcdatabases/observed/atm_o_era5_vw_pc.csv')
+awc_o_era5_rh_pc = os.path.join(nas_path, 'pcdatabases/observed/awc_o_era5_rh_pc.csv')
+tmp_o_era5_tmp_pc = os.path.join(nas_path, 'pcdatabases/observed/tmp_o_era5_tmp_pc.csv')
+tmp_o_era5_tmin_pc = os.path.join(nas_path, 'pcdatabases/observed/tmp_o_era5_tmin_pc.csv')
+tmp_o_era5_tmax_pc = os.path.join(nas_path, 'pcdatabases/observed/tmp_o_era5_tmax_pc.csv')
+tmp_o_era5_dew_pc = os.path.join(nas_path, 'pcdatabases/observed/tmp_o_era5_dew_pc.csv')
+et_o_era5_eta_pc = os.path.join(nas_path, 'pcdatabases/observed/et_o_era5_eta_pc.csv')
+et_o_era5_eto_pc = os.path.join(nas_path, 'pcdatabases/observed/et_o_era5_eto_pc.csv')
+swc_o_era5_sm_pc = os.path.join(nas_path, 'pcdatabases/observed/swc_o_era5_sm_pc.csv')
+veg_o_modis_fpar_pc = os.path.join(nas_path, 'pcdatabases/observed/veg_o_modis_fpar_pc.csv')
+veg_o_modis_lai_pc = os.path.join(nas_path, 'pcdatabases/observed/veg_o_modis_lai_pc.csv')
+
+
+log_tmp_o_era5_tmp_mean = os.path.join(nas_path, 'logs/log_tmp_o_era5_tmp_mean')
+log_tmp_o_era5_tmin_mean = os.path.join(nas_path, 'logs/log_tmp_o_era5_tmin_mean')
+log_tmp_o_era5_tmax_mean = os.path.join(nas_path, 'logs/log_tmp_o_era5_tmax_mean')
+
 
 
 # ----
