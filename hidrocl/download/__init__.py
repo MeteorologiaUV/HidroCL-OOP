@@ -159,7 +159,7 @@ def download_era5pressure(year, month, day, path):
     c = cdsapi.Client()
 
     c.retrieve(
-        'reanalysis-era5-single-levels',
+        'reanalysis-era5-pressure-levels',
         {
             'product_type': 'reanalysis',
             'format': 'netcdf',
