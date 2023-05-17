@@ -3,52 +3,37 @@ import hidrocl.paths as hcl
 import geopandas as gpd
 print(hidrocl.__version__)
 
-temp = hidrocl.HidroCLVariable("temp",
-                               hcl.tmp_o_era5_tmp_mean_b_none_d1_p0d,
-                               hcl.tmp_o_era5_tmp_mean_b_pc)
-
-tempmin = hidrocl.HidroCLVariable("tempmin",
-                               hcl.tmp_o_era5_tmp_min_b_none_d1_p0d,
-                               hcl.tmp_o_era5_tmp_min_b_pc)
-
-tempmax = hidrocl.HidroCLVariable("tempmax",
-                               hcl.tmp_o_era5_tmp_max_b_none_d1_p0d,
-                               hcl.tmp_o_era5_tmp_max_b_pc)
-
 eto = hidrocl.HidroCLVariable("eto",
-                              hcl.et_o_era5_eto_cum_b_d_p0d,
-                              hcl.et_o_gldas_eta_cum_b_pc)
+                              hcl.et_o_era5_eta_mean,
+                              hcl.et_o_era5_eta_pc)
 
 et = hidrocl.HidroCLVariable("et",
-                             hcl.et_o_era5_et_cum_b_d_p0d,
-                             hcl.et_o_era5_et_cum_b_pc)
+                             hcl.et_o_era5_eto_mean,
+                             hcl.et_o_era5_eto_pc)
 
 sca = hidrocl.HidroCLVariable("sca",
-                              hcl.snow_o_era5_sca_mean_b_d_p0d,
-                              hcl.snow_o_era5_sca_mean_b_pc)
+                              hcl.snw_o_era5_sca_mean,
+                              hcl.snw_o_era5_sca_pc)
 
 sna = hidrocl.HidroCLVariable("sna",
-                              hcl.snow_o_era5_sna_mean_b_d_p0d,
-                              hcl.snow_o_era5_sna_mean_b_pc)
-
+                              hcl.snw_o_era5_sna_mean,
+                              hcl.snw_o_era5_sna_pc)
+# density
 snr = hidrocl.HidroCLVariable("snr",
-                              hcl.snow_o_era5_snr_mean_b_d_p0d,
-                              hcl.snow_o_era5_snr_mean_b_pc)
-
+                              hcl.snw_o_era5_snr_mean,
+                              hcl.snw_o_era5_snr_pc)
+# depth
 snd = hidrocl.HidroCLVariable("snd",
-                              hcl.snow_o_era5_snd_mean_b_d_p0d,
-                              hcl.snow_o_era5_snd_mean_b_pc)
+                              hcl.snw_o_era5_snd_mean,
+                              hcl.snw_o_era5_snd_pc)
 
 sm = hidrocl.HidroCLVariable("sm",
-                             hcl.sm_o_era5_sm_mean_b_d_p0d,
-                             hcl.sm_o_era5_sm_mean_b_pc)
+                             hcl.swc_o_era5_sm_mean,
+                             hcl.swc_o_era5_sm_pc)
 
 v = gpd.read_file(hcl.hidrocl_wgs84)
 catchment_names = v.gauge_id.tolist()
 
-temp.catchment_names = catchment_names
-tempmin.catchment_names = catchment_names
-tempmax.catchment_names = catchment_names
 eto.catchment_names = catchment_names
 et.catchment_names = catchment_names
 sca.catchment_names = catchment_names
@@ -57,12 +42,6 @@ snr.catchment_names = catchment_names
 snd.catchment_names = catchment_names
 sm.catchment_names = catchment_names
 
-temp.checkdatabase()
-temp.checkpcdatabase()
-tempmin.checkdatabase()
-tempmin.checkpcdatabase()
-tempmax.checkdatabase()
-tempmax.checkpcdatabase()
 eto.checkdatabase()
 eto.checkpcdatabase()
 et.checkdatabase()
@@ -78,14 +57,9 @@ snd.checkpcdatabase()
 sm.checkdatabase()
 sm.checkpcdatabase()
 
-era5 = hidrocl.Era5_land(temp=temp, tempmin=tempmin,
-                         tempmax=tempmax,
-                         et=et, pet=eto,
+era5 = hidrocl.Era5_land(et=et, pet=eto,
                          snw=sca, snwa=sna,
                          snwdn=snr, snwdt=snd,soilm=sm,
-                         temp_log=hcl.log_tmp_o_era5_tmp_mean,
-                         tempmin_log=hcl.log_tmp_o_era5_tmp_min,
-                         tempmax_log=hcl.log_tmp_o_era5_tmp_max,
                          et_log=hcl.log_et_o_era5_et_cum,
                          pet_log=hcl.log_et_o_era5_eto_cum,
                          snw_log=hcl.log_snow_o_era5_sca,
