@@ -446,6 +446,14 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
             except (rxre.RioXarrayError, rioe.RasterioIOError):
                 return print(f"Error in scene {scene}")
 
+        case name if ("fpar" in name) or ("lai" in name):
+            try:
+                mos = mosaic_raster(selected_files, kwargs.get("layer"))
+                mos = (mos.where(mos <= 100)).fillna(0)
+                mos = mos * 10
+            except (rxre.RioXarrayError, rioe.RasterioIOError):
+                return print(f"Error in scene {scene}")
+
         case 'et':
             try:
                 mos = mosaic_raster(selected_files, kwargs.get("layer"))
