@@ -2210,6 +2210,7 @@ Volumetric soil water path: {self.soilm.database}
                                   database=self.et.database,
                                   pcdatabase=self.et.pcdatabase,
                                   vector_path=self.vectorpath,
+                                  aggregation='sum',
                                   layer="e")
 
                 if scene not in self.pet.indatabase:
@@ -2219,6 +2220,7 @@ Volumetric soil water path: {self.soilm.database}
                                   database=self.pet.database,
                                   pcdatabase=self.pet.pcdatabase,
                                   vector_path=self.vectorpath,
+                                  aggregation='sum',
                                   layer="pev")
 
                 if scene not in self.snw.indatabase:
@@ -2331,6 +2333,7 @@ class Era5:
 
     Attributes:
         pp (HidroCLVariable): HidroCLVariable object with ERA5 precipitation data \n
+        ppmax (HidroCLVariable): HidroCLVariable object with ERA5 maximum precipitation data \n
         temp (HidroCLVariable): HidroCLVariable object with ERA5 air temperature data \n
         tempmin (HidroCLVariable): HidroCLVariable object with ERA5 minimum air temperature data \n
         tempmax (HidroCLVariable): HidroCLVariable object with ERA5 maximum air temperature data \n
@@ -2339,6 +2342,7 @@ class Era5:
         u (HidroCLVariable): HidroCLVariable object with ERA5 u wind component data \n
         v (HidroCLVariable): HidroCLVariable object with ERA5 v wind component data \n
         pp_log (str): Log file path for precipitation data \n
+        ppmax_log (str): Log file path for maximum precipitation data \n
         temp_log (str): Log file path for air temperature data \n
         tempmin_log (str): Log file path for minimum air temperature data \n
         tempmax_log (str): Log file path for maximum air temperature data \n
@@ -2360,15 +2364,16 @@ class Era5:
         scenes_to_process (list): List of scenes to process (complete scenes no processed) \n
     """
 
-    def __init__(self, pp, temp, tempmin, tempmax,
+    def __init__(self, pp, ppmax, temp, tempmin, tempmax,
                  dew, pres, u, v, product_path, vector_path,
-                 pp_log, temp_log, tempmin_log, tempmax_log,
+                 pp_log, ppmax_log, temp_log, tempmin_log, tempmax_log,
                  dew_log, pres_log, u_log, v_log):
         """
         Examples:
             >>> from hidrocl import HidroCLVariable
             >>> from hidrocl import Era5
             >>> pp = HidroCLVariable('pp', pp.db, pppc.db)
+            >>> ppmax = HidroCLVariable('ppmax', ppmax.db, ppmaxpc.db)
             >>> temp = HidroCLVariable('temp', temp.db, temppc.db)
             >>> tempmin = HidroCLVariable('tempmin', tempmin.db, tempminpc.db)
             >>> tempmax = HidroCLVariable('tempmax', tempmax.db, tempmaxpc.db)
@@ -2383,7 +2388,7 @@ class Era5:
             >>> pres_log = '/home/user/pres.log'
             >>> u_log = '/home/user/u.log'
             >>> v_log = '/home/user/v.log'
-            >>> era5 = Era5(pp, temp, tempmin, tempmax,
+            >>> era5 = Era5(pp, ppmax, temp, tempmin, tempmax,
                             dew, pres, u, v,
                             product_path, vector_path,
                             pp_log, ppmax_log, temp_log,
@@ -2396,6 +2401,7 @@ class Era5:
 
         Args:
             pp (HidroCLVariable): HidroCLVariable object with ERA5 precipitation data \n
+            ppmax (HidroCLVariable): HidroCLVariable object with ERA5 maximum precipitation data \n
             temp (HidroCLVariable): HidroCLVariable object with ERA5 air temperature data \n
             tempmin (HidroCLVariable): HidroCLVariable object with ERA5 minimum air temperature data \n
             tempmax (HidroCLVariable): HidroCLVariable object with ERA5 maximum air temperature data \n
@@ -2406,6 +2412,7 @@ class Era5:
             product_path (str): Path to the product folder where the product files are located \n
             vector_path (str): Path to the vector folder with Shapefile with areas to be processed \n
             pp_log (str): Log file path for precipitation data \n
+            ppmax_log (str): Log file path for maximum precipitation data \n
             temp_log (str): Log file path for air temperature data \n
             tempmin_log (str): Log file path for minimum air temperature data \n
             tempmax_log (str): Log file path for maximum air temperature data \n
@@ -2415,10 +2422,11 @@ class Era5:
             v_log (str): Log file path for v wind component data \n
 
         Raises:
-            TypeError: If pp, dew, pres, u or v are not HidroCLVariable objects \n
+            TypeError: If pp, ppmax, temp, tempmin, tempmax, dew, pres, u or v are not HidroCLVariable objects \n
         """
-        if t.check_instance(pp, temp, tempmin, tempmax, dew, pres, u, v):
+        if t.check_instance(pp, ppmax, temp, tempmin, tempmax, dew, pres, u, v):
             self.pp = pp
+            self.ppmax = ppmax
             self.temp = temp
             self.tempmin = tempmin
             self.tempmax = tempmax
@@ -2427,6 +2435,7 @@ class Era5:
             self.u = u
             self.v = v
             self.pp_log = pp_log
+            self.ppmax_log = ppmax_log
             self.temp_log = temp_log
             self.tempmin_log = tempmin_log
             self.tempmax_log = tempmax_log
@@ -2438,6 +2447,7 @@ class Era5:
             self.productpath = product_path
             self.vectorpath = vector_path
             self.common_elements = t.compare_indatabase(self.pp.indatabase,
+                                                        self.ppmax.indatabase,
                                                         self.temp.indatabase,
                                                         self.tempmin.indatabase,
                                                         self.tempmax.indatabase,
@@ -2455,7 +2465,7 @@ class Era5:
             self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes,
                                                             self.common_elements, what="era5")
         else:
-            raise TypeError('pp, temp, tempmin, tempmax, dew, pres, u and v must be HidroCLVariable objects')
+            raise TypeError('pp, ppmax, temp, tempmin, tempmax, dew, pres, u and v must be HidroCLVariable objects')
 
     def __repr__(self):
         """
@@ -2478,6 +2488,9 @@ Product: {self.productname}
 
 Precipitation records: {len(self.pp.indatabase)}.
 Precipitation path: {self.pp.database}
+
+Maximum precipitation records: {len(self.ppmax.indatabase)}.
+Maximum precipitation path: {self.ppmax.database}
 
 Air temperature records: {len(self.temp.indatabase)}.
 Air temperature path: {self.temp.database}
@@ -2516,6 +2529,7 @@ V wind component path: {self.v.database}
 
         with t.HiddenPrints():
             self.pp.checkdatabase()
+            self.ppmax.checkdatabase()
             self.temp.checkdatabase()
             self.tempmin.checkdatabase()
             self.tempmax.checkdatabase()
@@ -2525,6 +2539,7 @@ V wind component path: {self.v.database}
             self.v.checkdatabase()
 
         self.common_elements = t.compare_indatabase(self.pp.indatabase,
+                                                    self.ppmax.indatabase,
                                                     self.temp.indatabase,
                                                     self.tempmin.indatabase,
                                                     self.tempmax.indatabase,
@@ -2554,15 +2569,27 @@ V wind component path: {self.v.database}
                                   database=self.pp.database,
                                   pcdatabase=self.pp.pcdatabase,
                                   vector_path=self.vectorpath,
+                                  aggregation='sum',
+                                  layer="tp")
+
+                if scene not in self.ppmax.indatabase:
+                    e.zonal_stats(scene, scenes_path,
+                                  temp_dir, 'pp_era5',
+                                  self.ppmax.catchment_names, self.ppmax_log,
+                                  database=self.ppmax.database,
+                                  pcdatabase=self.ppmax.pcdatabase,
+                                  vector_path=self.vectorpath,
+                                  aggregation='max',
                                   layer="tp")
 
                 if scene not in self.temp.indatabase:
                     e.zonal_stats(scene, scenes_path,
                                   temp_dir, 'temp_era5',
-                                  self.dew.catchment_names, self.dew_log,
-                                  database=self.dew.database,
-                                  pcdatabase=self.dew.pcdatabase,
+                                  self.temp.catchment_names, self.temp_log,
+                                  database=self.temp.database,
+                                  pcdatabase=self.temp.pcdatabase,
                                   vector_path=self.vectorpath,
+                                  aggregation='mean',
                                   layer="t2m")
 
                 if scene not in self.tempmin.indatabase:

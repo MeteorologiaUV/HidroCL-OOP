@@ -7,6 +7,10 @@ pp = hidrocl.HidroCLVariable("pp",
                              hcl.pp_o_era5_pp_mean,
                              hcl.pp_o_era5_pp_pc)
 
+ppmax = hidrocl.HidroCLVariable("ppmax",
+                                hcl.pp_o_era5_maxpp_mean,
+                                hcl.pp_o_era5_maxpp_pc)
+
 temp = hidrocl.HidroCLVariable("temp",
                                hcl.tmp_o_era5_tmp_mean,
                                hcl.tmp_o_era5_tmp_pc)
@@ -40,6 +44,7 @@ vc = gpd.read_file(hcl.hidrocl_wgs84)
 catchment_names = vc.gauge_id.tolist()
 
 pp.catchment_names = catchment_names
+ppmax.catchment_names = catchment_names
 dew.catchment_names = catchment_names
 pres.catchment_names = catchment_names
 u.catchment_names = catchment_names
@@ -47,6 +52,8 @@ v.catchment_names = catchment_names
 
 pp.checkdatabase()
 pp.checkpcdatabase()
+ppmax.checkdatabase()
+ppmax.checkpcdatabase()
 temp.checkdatabase()
 temp.checkpcdatabase()
 tempmin.checkdatabase()
@@ -63,9 +70,12 @@ v.checkdatabase()
 v.checkpcdatabase()
 
 
-era5 = hidrocl.Era5(pp=pp, temp=temp, tempmin=tempmin, tempmax=tempmax,
+era5 = hidrocl.Era5(pp=pp,
+                    ppmax=ppmax,
+                    temp=temp, tempmin=tempmin, tempmax=tempmax,
                     dew=dew, pres=pres, u=u, v=v,
                     pp_log=hcl.log_pp_o_era5_pp_mean,
+                    ppmax_log=hcl.log_pp_o_era5_maxpp_mean,
                     temp_log=hcl.log_tmp_o_era5_tmp_mean,
                     tempmin_log=hcl.log_tmp_o_era5_tmin_mean,
                     tempmax_log=hcl.log_tmp_o_era5_tmax_mean,

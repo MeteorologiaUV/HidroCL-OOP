@@ -96,6 +96,7 @@ snow_o_era5_snr_mean_b_d_p0d = os.path.join(nas_path, 'databases/observed/snow_o
 snow_o_era5_snd_mean_b_d_p0d = os.path.join(nas_path, 'databases/observed/snow_o_era5_snd_mean_b_d_p0d.csv') # snow depth
 sm_o_era5_sm_mean_b_d_p0d = os.path.join(nas_path, 'databases/observed/sm_o_era5_sm_mean_b_d_p0d.csv') # soil moisture
 pp_o_pdir_pp_mean_b_none_d1_p0d = os.path.join(nas_path, 'databases/observed/pp_o_pdir_pp_mean_b_none_d1_p0d.csv') # new persiann
+
 ## new variables with new names
 veg_o_modis_agr_mean_b_none_d1_p0d = os.path.join(nas_path, 'databases/observed/veg_o_modis_agr_mean_b_none_d1_p0d.csv')
 pp_o_era5_pp_mean_b_none_d1_p0d = os.path.join(nas_path, 'databases/observed/pp_o_era5_pp_mean_b_none_d1_p0d.csv')
@@ -159,6 +160,7 @@ tmp_f_gfs_tmp_max_b_none_d1_p4d = os.path.join(nas_path, 'databases/forecasted/t
 #
 
 pp_o_era5_pp_mean = os.path.join(nas_path, 'databases/observed/pp_o_era5_pp_mean_b_none_d1_p0d.csv')
+pp_o_era5_maxpp_mean = os.path.join(nas_path, 'databases/observed/pp_o_era5_maxpp_mean_b_none_d1_p0d.csv')
 snw_o_era5_snr_mean = os.path.join(nas_path, 'databases/observed/snw_o_era5_snr_mean_b_none_d1_p0d.csv')
 snw_o_era5_snd_mean = os.path.join(nas_path, 'databases/observed/snw_o_era5_snd_mean_b_none_d1_p0d.csv')
 snw_o_era5_sca_mean = os.path.join(nas_path, 'databases/observed/snw_o_era5_sca_mean_b_none_d1_p0d.csv')
@@ -179,6 +181,7 @@ veg_o_modis_fpar_mean = os.path.join(nas_path, 'databases/observed/veg_o_modis_f
 veg_o_modis_lai_mean = os.path.join(nas_path, 'databases/observed/veg_o_modis_lai_mean_b_none_d1_p0d.csv')
 
 pp_o_era5_pp_pc = os.path.join(nas_path, 'pcdatabases/observed/pp_o_era5_pp_pc.csv')
+pp_o_era5_maxpp_pc = os.path.join(nas_path, 'pcdatabases/observed/pp_o_era5_maxpp_pc.csv')
 snw_o_era5_snr_pc = os.path.join(nas_path, 'pcdatabases/observed/snw_o_era5_snr_pc.csv')
 snw_o_era5_snd_pc = os.path.join(nas_path, 'pcdatabases/observed/snw_o_era5_snd_pc.csv')
 snw_o_era5_sca_pc = os.path.join(nas_path, 'pcdatabases/observed/snw_o_era5_sca_pc.csv')
@@ -199,9 +202,10 @@ veg_o_modis_fpar_pc = os.path.join(nas_path, 'pcdatabases/observed/veg_o_modis_f
 veg_o_modis_lai_pc = os.path.join(nas_path, 'pcdatabases/observed/veg_o_modis_lai_pc.csv')
 
 
-log_tmp_o_era5_tmp_mean = os.path.join(nas_path, 'logs/log_tmp_o_era5_tmp_mean')
-log_tmp_o_era5_tmin_mean = os.path.join(nas_path, 'logs/log_tmp_o_era5_tmin_mean')
-log_tmp_o_era5_tmax_mean = os.path.join(nas_path, 'logs/log_tmp_o_era5_tmax_mean')
+log_tmp_o_era5_tmp_mean = os.path.join(nas_path, 'logs/log_tmp_o_era5_tmp_mean.txt')
+log_tmp_o_era5_tmin_mean = os.path.join(nas_path, 'logs/log_tmp_o_era5_tmin_mean.txt')
+log_tmp_o_era5_tmax_mean = os.path.join(nas_path, 'logs/log_tmp_o_era5_tmax_mean.txt')
+log_pp_o_era5_maxpp_mean = os.path.join(nas_path, 'logs/log_tmp_o_era5_tmax_mean.txt')
 
 
 

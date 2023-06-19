@@ -553,7 +553,7 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
                     if isinstance(kwargs.get("layer"), str):
                         try:
                             file = selected_files[0]
-                            mos = load_era5(file, kwargs.get("layer"), "sum")
+                            mos = load_era5(file, kwargs.get("layer"), kwargs.get("aggregation"))
                             mos = mos * 10000
                         except (OSError, ValueError):
                             return print(f"Error in scene {scene}")
