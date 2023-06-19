@@ -2574,7 +2574,7 @@ V wind component path: {self.v.database}
 
                 if scene not in self.ppmax.indatabase:
                     e.zonal_stats(scene, scenes_path,
-                                  temp_dir, 'pp_era5',
+                                  temp_dir, 'maxpp_era5',
                                   self.ppmax.catchment_names, self.ppmax_log,
                                   database=self.ppmax.database,
                                   pcdatabase=self.ppmax.pcdatabase,
@@ -2594,7 +2594,7 @@ V wind component path: {self.v.database}
 
                 if scene not in self.tempmin.indatabase:
                     e.zonal_stats(scene, scenes_path,
-                                  temp_dir, 'temp_era5',
+                                  temp_dir, 'tempmin_era5',
                                   self.tempmin.catchment_names, self.tempmin_log,
                                   database=self.tempmin.database,
                                   pcdatabase=self.tempmin.pcdatabase,
@@ -2604,7 +2604,7 @@ V wind component path: {self.v.database}
 
                 if scene not in self.tempmax.indatabase:
                     e.zonal_stats(scene, scenes_path,
-                                  temp_dir, 'temp_era5',
+                                  temp_dir, 'tempmax_era5',
                                   self.tempmax.catchment_names, self.tempmax_log,
                                   database=self.tempmax.database,
                                   pcdatabase=self.tempmax.pcdatabase,
