@@ -2333,7 +2333,6 @@ class Era5:
 
     Attributes:
         pp (HidroCLVariable): HidroCLVariable object with ERA5 precipitation data \n
-        ppmax (HidroCLVariable): HidroCLVariable object with ERA5 maximum precipitation data \n
         temp (HidroCLVariable): HidroCLVariable object with ERA5 air temperature data \n
         tempmin (HidroCLVariable): HidroCLVariable object with ERA5 minimum air temperature data \n
         tempmax (HidroCLVariable): HidroCLVariable object with ERA5 maximum air temperature data \n
@@ -2342,7 +2341,6 @@ class Era5:
         u (HidroCLVariable): HidroCLVariable object with ERA5 u wind component data \n
         v (HidroCLVariable): HidroCLVariable object with ERA5 v wind component data \n
         pp_log (str): Log file path for precipitation data \n
-        ppmax_log (str): Log file path for maximum precipitation data \n
         temp_log (str): Log file path for air temperature data \n
         tempmin_log (str): Log file path for minimum air temperature data \n
         tempmax_log (str): Log file path for maximum air temperature data \n
@@ -2364,16 +2362,15 @@ class Era5:
         scenes_to_process (list): List of scenes to process (complete scenes no processed) \n
     """
 
-    def __init__(self, pp, ppmax, temp, tempmin, tempmax,
+    def __init__(self, pp, temp, tempmin, tempmax,
                  dew, pres, u, v, product_path, vector_path,
-                 pp_log, ppmax_log, temp_log, tempmin_log, tempmax_log,
+                 pp_log, temp_log, tempmin_log, tempmax_log,
                  dew_log, pres_log, u_log, v_log):
         """
         Examples:
             >>> from hidrocl import HidroCLVariable
             >>> from hidrocl import Era5
             >>> pp = HidroCLVariable('pp', pp.db, pppc.db)
-            >>> ppmax = HidroCLVariable('ppmax', ppmax.db, ppmaxpc.db)
             >>> temp = HidroCLVariable('temp', temp.db, temppc.db)
             >>> tempmin = HidroCLVariable('tempmin', tempmin.db, tempminpc.db)
             >>> tempmax = HidroCLVariable('tempmax', tempmax.db, tempmaxpc.db)
@@ -2388,10 +2385,10 @@ class Era5:
             >>> pres_log = '/home/user/pres.log'
             >>> u_log = '/home/user/u.log'
             >>> v_log = '/home/user/v.log'
-            >>> era5 = Era5(pp, ppmax, temp, tempmin, tempmax,
+            >>> era5 = Era5(pp, temp, tempmin, tempmax,
                             dew, pres, u, v,
                             product_path, vector_path,
-                            pp_log, ppmax_log, temp_log,
+                            pp_log, temp_log,
                             tempmin_log, tempmax_log,
                             pp_log, dew_log, pres_log, u_log, v_log)
             >>> era5
@@ -2401,7 +2398,6 @@ class Era5:
 
         Args:
             pp (HidroCLVariable): HidroCLVariable object with ERA5 precipitation data \n
-            ppmax (HidroCLVariable): HidroCLVariable object with ERA5 maximum precipitation data \n
             temp (HidroCLVariable): HidroCLVariable object with ERA5 air temperature data \n
             tempmin (HidroCLVariable): HidroCLVariable object with ERA5 minimum air temperature data \n
             tempmax (HidroCLVariable): HidroCLVariable object with ERA5 maximum air temperature data \n
@@ -2412,7 +2408,6 @@ class Era5:
             product_path (str): Path to the product folder where the product files are located \n
             vector_path (str): Path to the vector folder with Shapefile with areas to be processed \n
             pp_log (str): Log file path for precipitation data \n
-            ppmax_log (str): Log file path for maximum precipitation data \n
             temp_log (str): Log file path for air temperature data \n
             tempmin_log (str): Log file path for minimum air temperature data \n
             tempmax_log (str): Log file path for maximum air temperature data \n
@@ -2422,11 +2417,10 @@ class Era5:
             v_log (str): Log file path for v wind component data \n
 
         Raises:
-            TypeError: If pp, ppmax, temp, tempmin, tempmax, dew, pres, u or v are not HidroCLVariable objects \n
+            TypeError: If pp, temp, tempmin, tempmax, dew, pres, u or v are not HidroCLVariable objects \n
         """
-        if t.check_instance(pp, ppmax, temp, tempmin, tempmax, dew, pres, u, v):
+        if t.check_instance(pp, temp, tempmin, tempmax, dew, pres, u, v):
             self.pp = pp
-            self.ppmax = ppmax
             self.temp = temp
             self.tempmin = tempmin
             self.tempmax = tempmax
@@ -2435,7 +2429,6 @@ class Era5:
             self.u = u
             self.v = v
             self.pp_log = pp_log
-            self.ppmax_log = ppmax_log
             self.temp_log = temp_log
             self.tempmin_log = tempmin_log
             self.tempmax_log = tempmax_log
@@ -2447,7 +2440,6 @@ class Era5:
             self.productpath = product_path
             self.vectorpath = vector_path
             self.common_elements = t.compare_indatabase(self.pp.indatabase,
-                                                        self.ppmax.indatabase,
                                                         self.temp.indatabase,
                                                         self.tempmin.indatabase,
                                                         self.tempmax.indatabase,
@@ -2465,7 +2457,7 @@ class Era5:
             self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes,
                                                             self.common_elements, what="era5")
         else:
-            raise TypeError('pp, ppmax, temp, tempmin, tempmax, dew, pres, u and v must be HidroCLVariable objects')
+            raise TypeError('pp, temp, tempmin, tempmax, dew, pres, u and v must be HidroCLVariable objects')
 
     def __repr__(self):
         """
@@ -2488,9 +2480,6 @@ Product: {self.productname}
 
 Precipitation records: {len(self.pp.indatabase)}.
 Precipitation path: {self.pp.database}
-
-Maximum precipitation records: {len(self.ppmax.indatabase)}.
-Maximum precipitation path: {self.ppmax.database}
 
 Air temperature records: {len(self.temp.indatabase)}.
 Air temperature path: {self.temp.database}
@@ -2529,7 +2518,6 @@ V wind component path: {self.v.database}
 
         with t.HiddenPrints():
             self.pp.checkdatabase()
-            self.ppmax.checkdatabase()
             self.temp.checkdatabase()
             self.tempmin.checkdatabase()
             self.tempmax.checkdatabase()
@@ -2539,7 +2527,6 @@ V wind component path: {self.v.database}
             self.v.checkdatabase()
 
         self.common_elements = t.compare_indatabase(self.pp.indatabase,
-                                                    self.ppmax.indatabase,
                                                     self.temp.indatabase,
                                                     self.tempmin.indatabase,
                                                     self.tempmax.indatabase,
@@ -2570,16 +2557,6 @@ V wind component path: {self.v.database}
                                   pcdatabase=self.pp.pcdatabase,
                                   vector_path=self.vectorpath,
                                   aggregation='sum',
-                                  layer="tp")
-
-                if scene not in self.ppmax.indatabase:
-                    e.zonal_stats(scene, scenes_path,
-                                  temp_dir, 'maxpp_era5',
-                                  self.ppmax.catchment_names, self.ppmax_log,
-                                  database=self.ppmax.database,
-                                  pcdatabase=self.ppmax.pcdatabase,
-                                  vector_path=self.vectorpath,
-                                  aggregation='max',
                                   layer="tp")
 
                 if scene not in self.temp.indatabase:
@@ -2678,6 +2655,177 @@ V wind component path: {self.v.database}
                                                     self.pres.indatabase,
                                                     self.u.indatabase,
                                                     self.v.indatabase)
+
+        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.common_elements, "era5")
+
+        scenes_path = t.get_scenes_path(self.product_files, self.productpath)
+
+        if limit is not None:
+            scenes_to_process = self.scenes_to_process[:limit]
+        else:
+            scenes_to_process = self.scenes_to_process
+
+        for scene in scenes_to_process:
+            m.file_maintainer(scene=scene,
+                              scenes_path=scenes_path,
+                              name='era5',
+                              log_file=log_file)
+
+
+"""
+Extraction of ERA5 max precipitation 3-hour data:
+"""
+
+
+class Era5ppmax:
+    """
+    A class to process ERA5 hourly to hidrocl variables. Where:
+
+    total precipitation: tp -> pp (10000 * m) sum \n
+
+    ppmax: HidroCLVariable object with ERA5 data \n
+
+    Attributes:
+        ppmax (HidroCLVariable): HidroCLVariable object with ERA5 maximum precipitation data \n
+        ppmax_log (str): Log file path for maximum precipitation data \n
+        productname (str): Name of the remote sensing product to be processed \n
+        productpath (str): Path to the product folder where the product files are located \n
+        vectorpath (str): Path to the vector folder with Shapefile with areas to be processed \n
+        common_elements (list): List of common elements between the pp, dew, pres, u and v databases \n
+        product_files (list): List of product files in the product folder \n
+        product_ids (list): List of product ids. Each product id is str with common tag by date \n
+        all_scenes (list): List of all scenes (no matter the product id here) \n
+        scenes_occurrences (list): List of scenes occurrences for each product id \n
+        overpopulated_scenes (list): List of overpopulated scenes (more than 1 scenes for era5) \n
+        complete_scenes (list): List of complete scenes (1 scenes for era5) \n
+        incomplete_scenes (list): List of incomplete scenes (less than 1 scenes for era5) \n
+        scenes_to_process (list): List of scenes to process (complete scenes no processed) \n
+    """
+
+    def __init__(self, ppmax, product_path, vector_path, ppmax_log):
+        """
+        Examples:
+            >>> from hidrocl import HidroCLVariable
+            >>> from hidrocl import Era5ppmax
+            >>> ppmax = HidroCLVariable('ppmax', ppmax.db, ppmaxpc.db)
+            >>> product_path = '/home/user/era5'
+            >>> vector_path = '/home/user/shapefiles'
+            >>> ppmax_log = '/home/user/pp.log'
+            >>> era5 = Era5(ppmax, product_path, vector_path,
+                            ppmax_log)
+            >>> era5
+            "Class to extract ERA5 max precipitation 3-Hour 0.25 degree"
+            >>> era5.run_extraction()
+
+
+        Args:
+            ppmax (HidroCLVariable): HidroCLVariable object with ERA5 maximum precipitation data \n
+            product_path (str): Path to the product folder where the product files are located \n
+            vector_path (str): Path to the vector folder with Shapefile with areas to be processed \n
+            ppmax_log (str): Log file path for maximum precipitation data \n
+
+        Raises:
+            TypeError: If pp, ppmax, temp, tempmin, tempmax, dew, pres, u or v are not HidroCLVariable objects \n
+        """
+        if t.check_instance(ppmax):
+            self.ppmax = ppmax
+            self.ppmax_log = ppmax_log
+            self.productname = "ERA5 max precipitation 3-Hour 0.25 degree"
+            self.productpath = product_path
+            self.vectorpath = vector_path
+            self.common_elements = t.compare_indatabase(self.ppmax.indatabase)
+            self.product_files = t.read_product_files(self.productpath, "era5")
+            self.product_ids = t.get_product_ids(self.product_files, "era5")
+            self.all_scenes = t.check_product_files(self.product_ids)
+            self.scenes_occurrences = t.count_scenes_occurrences(self.all_scenes, self.product_ids)
+            (self.overpopulated_scenes,
+             self.complete_scenes,
+             self.incomplete_scenes) = t.classify_occurrences(self.scenes_occurrences, "era5")
+            self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes,
+                                                            self.common_elements, what="era5")
+        else:
+            raise TypeError('ppmax must be HidroCLVariable object')
+
+    def __repr__(self):
+        """
+        Return a string representation of the object
+
+        Returns:
+             str: String representation of the object
+        """
+        return f'Class to extract {self.productname}'
+
+    def __str__(self):
+        """
+        Return a string representation of the object
+
+        Returns:
+            str: String representation of the object
+        """
+        return f'''
+Product: {self.productname}
+
+Maximum precipitation records: {len(self.ppmax.indatabase)}.
+Maximum precipitation path: {self.ppmax.database}
+                '''
+
+    def run_extraction(self, limit=None):
+        """
+        Run the extraction of the product.
+        If limit is None, all scenes will be processed.
+        If limit is a number, only the first limit scenes will be processed.
+
+        Args:
+            limit (int): length of the scenes_to_process
+
+        Returns:
+            str: Print
+        """
+
+        with t.HiddenPrints():
+            self.ppmax.checkdatabase()
+
+        self.common_elements = t.compare_indatabase(self.ppmax.indatabase)
+
+        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.common_elements, "era5")
+
+        scenes_path = t.get_scenes_path(self.product_files, self.productpath)
+
+        with TemporaryDirectory() as tempdirname:
+            temp_dir = Path(tempdirname)
+
+            if limit is not None:
+                scenes_to_process = self.scenes_to_process[:limit]
+            else:
+                scenes_to_process = self.scenes_to_process
+
+            for scene in scenes_to_process:
+                if scene not in self.ppmax.indatabase:
+                    e.zonal_stats(scene, scenes_path,
+                                  temp_dir, 'maxpp_eraacc',
+                                  self.ppmax.catchment_names, self.ppmax_log,
+                                  database=self.ppmax.database,
+                                  pcdatabase=self.ppmax.pcdatabase,
+                                  vector_path=self.vectorpath,
+                                  aggregation='max',
+                                  layer="tp")
+
+    def run_maintainer(self, log_file, limit=None):
+        """
+        Run file maintainer. It will remove any file with problems
+
+        Args:
+            log_file (str): log file path
+            limit (int): length of the scenes_to_process
+
+        Returns:
+            str: Print
+        """
+
+        with t.HiddenPrints():
+            self.ppmax.checkdatabase()
+
+        self.common_elements = t.compare_indatabase(self.ppmax.indatabase)
 
         self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.common_elements, "era5")
 

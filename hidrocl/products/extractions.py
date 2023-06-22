@@ -111,6 +111,38 @@ def load_era5(file, var, reducer='mean'):
         return da
 
 
+def load_era5acc(file, var, reducer='max'):
+    """
+    Load .nc files from ERA5 product
+
+    Args:
+        file (str): file path
+        var (str): variable to extract
+        reducer (str): reducer to use
+
+    Returns:
+        xarray.DataArray: xarray.DataArray with the variable
+    """
+
+    with t.HiddenPrints():
+        da = xarray.open_dataset(file, mask_and_scale=True)
+        da = da[var]
+        # aggregate to 3-hourly
+        da = da.resample(time='3H')
+        match reducer:
+            case 'mean':
+                da = da.mean(dim='time')
+            case 'sum':
+                da = da.sum(dim='time')
+            case 'min':
+                da = da.min(dim='time')
+            case 'max':
+                da = da.max(dim='time')
+            case _:
+                raise ValueError("Reducer not supported")
+        return da
+
+
 def load_persiann(file):
     """
     Load .bin persiann files
@@ -423,6 +455,8 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
             file_date = datetime.strptime(scene, '%y%m%d').strftime('%Y-%m-%d')
         case name if "era5" in name:
             file_date = datetime.strptime(scene, '%Y%m%d').strftime('%Y-%m-%d')
+        case name if "eraacc" in name:
+            file_date = datetime.strptime(scene, '%Y%m%d').strftime('%Y-%m-%d')
         case "gfs":
             file_date = datetime.strptime(scene, '%Y%m%d%H').strftime('%Y-%m-%d')
         case _:
@@ -594,6 +628,16 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
                             return print(f"Error in scene {scene}")
                     else:
                         return print("layer argument must be a list")
+        case name if "eraacc" in name:
+            match name:
+                case name if "maxpp" in name:
+                    if isinstance(kwargs.get("layer"), str):
+                        try:
+                            file = selected_files[0]
+                            mos = load_era5acc(file, kwargs.get("layer"), kwargs.get("aggregation"))
+                            mos = mos * 10000
+                        except (OSError, ValueError):
+                            return print(f"Error in scene {scene}")
         case name if "persiann" in name:
             if len(selected_files) == 1:
                 try:
