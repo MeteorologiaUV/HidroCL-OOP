@@ -209,8 +209,8 @@ def load_gfs(file, var, day=0):
         da = xarray.open_dataset(file, mask_and_scale=True)
         da = da[var]
         da.load()
-        da = da.sel(valid_time=slice(da.time+pd.to_timedelta(24*day, unit='H'),
-                                     da.time+pd.to_timedelta(24*day + 23, unit='H')))\
+        da = da.sel(valid_time=slice(da.time+pd.to_timedelta(24*day + 3, unit='H'),
+                                     da.time+pd.to_timedelta(24*day + 26, unit='H')))\
             .transpose('valid_time', 'latitude', 'longitude')
         da.coords['longitude'] = (da.coords['longitude'] + 180) % 360 - 180
         return da
