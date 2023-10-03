@@ -297,6 +297,21 @@ def min_datasets(dataset_list):
     template.values = min_values
     return template
 
+def len_event(dataset, limit = 1):
+    """
+    Function to get the length of the precipitation event
+
+    Args:
+        dataset_list (list): list of xarray datasets
+        limit (int): limit to consider precipitation event
+
+    Returns:
+        xarray.Dataset: xarray dataset with the length of the precipitation event
+    """
+    template = dataset.isel(valid_time=0).copy()
+    template.values = ((dataset.values * 3600 * 3 > limit) * 3).astype(float).sum(axis=0)
+    return template
+
 
 def mosaic_raster(raster_list, layer):
     """
@@ -525,15 +540,20 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
                             mos_pre = max_datasets(dataset)
                         elif kwargs.get("aggregation") == "min":
                             mos_pre = min_datasets(dataset)
+                        elif kwargs.get("aggregation") == "len":
+                            mos_pre = len_event(dataset, limit=kwargs.get("prec_threshold"))
                         else:
-                            print("aggregation argument must be sum, mean, min or max, and it's needed")
+                            print("aggregation argument must be sum, mean, min, max" +
+                                  "or event length, and it's needed")
                             return None
                         # scale and unit conversions
-                        if kwargs.get("layer") == 'prate':
+                        if kwargs.get("aggregation") == "len":
+                            mos_pre = mos_pre * 10
+                        elif kwargs.get("layer") == 'prate':
                             mos_pre = mos_pre * 3600 * 30
-                        if kwargs.get("layer") == 'gh':
+                        elif kwargs.get("layer") == 'gh':
                             pass
-                        if kwargs.get("layer") == 't2m':
+                        elif kwargs.get("layer") == 't2m':
                             mos_pre = (mos_pre - 273.15)*10
                         else:
                             mos_pre = mos_pre * 10

@@ -3201,8 +3201,7 @@ class Gfs:
         db2 (HidroCLVariable): HidroCLVariable object with GFS variable (see avobe) of day 2 \n
         db3 (HidroCLVariable): HidroCLVariable object with GFS variable (see avobe) of day 3 \n
         db4 (HidroCLVariable): HidroCLVariable object with GFS variable (see avobe) of day 4 \n
-        db_log (str): Log file path for temperature data \n
-        valid_time (int): Valid time for extracting the product \n
+        db_log (str): Log file path for variable data \n
         variable (str): Variable name \n
         productname (str): Name of the remote sensing product to be processed \n
         productpath (str): Path to the product folder where the product files are located \n
@@ -3219,15 +3218,20 @@ class Gfs:
 
     def __init__(self, db0, db1, db2, db3, db4,
                  db_log, variable, aggregation,
-                 product_path, vectorpath):
+                 product_path, vectorpath,
+                 prec_threshold=1):
         """
         Examples:
 
         Args:
-            db (HidroCLVariable): HidroCLVariable object with GFS variable (see avobe) \n
+            db0 (HidroCLVariable): HidroCLVariable object with GFS variable (see avobe) \n
+            db1 (HidroCLVariable): HidroCLVariable object with GFS variable (see avobe) \n
+            db2 (HidroCLVariable): HidroCLVariable object with GFS variable (see avobe) \n
+            db3 (HidroCLVariable): HidroCLVariable object with GFS variable (see avobe) \n
+            db4 (HidroCLVariable): HidroCLVariable object with GFS variable (see avobe) \n
             db_log (str): Log file path for extracted data \n
-            valid_time (int): Valid time for extracting the product \n
             variable (str): Variable name \n
+            aggregation (str): Aggregation type \n
             product_path (str): Path to the product folder where the product files are located \n
             vectorpath (str): Path to the vector folder with Shapefile with areas to be processed \n
 
@@ -3246,6 +3250,7 @@ class Gfs:
             self.productname = "GFS 0.5º"
             self.productpath = product_path
             self.vectorpath = vectorpath
+            self.prec_threshold = prec_threshold
             self.common_elements = t.compare_indatabase(self.db0.indatabase, self.db1.indatabase,
                                                         self.db2.indatabase, self.db3.indatabase, self.db4.indatabase)
             self.product_files = t.read_product_files(self.productpath, "gfs", variable=self.variable)
@@ -3360,7 +3365,8 @@ Database path day 4: {self.db4.database}
                               vector_path=self.vectorpath,
                               layer=self.variable,
                               aggregation=self.aggregation,
-                              days=days)
+                              days=days,
+                              prec_threshold=self.prec_threshold)
 
 
     def run_maintainer(self, log_file, limit=None):
@@ -3376,27 +3382,19 @@ Database path day 4: {self.db4.database}
         """
 
         with t.HiddenPrints():
-            self.temp.checkdatabase()
-            self.pp.checkdatabase()
-            self.et.checkdatabase()
-            self.pet.checkdatabase()
-            self.snw.checkdatabase()
-            self.snwa.checkdatabase()
-            self.snwdn.checkdatabase()
-            self.snwdt.checkdatabase()
-            self.soilm.checkdatabase()
+            self.db0.checkdatabase()
+            self.db1.checkdatabase()
+            self.db2.checkdatabase()
+            self.db3.checkdatabase()
+            self.db4.checkdatabase()
 
-        self.common_elements = t.compare_indatabase(self.temp.indatabase,
-                                                    self.pp.indatabase,
-                                                    self.et.indatabase,
-                                                    self.pet.indatabase,
-                                                    self.snw.indatabase,
-                                                    self.snwa.indatabase,
-                                                    self.snwdn.indatabase,
-                                                    self.snwdt.indatabase,
-                                                    self.soilm.indatabase)
+        self.common_elements = t.compare_indatabase(self.db0.database,
+                                                    self.db1.database,
+                                                    self.db2.database,
+                                                    self.db3.database,
+                                                    self.db4.database)
 
-        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.common_elements, "era5")
+        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.common_elements, "gfs")
 
         scenes_path = t.get_scenes_path(self.product_files, self.productpath)
 
@@ -3408,5 +3406,174 @@ Database path day 4: {self.db4.database}
         for scene in scenes_to_process:
             m.file_maintainer(scene=scene,
                               scenes_path=scenes_path,
-                              name='era5',
+                              name='gfs',
                               log_file=log_file)
+
+
+# """
+# Extraction of CSR GRACE and GRACE-FO MASCON RL06Mv2 data product:
+# """
+#
+#
+# class Grace:
+#     """
+#     A class to process GRACE-FO MASCON to hidrocl variables. Where:\n
+#
+#     liquid water equivalent thickness: lwe_thickness -> lwe (10 * cm) mean \n
+#
+#     lwe: HidroCLVariable object with Grace data \n
+#
+#     Attributes:
+#         lwe (HidroCLVariable): HidroCLVariable object with GRACE liquid water equivalent thickness data \n
+#         lwe_log (str): Log file path for liquid water equivalent thickness data \n
+#         productname (str): Name of the remote sensing product to be processed \n
+#         productpath (str): Path to the product folder where the product files are located \n
+#         vectorpath (str): Path to the vector folder with Shapefile with areas to be processed \n
+#         common_elements (list): List of common elements / this case the same elements \n
+#         product_files (list): List of product files in the product folder \n
+#         product_ids (list): List of product ids. Each product id is str with common tag by date \n
+#         all_scenes (list): List of all scenes (no matter the product id here) \n
+#         scenes_occurrences (list): List of scenes occurrences for each product id \n
+#         overpopulated_scenes (list): List of overpopulated scenes (more than 1 scene for grace) \n
+#         complete_scenes (list): List of complete scenes (1 scene for grace) \n
+#         incomplete_scenes (list): List of incomplete scenes (less than 1 scene for grace) \n
+#         scenes_to_process (list): List of scenes to process (complete scenes no processed) \n
+#     """
+#
+#     def __init__(self, lwe, product_path, vector_path, lwe_log):
+#         """
+#         Examples:
+#             >>> from hidrocl import HidroCLVariable
+#             >>> from hidrocl import Grace
+#             >>> lwe = HidroCLVariable('lwe', lwe.db, lwepc.db)
+#             >>> product_path = '/home/user/grace'
+#             >>> vector_path = '/home/user/shapefiles'
+#             >>> lwe_log = '/home/user/lwe.log'
+#             >>> grace = Grace(lwe, product_path, vector_path, lwe_log)
+#             >>> grace
+#             "Class to extract GRACE-FO MASCON RL06Mv2"
+#             >>> grace.run_extraction()
+#
+#
+#         Args:
+#             lwe (HidroCLVariable): HidroCLVariable object with GRACE liquid water equivalent thickness data \n
+#             product_path (str): Path to the product folder where the product files are located \n
+#             vector_path (str): Path to the vector folder with Shapefile with areas to be processed \n
+#             lwe_log (str): Log file path for liquid water equivalent thickness data \n
+#
+#         Raises:
+#             TypeError: If lwe is not HidroCLVariable object \n
+#         """
+#         if t.check_instance(lwe):
+#             self.lwe = lwe
+#             self.lwe_log = lwe_log
+#             self.productname = "GRACE-FO MASCON RL06Mv2"
+#             self.productpath = product_path
+#             self.vectorpath = vector_path
+#             self.common_elements = self.lwe.indatabase
+#             self.product_files = t.read_product_files(self.productpath, "grace")
+#             self.product_ids = t.get_product_ids(self.product_files, "grace")
+#             self.all_scenes = t.check_product_files(self.product_ids)
+#             self.scenes_occurrences = t.count_scenes_occurrences(self.all_scenes, self.product_ids)
+#             (self.overpopulated_scenes,
+#              self.complete_scenes,
+#              self.incomplete_scenes) = t.classify_occurrences(self.scenes_occurrences, "grace")
+#             self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes,
+#                                                             self.common_elements, what="grace")
+#         else:
+#             raise TypeError('lwe must be HidroCLVariable object')
+#
+#     def __repr__(self):
+#         """
+#         Return a string representation of the object
+#
+#         Returns:
+#              str: String representation of the object
+#         """
+#         return f'Class to extract {self.productname}'
+#
+#     def __str__(self):
+#         """
+#         Return a string representation of the object
+#
+#         Returns:
+#             str: String representation of the object
+#         """
+#         return f'''
+# Product: {self.productname}
+#
+# Liquid water equivalent thickness records: {len(self.lwe.indatabase)}.
+# Liquid water equivalent thickness path: {self.lwe.database}
+#                 '''
+#
+#     def run_extraction(self, limit=None):
+#         """
+#         Run the extraction of the product.
+#         If limit is None, all scenes will be processed.
+#         If limit is a number, only the first limit scenes will be processed.
+#
+#         Args:
+#             limit (int): length of the scenes_to_process
+#
+#         Returns:
+#             str: Print
+#         """
+#
+#         with t.HiddenPrints():
+#             self.lwe.checkdatabase()
+#
+#         self.common_elements = self.lwe.indatabase
+#
+#         self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.common_elements, "grace")
+#
+#         scenes_path = t.get_scenes_path(self.product_files, self.productpath)
+#
+#         with TemporaryDirectory() as tempdirname:
+#             temp_dir = Path(tempdirname)
+#
+#             if limit is not None:
+#                 scenes_to_process = self.scenes_to_process[:limit]
+#             else:
+#                 scenes_to_process = self.scenes_to_process
+#
+#             for scene in scenes_to_process:
+#                 if scene not in self.lwe.indatabase:
+#                     e.zonal_stats(scene, scenes_path,
+#                                   temp_dir, 'z_era5',
+#                                   self.z.catchment_names, self.z_log,
+#                                   database=self.z.database,
+#                                   pcdatabase=self.z.pcdatabase,
+#                                   vector_path=self.vectorpath,
+#                                   layer="z")
+#
+#     def run_maintainer(self, log_file, limit=None):
+#         """
+#         Run file maintainer. It will remove any file with problems
+#
+#         Args:
+#             log_file (str): log file path
+#             limit (int): length of the scenes_to_process
+#
+#         Returns:
+#             str: Print
+#         """
+#
+#         with t.HiddenPrints():
+#             self.z.checkdatabase()
+#
+#         self.common_elements = self.z.indatabase
+#
+#         self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.common_elements, "era5")
+#
+#         scenes_path = t.get_scenes_path(self.product_files, self.productpath)
+#
+#         if limit is not None:
+#             scenes_to_process = self.scenes_to_process[:limit]
+#         else:
+#             scenes_to_process = self.scenes_to_process
+#
+#         for scene in scenes_to_process:
+#             m.file_maintainer(scene=scene,
+#                               scenes_path=scenes_path,
+#                               name='era5',
+#                               log_file=log_file)

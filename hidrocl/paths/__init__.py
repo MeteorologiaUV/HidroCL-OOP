@@ -153,6 +153,11 @@ tmp_f_gfs_tmp_max_b_none_d1_p1d = os.path.join(nas_path, 'databases/forecasted/t
 tmp_f_gfs_tmp_max_b_none_d1_p2d = os.path.join(nas_path, 'databases/forecasted/tmp_f_gfs_tmp_max_b_none_d1_p2d.csv')
 tmp_f_gfs_tmp_max_b_none_d1_p3d = os.path.join(nas_path, 'databases/forecasted/tmp_f_gfs_tmp_max_b_none_d1_p3d.csv')
 tmp_f_gfs_tmp_max_b_none_d1_p4d = os.path.join(nas_path, 'databases/forecasted/tmp_f_gfs_tmp_max_b_none_d1_p4d.csv')
+pp_f_gfs_plen_mean_b_none_d1_p0d = os.path.join(nas_path, 'databases/forecasted/pp_f_gfs_plen_mean_b_none_d1_p0d.csv')
+pp_f_gfs_plen_mean_b_none_d1_p1d = os.path.join(nas_path, 'databases/forecasted/pp_f_gfs_plen_mean_b_none_d1_p1d.csv')
+pp_f_gfs_plen_mean_b_none_d1_p2d = os.path.join(nas_path, 'databases/forecasted/pp_f_gfs_plen_mean_b_none_d1_p2d.csv')
+pp_f_gfs_plen_mean_b_none_d1_p3d = os.path.join(nas_path, 'databases/forecasted/pp_f_gfs_plen_mean_b_none_d1_p3d.csv')
+pp_f_gfs_plen_mean_b_none_d1_p4d = os.path.join(nas_path, 'databases/forecasted/pp_f_gfs_plen_mean_b_none_d1_p4d.csv')
 
 
 #
@@ -301,6 +306,11 @@ tmp_f_gfs_tmp_max_pc_p1d = os.path.join(nas_path, 'pcdatabases/forecasted/tmp_f_
 tmp_f_gfs_tmp_max_pc_p2d = os.path.join(nas_path, 'pcdatabases/forecasted/tmp_f_gfs_tmp_max_pc_p2d.csv')
 tmp_f_gfs_tmp_max_pc_p3d = os.path.join(nas_path, 'pcdatabases/forecasted/tmp_f_gfs_tmp_max_pc_p3d.csv')
 tmp_f_gfs_tmp_max_pc_p4d = os.path.join(nas_path, 'pcdatabases/forecasted/tmp_f_gfs_tmp_max_pc_p4d.csv')
+pp_f_gfs_plen_mean_pc_p0d = os.path.join(nas_path, 'pcdatabases/forecasted/pp_f_gfs_plen_mean_pc_p0d.csv')
+pp_f_gfs_plen_mean_pc_p1d = os.path.join(nas_path, 'pcdatabases/forecasted/pp_f_gfs_plen_mean_pc_p1d.csv')
+pp_f_gfs_plen_mean_pc_p2d = os.path.join(nas_path, 'pcdatabases/forecasted/pp_f_gfs_plen_mean_pc_p2d.csv')
+pp_f_gfs_plen_mean_pc_p3d = os.path.join(nas_path, 'pcdatabases/forecasted/pp_f_gfs_plen_mean_pc_p3d.csv')
+pp_f_gfs_plen_mean_pc_p4d = os.path.join(nas_path, 'pcdatabases/forecasted/pp_f_gfs_plen_mean_pc_p4d.csv')
 
 # ----
 # log files
@@ -361,6 +371,7 @@ log_atm_f_gfs_vw_mean_log = os.path.join(nas_path, 'logs/atm_f_gfs_vw_mean_log.t
 log_tmp_f_gfs_tmp_mean_log = os.path.join(nas_path, 'logs/tmp_f_gfs_tmp_mean_log.txt')
 log_tmp_f_gfs_tmp_min_log = os.path.join(nas_path, 'logs/tmp_f_gfs_tmp_min_log.txt')
 log_tmp_f_gfs_tmp_max_log = os.path.join(nas_path, 'logs/tmp_f_gfs_tmp_max_log.txt')
+log_pp_f_gfs_plen_mean_log = os.path.join(nas_path, 'logs/pp_f_gfs_plen_mean_log.txt')
 
 """
 polys = gpd.read_file(hidrocl_sinusoidal)  # for getting gauge_id values
