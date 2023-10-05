@@ -59,7 +59,7 @@ sm.checkpcdatabase()
 
 era5 = hidrocl.Era5_land(et=et, pet=eto,
                          snw=sca, snwa=sna,
-                         snwdn=snr, snwdt=snd,soilm=sm,
+                         snwdn=snr, snwdt=snd, soilm=sm,
                          et_log=hcl.log_et_o_era5_et_cum,
                          pet_log=hcl.log_et_o_era5_eto_cum,
                          snw_log=hcl.log_snow_o_era5_sca,

@@ -616,7 +616,11 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
                         try:
                             file = selected_files[0]
                             mos = load_era5(file, kwargs.get("layer"), "mean")
-                            mos = mos * 10000
+                            match name:
+                                case name if "snwdn" in name:
+                                    mos = mos * 10
+                                case _:
+                                    mos = mos * 10000
                         except (OSError, ValueError):
                             return print(f"Error in scene {scene}")
                 case name if ("dew" in name) or ("pres" in name) or \
