@@ -96,6 +96,7 @@ snow_o_era5_snr_mean_b_d_p0d = os.path.join(nas_path, 'databases/observed/snow_o
 snow_o_era5_snd_mean_b_d_p0d = os.path.join(nas_path, 'databases/observed/snow_o_era5_snd_mean_b_d_p0d.csv') # snow depth
 sm_o_era5_sm_mean_b_d_p0d = os.path.join(nas_path, 'databases/observed/sm_o_era5_sm_mean_b_d_p0d.csv') # soil moisture
 pp_o_pdir_pp_mean_b_none_d1_p0d = os.path.join(nas_path, 'databases/observed/pp_o_pdir_pp_mean_b_none_d1_p0d.csv') # new persiann
+pp_o_era5_plen_mean_b_d1_p0d = os.path.join(nas_path, 'databases/observed/pp_o_era5_plen_mean_b_d1_p0d.csv') # pp length
 
 ## new variables with new names
 veg_o_modis_agr_mean_b_none_d1_p0d = os.path.join(nas_path, 'databases/observed/veg_o_modis_agr_mean_b_none_d1_p0d.csv')
@@ -252,6 +253,7 @@ snow_o_era5_sna_mean_b_pc = os.path.join(nas_path, 'pcdatabases/observed/snow_o_
 snow_o_era5_snr_mean_b_pc = os.path.join(nas_path, 'pcdatabases/observed/snow_o_era5_snr_b_mean_pc.csv') # snow density
 snow_o_era5_snd_mean_b_pc = os.path.join(nas_path, 'pcdatabases/observed/snow_o_era5_snd_b_mean_pc.csv') # snow depth
 sm_o_era5_sm_mean_b_pc = os.path.join(nas_path, 'pcdatabases/observed/sm_o_era5_sm_mean_b_pc.csv') # soil moisture
+pp_o_era5_plen_mean_b_pc = os.path.join(nas_path, 'pcdatabases/observed/pp_o_era5_plen_mean_b_pc.csv') # pp length
 # new names
 tmp_o_era5_dew_mean_b_pc = os.path.join(nas_path, 'pcdatabases/observed/tmp_o_era5_dew_mean_b_pc.csv')
 wind_o_era5_u10_mean_b_pc = os.path.join(nas_path, 'pcdatabases/observed/wind_o_era5_u10_mean_b_pc.csv')
@@ -358,6 +360,7 @@ log_wind_o_era5_v10_mean = os.path.join(nas_path, 'logs/log_wind_o_era5_v10_mean
 log_atm_o_era5_pres_mean = os.path.join(nas_path, 'logs/log_atm_o_era5_pres_mean.txt')
 log_atm_o_era5_z_mean = os.path.join(nas_path, 'logs/log_atm_o_era5_z_mean.csv')
 log_awc_o_era5_rh_mean = os.path.join(nas_path, 'logs/log_awc_o_era5_rh_mean.txt')
+log_pp_o_era5_plen_mean = os.path.join(nas_path, 'logs/log_pp_o_era5_plen_mean.txt') # pp length
 
 log_file_maintainer = os.path.join(nas_path, 'logs/file_maintainer.txt')
 

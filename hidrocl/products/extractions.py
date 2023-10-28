@@ -313,6 +313,22 @@ def len_event(dataset, limit = 1):
     return template
 
 
+def len_era5(dataset, limit = 1):
+    """
+    Function to get the length of the precipitation event
+    Args:
+        dataset: era5 filename
+        limit: mm limit
+
+    Returns:
+        xarray.Dataset: xarray dataset with the length of the precipitation event
+    """
+    da = xarray.open_dataset(dataset, mask_and_scale=True)
+    da = da['tp']
+    da = da.resample(time='3H').sum('time') > 0.001 * limit
+    return da.sum('time') * 3
+
+
 def mosaic_raster(raster_list, layer):
     """
     Function to compute mosaic files with rioxarray library
@@ -605,12 +621,23 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
                             return print(f"Error in scene {scene}")
                 case name if ("et" in name) or ("pp" in name):
                     if isinstance(kwargs.get("layer"), str):
-                        try:
-                            file = selected_files[0]
-                            mos = load_era5(file, kwargs.get("layer"), kwargs.get("aggregation"))
-                            mos = mos * 10000
-                        except (OSError, ValueError):
-                            return print(f"Error in scene {scene}")
+                        agg = kwargs.get("aggregation")
+                        if agg == "len":
+                            try:
+                                file = selected_files[0]
+                                mos = len_era5(file, limit = kwargs.get("prec_threshold"))
+                                mos = mos * 10
+                            except (OSError, ValueError):
+                                return print(f"Error in scene {scene}")
+                        else:
+                            try:
+                                file = selected_files[0]
+                                mos = load_era5(file, kwargs.get("layer"), kwargs.get("aggregation"))
+                                mos = mos * 10000
+                            except (OSError, ValueError):
+                                return print(f"Error in scene {scene}")
+                    else:
+                        return print("layer argument must be a string")
                 case name if ("snw" in name):
                     if isinstance(kwargs.get("layer"), str):
                         try:

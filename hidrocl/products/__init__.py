@@ -2691,7 +2691,7 @@ class Era5ppmax:
         productname (str): Name of the remote sensing product to be processed \n
         productpath (str): Path to the product folder where the product files are located \n
         vectorpath (str): Path to the vector folder with Shapefile with areas to be processed \n
-        common_elements (list): List of common elements between the pp, dew, pres, u and v databases \n
+        common_elements (list): List of common elements between pp database \n
         product_files (list): List of product files in the product folder \n
         product_ids (list): List of product ids. Each product id is str with common tag by date \n
         all_scenes (list): List of all scenes (no matter the product id here) \n
@@ -2725,7 +2725,7 @@ class Era5ppmax:
             ppmax_log (str): Log file path for maximum precipitation data \n
 
         Raises:
-            TypeError: If pp, ppmax, temp, tempmin, tempmax, dew, pres, u or v are not HidroCLVariable objects \n
+            TypeError: If ppmax is not HidroCLVariable objects \n
         """
         if t.check_instance(ppmax):
             self.ppmax = ppmax
@@ -2841,6 +2841,179 @@ Maximum precipitation path: {self.ppmax.database}
                               scenes_path=scenes_path,
                               name='era5',
                               log_file=log_file)
+
+
+"""
+Extraction of ERA5 precipitation length 3-hour data:
+"""
+
+
+class Era5pplen:
+    """
+    A class to process ERA5 hourly to hidrocl variables. Where:
+
+    total precipitation: tp -> pp (10000 * m) sum \n
+
+    ppmax: HidroCLVariable object with ERA5 data \n
+
+    Attributes:
+        pplen (HidroCLVariable): HidroCLVariable object with ERA5 precipitation length data \n
+        pplen_log (str): Log file path for precipitation length data \n
+        productname (str): Name of the remote sensing product to be processed \n
+        productpath (str): Path to the product folder where the product files are located \n
+        vectorpath (str): Path to the vector folder with Shapefile with areas to be processed \n
+        common_elements (list): List of common elements between pp database \n
+        product_files (list): List of product files in the product folder \n
+        product_ids (list): List of product ids. Each product id is str with common tag by date \n
+        all_scenes (list): List of all scenes (no matter the product id here) \n
+        scenes_occurrences (list): List of scenes occurrences for each product id \n
+        overpopulated_scenes (list): List of overpopulated scenes (more than 1 scenes for era5) \n
+        complete_scenes (list): List of complete scenes (1 scenes for era5) \n
+        incomplete_scenes (list): List of incomplete scenes (less than 1 scenes for era5) \n
+        scenes_to_process (list): List of scenes to process (complete scenes no processed) \n
+    """
+
+    def __init__(self, pplen, product_path, vector_path, pplen_log):
+        """
+        Examples:
+            >>> from hidrocl import HidroCLVariable
+            >>> from hidrocl import Era5pplen
+            >>> pplen = HidroCLVariable('pplen', pplen.db, pplenpc.db)
+            >>> product_path = '/home/user/era5'
+            >>> vector_path = '/home/user/shapefiles'
+            >>> pplen_log = '/home/user/pp.log'
+            >>> era5 = Era5(pplen, product_path, vector_path,
+                            pplen_log)
+            >>> era5
+            "Class to extract ERA5 precipitation 3-Hour length 0.25 degree"
+            >>> era5.run_extraction()
+
+
+        Args:
+            ppmax (HidroCLVariable): HidroCLVariable object with ERA5 maximum precipitation data \n
+            product_path (str): Path to the product folder where the product files are located \n
+            vector_path (str): Path to the vector folder with Shapefile with areas to be processed \n
+            ppmax_log (str): Log file path for maximum precipitation data \n
+
+        Raises:
+            TypeError: If pplen is not HidroCLVariable objects \n
+        """
+        if t.check_instance(pplen):
+            self.pplen = pplen
+            self.pplen_log = pplen_log
+            self.productname = "ERA5 precipitation 3-Hour length 0.25 degree"
+            self.productpath = product_path
+            self.vectorpath = vector_path
+            self.common_elements = t.compare_indatabase(self.pplen.indatabase)
+            self.product_files = t.read_product_files(self.productpath, "era5")
+            self.product_ids = t.get_product_ids(self.product_files, "era5")
+            self.all_scenes = t.check_product_files(self.product_ids)
+            self.scenes_occurrences = t.count_scenes_occurrences(self.all_scenes, self.product_ids)
+            (self.overpopulated_scenes,
+             self.complete_scenes,
+             self.incomplete_scenes) = t.classify_occurrences(self.scenes_occurrences, "era5")
+            self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes,
+                                                            self.common_elements, what="era5")
+        else:
+            raise TypeError('pplen must be HidroCLVariable object')
+
+    def __repr__(self):
+        """
+        Return a string representation of the object
+
+        Returns:
+             str: String representation of the object
+        """
+        return f'Class to extract {self.productname}'
+
+    def __str__(self):
+        """
+        Return a string representation of the object
+
+        Returns:
+            str: String representation of the object
+        """
+        return f'''
+Product: {self.productname}
+
+Precipitation length records: {len(self.pplen.indatabase)}.
+Precipitation length path: {self.pplen.database}
+                '''
+
+    def run_extraction(self, limit=None):
+        """
+        Run the extraction of the product.
+        If limit is None, all scenes will be processed.
+        If limit is a number, only the first limit scenes will be processed.
+
+        Args:
+            limit (int): length of the scenes_to_process
+
+        Returns:
+            str: Print
+        """
+
+        with t.HiddenPrints():
+            self.pplen.checkdatabase()
+
+        self.common_elements = t.compare_indatabase(self.pplen.indatabase)
+
+        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.common_elements, "era5")
+
+        scenes_path = t.get_scenes_path(self.product_files, self.productpath)
+
+        with TemporaryDirectory() as tempdirname:
+            temp_dir = Path(tempdirname)
+
+            if limit is not None:
+                scenes_to_process = self.scenes_to_process[:limit]
+            else:
+                scenes_to_process = self.scenes_to_process
+
+            for scene in scenes_to_process:
+                if scene not in self.pplen.indatabase:
+                    e.zonal_stats(scene, scenes_path,
+                                  temp_dir, 'pp_era5',
+                                  self.pplen.catchment_names, self.pplen_log,
+                                  database=self.pplen.database,
+                                  pcdatabase=self.pplen.pcdatabase,
+                                  vector_path=self.vectorpath,
+                                  aggregation='len',
+                                  layer="tp",
+                                  prec_threshold=1)
+
+    def run_maintainer(self, log_file, limit=None):
+        """
+        Run file maintainer. It will remove any file with problems
+
+        Args:
+            log_file (str): log file path
+            limit (int): length of the scenes_to_process
+
+        Returns:
+            str: Print
+        """
+
+        with t.HiddenPrints():
+            self.pplen.checkdatabase()
+
+        self.common_elements = t.compare_indatabase(self.pplen.indatabase)
+
+        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.common_elements, "era5")
+
+        scenes_path = t.get_scenes_path(self.product_files, self.productpath)
+
+        if limit is not None:
+            scenes_to_process = self.scenes_to_process[:limit]
+        else:
+            scenes_to_process = self.scenes_to_process
+
+        for scene in scenes_to_process:
+            m.file_maintainer(scene=scene,
+                              scenes_path=scenes_path,
+                              name='era5',
+                              log_file=log_file)
+
 
 
 """
