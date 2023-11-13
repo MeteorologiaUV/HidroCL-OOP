@@ -507,7 +507,10 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
         case 'snow':
             try:
                 mos = mosaic_raster(selected_files, kwargs.get("layer"))
-                mos = (mos.where(mos == 200) / 200).fillna(0)
+                mos = xarray.where(mos == 200, 1, mos)
+                mos = xarray.where(mos == 0, np.nan, mos)
+                mos = xarray.where((mos == 25) | (mos == 37) | (mos == 39), 0, mos)
+                mos = xarray.where((mos == 0) | (mos == 1), mos, np.nan)
             except (rxre.RioXarrayError, rioe.RasterioIOError):
                 return print(f"Error in scene {scene}")
 
@@ -519,7 +522,7 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
             except (rxre.RioXarrayError, rioe.RasterioIOError):
                 return print(f"Error in scene {scene}")
 
-        case 'et':
+        case 'et' | 'pet':
             try:
                 mos = mosaic_raster(selected_files, kwargs.get("layer"))
                 mos = mos.where(mos < 3200)
@@ -796,6 +799,6 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
     currenttime = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
     print(f"Time elapsed for {scene}: {str(round(end - start))} seconds")
     write_log(log_file, scene, currenttime, time_dif, kwargs.get("database"))
-    os.remove(temporal_raster)
-    os.remove(result_file)
+    #os.remove(temporal_raster)
+    #os.remove(result_file)
     gc.collect()

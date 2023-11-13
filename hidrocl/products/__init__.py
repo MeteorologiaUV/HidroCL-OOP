@@ -7,7 +7,6 @@ from . import tools as t
 from . import maintainer as m
 from . import extractions as e
 
-
 """
 Extraction of MODIS MOD13Q1 product:
 """
@@ -334,7 +333,7 @@ NDVI database path: {self.ndvi.database}
         with t.HiddenPrints():
             self.ndvi.checkdatabase()
 
-        self.common_elements = t.compare_indatabase(self.ndvi.indatabase,)
+        self.common_elements = t.compare_indatabase(self.ndvi.indatabase)
 
         self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.common_elements)
 
@@ -356,7 +355,6 @@ NDVI database path: {self.ndvi.database}
                               pcdatabase=self.ndvi.pcdatabase,
                               vector_path=self.vectorpath,
                               layer="250m 16 days NDVI", )
-
 
     def run_maintainer(self, log_file, limit=None):
         """
@@ -389,6 +387,7 @@ NDVI database path: {self.ndvi.database}
                               scenes_path=scenes_path,
                               name='modis',
                               log_file=log_file)
+
 
 """
 Extraction of MODIS MOD10A2 product:
@@ -580,7 +579,6 @@ Extraction of MODIS MOD16A2 product:
 
 
 class Mod16a2:
-
     """
     A class to process MOD16A2 to hidrocl variables
 
@@ -712,7 +710,7 @@ ET database path: {self.et.database}
             for scene in scenes_to_process:
                 if scene not in self.pet.indatabase:
                     e.zonal_stats(scene, scenes_path,
-                                  temp_dir, 'et',
+                                  temp_dir, 'pet',
                                   self.pet.catchment_names, self.pet_log,
                                   database=self.pet.database,
                                   pcdatabase=self.pet.pcdatabase,
@@ -1825,6 +1823,7 @@ Soil moisture path: {self.soilm.database}
 Extraction of PDIR-NOW 0.04º degree product:
 """
 
+
 class Pdirnow:
     """
     A class to process PDIR-Now to hidrocl variables
@@ -2535,7 +2534,6 @@ V wind component path: {self.v.database}
                                                     self.u.indatabase,
                                                     self.v.indatabase)
 
-
         self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.common_elements, "era5")
 
         scenes_path = t.get_scenes_path(self.product_files, self.productpath)
@@ -3015,7 +3013,6 @@ Precipitation length path: {self.pplen.database}
                               log_file=log_file)
 
 
-
 """
 Extraction of ERA5 Pressure levels hourly data product:
 """
@@ -3353,6 +3350,7 @@ Relative humidity path: {self.rh.database}
                               name='era5',
                               log_file=log_file)
 
+
 """
 Extraction of GFS data product:
 """
@@ -3541,7 +3539,6 @@ Database path day 4: {self.db4.database}
                               days=days,
                               prec_threshold=self.prec_threshold)
 
-
     def run_maintainer(self, log_file, limit=None):
         """
         Run file maintainer. It will remove any file with problems
@@ -3581,7 +3578,6 @@ Database path day 4: {self.db4.database}
                               scenes_path=scenes_path,
                               name='gfs',
                               log_file=log_file)
-
 
 # """
 # Extraction of CSR GRACE and GRACE-FO MASCON RL06Mv2 data product:
