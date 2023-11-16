@@ -12,7 +12,7 @@ setup(
         'matplotlib>=3.5.3',
         'geopandas>=0.11.1',
         'netCDF4>=1.6.0',
-        'earthdata>=0.4.1'
+        'earthdata>=0.4.1',
         'cdsapi>=0.5.1',
     ],
     python_requires='>=3.10',
