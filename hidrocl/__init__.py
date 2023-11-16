@@ -10,7 +10,7 @@ __author__ = "Aldo Tapia"
 __email__ = "aatapia@userena.cl"
 
 __license__ = "MIT"
-__copyright__ = "2022 Aldo Tapia"
+__copyright__ = "2023 Aldo Tapia"
 
 try:
     # from . import variables, products

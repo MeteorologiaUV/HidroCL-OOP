@@ -3,9 +3,13 @@
 import os
 import cdsapi
 import tarfile
-import pandas as pd
+import logging
 import requests
+import pandas as pd
+import xarray as xr
+from . import tools as t
 from datetime import datetime
+from bs4 import BeautifulSoup
 from requests.auth import HTTPBasicAuth
 
 
@@ -332,3 +336,95 @@ def download_imerg(url_extract, folder, user, password, timeout=60):
     with open(os.path.join(folder, fname), 'wb') as f:
         f.write(response.content)
         print(f'{fname} downloaded')
+
+
+def list_gfs():
+    """
+    List the available GFS 0.5 products in nomads
+
+    Returns:
+        list: a list of available GFS products or the status code if the request fails
+    """
+
+    baseurl = 'https://nomads.ncep.noaa.gov/dods/gfs_0p50'
+
+    response = requests.get(baseurl)
+
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.text, 'html.parser')
+        variables = soup.find_all('a')
+        urls = [val.get('href') + '/gfs_0p50_00z' for val in variables if 'gfs_0p50/' in val.get('href')]
+        return urls
+    else:
+        print('Error: ', response.status_code)
+        return response.status_code
+
+
+def download_gfs(url, product_path):
+    """
+
+    Args:
+        url: url of the product
+        product_path: path to save the product
+
+    Returns:
+        None
+    """
+
+    dic = {'ugrd10m': 'u10',
+           'vgrd10m': 'v10',
+           'pratesfc': 'prate',
+           'tmp2m': 't2m',
+           'rh2m': 'r2',
+           'hgtprs': 'gh'}
+
+    dims = {'time': 'valid_time',
+            'lat': 'latitude',
+            'lon': 'longitude'}
+
+    dims.update(dic)
+
+    leveltype = {'u10': 'heightAboveGround',
+                 'v10': 'heightAboveGround',
+                 'prate': 'surface',
+                 't2m': 'heightAboveGround',
+                 'r2': 'heightAboveGround',
+                 'gh': 'isothermZero'}
+
+    steptype = {'u10': 'instant',
+                'v10': 'instant',
+                'prate': 'avg',
+                't2m': 'instant',
+                'r2': 'instant',
+                'gh': 'instant'}
+
+    date = url.split('/')[-2].replace('gfs', '')
+    year = date[:4]
+    date = date + '00'
+
+    if not os.path.exists(os.path.join(product_path, year)):
+        os.makedirs(os.path.join(product_path, year))
+    else:
+        print(f'Folder {year} already exists')
+    if not os.path.exists(os.path.join(product_path, year, date)):
+        os.makedirs(os.path.join(product_path, year, date))
+    else:
+        print(f'Folder {date} already exists')
+
+    logging.info(url)
+
+    with t.HiddenPrints():
+        ds = xr.open_dataset(url)
+
+        ds = ds.sel(lev=500)[list(dic.keys())].drop('lev')
+        ds = ds.rename(dims)
+        ds = ds.sel(latitude=slice(-61, -13), longitude=slice(281, 297),
+                    valid_time=slice(ds.valid_time[0].values,
+                                     ds.valid_time[0].values + pd.to_timedelta(24 * 5, unit='H')))
+        # create a new coordinate
+        ds = ds.assign_coords({'time': ds.valid_time.values[0]})
+
+        for var in dic.values():
+            name = f'GFS0.5_{var}_{leveltype.get(var)}_{steptype.get(var)}_{date}.nc'
+            ds[var].to_netcdf(os.path.join(product_path, year, date, name))
+            print(f'{date} {var} saved')

@@ -4,7 +4,7 @@
 
 [![pythonversion](https://img.shields.io/badge/python-v3.10-blue?style=plastic&logo=python&logoColor=yellow)](https://www.python.org/downloads/release/python-3100/)
 [![packageversion](https://img.shields.io/badge/r-v4.1.2-blue?style=plastic&logo=r&logoColor=9cf)](https://anaconda.org/conda-forge/r-base?version=4.2.1)
-![packageversion](https://img.shields.io/badge/version-v0.0.10-blue?style=plastic)
+![packageversion](https://img.shields.io/badge/version-v0.0.13-blue?style=plastic)
 
 ## Data download
 
@@ -157,6 +157,12 @@ install.packages("tibble", dependencies = TRUE)
 ----
 
 ## Changelog
+
+### [0.0.13] - 2023-11-16
+#### Added
+- **ERA5**: Added ERA5 product
+- **ERA pressure levels**: Added ERA5 pressure levels product
+- **ERA relative humidity**: RH computation from ERA5 
 
 ### [0.0.12] - 2023-01-23
 #### Changed
