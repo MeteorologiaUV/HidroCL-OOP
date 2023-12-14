@@ -516,7 +516,7 @@ def earthdata_download(what, product_path, start, end):
 
     earthaccess.login()
 
-    results = earthaccess.granule_query().short_name(earthdata_products[what]).bounding_box(-73.73,-55.01,-67.05,-17.63).version(earthdata_version[what]).temporal(start.strftime("%Y-%m-%d"),start.strftime("%Y-%m-%d")).get_all()
+    results = earthaccess.granule_query().short_name(earthdata_products[what]).bounding_box(-73.73,-55.01,-67.05,-17.63).version(earthdata_version[what]).temporal(start.strftime("%Y-%m-%d"),end.strftime("%Y-%m-%d")).get_all()
 
     results = [value for value in results if any(substring in value.data_links()[0] for substring in grids)]
 
