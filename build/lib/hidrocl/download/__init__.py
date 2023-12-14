@@ -5,7 +5,6 @@ import cdsapi
 import tarfile
 import logging
 import requests
-import earthaccess
 import pandas as pd
 import xarray as xr
 from . import tools as t
@@ -429,101 +428,3 @@ def download_gfs(url, product_path):
             name = f'GFS0.5_{var}_{leveltype.get(var)}_{steptype.get(var)}_{date}.nc'
             ds[var].to_netcdf(os.path.join(product_path, year, date, name))
             print(f'{date} {var} saved')
-
-
-def earthdata_download(what, product_path, start, end):
-    """
-    Download data from earthdata.nasa.gov
-
-    Args:
-        what: one of the following: reflectance, vegetation, lai, albedo, lulc, et0, snow, precipitation, landdata
-        product_path: path to save the downloaded files
-        start: start date in format YYYY-MM-DD
-        end: start date in format YYYY-MM-DD
-
-    Returns:
-
-    """
-
-    earthdata_products = {
-        'reflectance':'MOD09A1',
-        'vegetation':'MOD13Q1',
-        'lai':'MCD15A2H',
-        'albedo':'MCD43A3',
-        'lulc':'MCD12Q1',
-        'et0':'MOD16A2',
-        'snow':'MOD10A2',
-        'precipitation':'GPM_3IMERGHHL',
-        'landdata':'GLDAS_NOAH025_3H',
-    }
-
-    earthdata_platform = {
-        'reflectance':'modis',
-        'vegetation':'modis',
-        'lai':'modis',
-        'albedo':'modis',
-        'lulc':'modis',
-        'et0':'modis',
-        'snow':'modis',
-        'precipitation':'mixed',
-        'landdata':'model',
-    }
-
-    earthdata_version = {
-        'reflectance':'061',
-        'vegetation':'061',
-        'lai':'006',
-        'albedo':'061',
-        'lulc':'006',
-        'et0':'061',
-        'snow':'61',
-        'precipitation':'06',
-        'landdata':'2.1',
-    }
-
-    earthdata_file_extension = {
-        'reflectance':'hdf',
-        'vegetation':'.hdf',
-        'lai':'.hdf',
-        'albedo':'.hdf',
-        'lulc':'.hdf',
-        'et0':'.hdf',
-        'snow':'.hdf',
-        'precipitation':'.hdf5',
-        'landdata':'.nc4',
-    }
-
-    try:
-        what = what.lower()
-    except AttributeError:
-        raise ValueError("what must be a string")
-
-    if what not in earthdata_products.keys():
-        raise ValueError("what must be one of the following: reflectance, vegetation,"+
-                         "lai, albedo, lulc, et0, snow, precipitation, landdata")
-
-    try:
-        start = pd.to_datetime(start, format="%Y-%m-%d")
-        end = pd.to_datetime(end, format="%Y-%m-%d")
-    except ValueError:
-        raise ValueError("start and end must be in format YYYY-MM-DD")
-
-    if start > end:
-        raise ValueError("start must be before end")
-
-    grids = ['h13v14','h14v14','h12v13','h13v13','h11v12',
-        'h12v12','h11v11','h12v11','h11v10']
-
-    earthaccess.login()
-
-    results = earthaccess.granule_query().short_name(earthdata_products[what]).bounding_box(-73.73,-55.01,-67.05,-17.63).version(earthdata_version[what]).temporal(start.strftime("%Y-%m-%d"),start.strftime("%Y-%m-%d")).get_all()
-
-    results = [value for value in results if any(substring in value.data_links()[0] for substring in grids)]
-
-    if earthdata_platform[what] == 'modis':
-        results = [value for value in results if any(substring in value.data_links()[0] for substring in grids)]
-
-    downloaded_files = earthaccess.download(results,
-                                            local_path=product_path)
-
-    print('Downloaded finished')
