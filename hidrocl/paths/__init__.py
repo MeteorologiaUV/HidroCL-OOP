@@ -45,9 +45,9 @@ pp_o_pdir_pp_mean_b_none_d1_p0d = os.path.join(project_path, 'databases/observed
 # observed
 snw_o_modis_sca_cum_n_d8_p0d = os.path.join(project_path, 'databases/observed/snw_o_modis_sca_cum_n_d8_p0d.csv')
 snw_o_modis_sca_cum_s_d8_p0d = os.path.join(project_path, 'databases/observed/snw_o_modis_sca_cum_s_d8_p0d.csv')
-veg_o_modis_ndvi_mean_b_d16_p0d = os.path.join(project_path, 'databases/observed/veg_o_modis_ndvi_mean_b_d16_p0d.csv')
-veg_o_modis_evi_mean_b_d16_p0d = os.path.join(project_path, 'databases/observed/veg_o_modis_evi_mean_b_d16_p0d.csv')
-veg_o_int_nbr_mean_b_d16_p0d = os.path.join(project_path, 'databases/observed/veg_o_int_nbr_mean_b_d16_p0d.csv')
+veg_o_modis_ndvi_mean_b_d16_p0d = os.path.join(project_path, 'databases/observed/veg_o_modis_ndvi_mean_b_none_d1_p0d.csv')
+veg_o_modis_evi_mean_b_d16_p0d = os.path.join(project_path, 'databases/observed/veg_o_modis_evi_mean_b_none_d1_p0d.csv')
+veg_o_int_nbr_mean_b_d16_p0d = os.path.join(project_path, 'databases/observed/veg_o_modis_nbr_mean_b_none_d1_p0d.csv')
 # sun_o_modis_al_mean_b_d16_p0d = os.path.join(nas_path, 'databases/observed/sun_o_modis_al_mean_b_d16_p0d.csv')
 # sun_o_modis_al_p10_b_d16_p0d = os.path.join(nas_path, 'databases/observed/sun_o_modis_al_p10_b_d16_p0d.csv')
 # sun_o_modis_al_p25_b_d16_p0d = os.path.join(nas_path, 'databases/observed/sun_o_modis_al_p25_b_d16_p0d.csv')

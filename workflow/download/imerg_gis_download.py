@@ -5,8 +5,8 @@ import hidrocl.paths as hcl
 
 fpath = hcl.imerggis_path
 
-start = '2000-01-01'
-end = '2022-10-01'
+start = '2022-01-01'
+end = '2024-10-01'
 
 period = pd.period_range(pd.to_datetime(start, format="%Y-%m-%d"),
                          pd.to_datetime(end, format="%Y-%m-%d"), freq='M')
