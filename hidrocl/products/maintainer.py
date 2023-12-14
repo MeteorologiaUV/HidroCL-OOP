@@ -15,8 +15,11 @@ def test_load_hdf5(file):
     """
     Open .HDF5 to test file
 
-    :param file: HDF5 raster path
-    :return: None
+    Args:
+        file (str): file path
+
+    Returns:
+        None
     """
 
     with t.HiddenPrints():
@@ -29,8 +32,11 @@ def test_load_gldas(file):
     """
     Open .nc to test file
 
-    :param file: str with file path
-    :return: None
+    Args:
+        file (str): file path
+
+    Returns:
+        None
     """
 
     with t.HiddenPrints():
@@ -42,8 +48,11 @@ def test_load_persiann(file):
     """
     Load .bin to test file
 
-    :param file: str with file path
-    :return: None
+    Args:
+        file (str): file path
+
+    Returns:
+        None
     """
     with t.HiddenPrints():
         da = open(file, 'rb')
@@ -101,9 +110,12 @@ def write_del_log(log_file, file):
     """
     Write log file for deleted files
 
-    :param log_file: str with log file path
-    :param file: str with file path
-    :return: None
+    Args:
+        log_file (str): str with log file path
+        file (str): str with file path
+
+    Returns:
+        None
     """
     currenttime = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
     with open(log_file, 'a') as txt_file:
@@ -114,8 +126,11 @@ def test_open_raster(raster_list):
     """
     Function test files with rioxarray
 
-    :param raster_list: list with raster paths
-    :return: None
+    Args:
+        raster_list (list): list with raster paths
+
+    Returns:
+        None
     """
 
     if isinstance(raster_list, list):
@@ -129,12 +144,16 @@ def test_open_raster(raster_list):
 
 def file_maintainer(scene, scenes_path, name, log_file):
     """
+    Function to maintain files in the directory
 
-    :param scene: str with scene id to process
-    :param scenes_path: list with path to scenes
-    :param name: str withname of the product
-    :param log_file: str with log path
-    :return: Print
+    Args:
+        scene (str): str with scene id to process
+        scenes_path (list): list with path to scenes
+        name (str): str withname of the product
+        log_file (str): str with log path
+
+    Returns:
+        Print
     """
 
     r = re.compile('.*' + scene + '.*')

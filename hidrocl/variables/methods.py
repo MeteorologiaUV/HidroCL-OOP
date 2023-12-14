@@ -9,14 +9,17 @@ def checkdatabase(database, catchment_names=None):
     """
     Check if the database exists and is valid
 
-    :param database: str with the path to the database
-    :param catchment_names: list with the catchment names
-    :return: pandas.DataFrame with the observations
+    Args:
+        database (str): Path to the database
+        catchment_names (list): List of catchment names
+
+    Returns:
+        pandas.DataFrame: Dataframe with the observations
     """
 
     if os.path.exists(database):  # check if db exists
         print('Database found, using ' + database)
-        observations = pd.read_csv(database, dtype={'name_id':str})
+        observations = pd.read_csv(database, dtype={'name_id': str})
         observations.date = pd.to_datetime(observations.date, format='%Y-%m-%d')
         observations.set_index(['date'], inplace=True)
         return observations
@@ -42,9 +45,12 @@ def get_catchment_name(catchment, catchment_names):
     """
     Get catchment name from catchment ID
 
-    :param catchment: str (catchment name) or int (catchment ID)
-    :param catchment_names: list with the catchment names
-    :return: str (catchement name)
+    Args:
+        catchment (str or int): Catchment name or ID
+        catchment_names (list): List of catchment names
+
+    Returns:
+        str: Catchment name
     """
     match catchment:
         case str():
@@ -68,10 +74,13 @@ def plot_variable(catchment, observations, what='valid'):
     """
     Plot variable for a catchment
 
-    :param catchment: str (catchment name)
-    :param observations: pandas.DataFrame with the observations
-    :param what: str ('valid' or 'all')
-    :return: plot
+    Args:
+        catchment (str): Catchment name
+        observations (pandas.DataFrame): Dataframe with the observations
+        what (str): 'valid' or 'all'
+
+    Returns:
+        plot
     """
 
     aim = observations[[catchment]]
@@ -104,11 +113,14 @@ def plot_variable_all(observations, catchment_names, database, what='obs'):
     """
     Plot variable for a catchment
 
-    :param observations: pandas.DataFrame with the observations
-    :param catchment_names: list with catchment names
-    :param database: str with database path
-    :param what: str ('obs' or 'pc')
-    :return: plot
+    Args:
+        observations (pandas.DataFrame): Dataframe with the observations
+        catchment_names (list): List of catchment names
+        database (str): Path to the database
+        what (str): 'obs' or 'pc'
+
+    Returns:
+        plot
     """
 
     databasename = database.split('/')[-1]

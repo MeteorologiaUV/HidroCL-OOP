@@ -11,8 +11,11 @@ def compare_indatabase(*args):
     """
     Function to compare if a variable is in a database.
 
-    :param args: lists of indatabase to compare
-    :return: list
+    Args:
+        args: lists of indatabase to compare
+
+    Returns:
+        list: list with common elements in all lists
     """
     for arg in args:
         if isinstance(arg, list):
@@ -29,13 +32,17 @@ def compare_indatabase(*args):
     return list(reduce((lambda x, y: x & y), indb))
 
 
-def read_product_files(productpath, what="modis", variable = None):
+def read_product_files(productpath, what="modis", variable=None):
     """
     Read remote sensing/modeling product files
 
-    :param productpath: str with product path
-    :param what: str with product type
-    :return: list with file names for asked product
+    Args:
+        productpath: str with product path
+        what: str with product type
+        variable: str with variable name
+
+    Returns:
+        list: list with file names for asked product
     """
     match what:
         case "modis":
@@ -72,9 +79,12 @@ def get_product_ids(product_files, what="modis"):
     """
     Get product IDs from product files
 
-    :param product_files: list with product files
-    :param what: str with product type
-    :return: list with product IDs
+    Args:
+        product_files: list with product files
+        what: str with product type
+
+    Returns:
+        list: list with product IDs
     """
     match what:
         case "modis":
@@ -100,20 +110,25 @@ def check_product_files(product_ids):
     """
     Extract unique product IDs from product files
 
-    :param product_ids:
-    :return: list with unique product IDs
+    Args:
+        product_ids: list with product IDs
+
+    Returns:
+        list: list with unique product IDs
     """
     return list(set(product_ids))
 
 
 def count_scenes_occurrences(all_scenes, product_ids):
     """
-    Count all_scenes in product_ids returning a dictionary
-    with product IDs and number of occurrences
+    Count all_scenes in product_ids returning a dictionary with product IDs and number of occurrences
 
-    :param all_scenes: list with name of all scenes
-    :param product_ids: list with product IDs
-    :return: dictionary with product IDs and number of occurrences
+    Args:
+        all_scenes: list with name of all scenes
+        product_ids: list with product IDs
+
+    Returns:
+        dict: dictionary with product IDs and number of occurrences
     """
     return {value: product_ids.count(value) for value in all_scenes}
 
@@ -122,12 +137,14 @@ def classify_occurrences(scenes_occurrences, what="modis"):
     """
     classify count_scenes based on occurrences
 
-    :param scenes_occurrences: dict with product occurrences
-    :param what: str with product type
-    :return:
-       - list - overpopulated scenes
-       - list - complete scenes
-       - list - incomplete scenes
+    Args:
+        scenes_occurrences: dict with product occurrences
+        what: str with product type
+
+    Returns:
+        list: list with overpopulated scenes
+        list: list with complete scenes
+        list: list with incomplete scenes
     """
 
     overpopulated_scenes = []
@@ -164,10 +181,13 @@ def get_scenes_out_of_db(complete_scenes, common_elements, what='modis'):
     """
     Get scenes out of database
 
-    :param complete_scenes: list with complete scenes
-    :param common_elements: list with common elements
-    :param what: str with product name
-    :return: list with scenes out of database
+    Args:
+        complete_scenes: list with complete scenes
+        common_elements: list with common elements
+        what: str with product name
+
+    Returns:
+        list: list with scenes out of database
     """
 
     match what:
@@ -226,9 +246,12 @@ def get_scenes_path(product_files, productpath):
     """
     Get scenes path from product files
 
-    :param product_files: list with product files
-    :param productpath: str with product path
-    :return: list with scenes path
+    Args:
+        product_files: list with product files
+        productpath: str with product path
+
+    Returns:
+        list: list with scenes path
     """
     return [os.path.join(productpath, value) for value in product_files]
 
@@ -237,8 +260,11 @@ def check_instance(*args):
     """
     Check if arguments are instances of HidroCLVariable
 
-    :param args: list with arguments
-    :return: list with arguments
+    Args:
+        *args: list with arguments
+
+    Returns:
+        list: list with arguments
     """
     for arg in args:
         if not isinstance(arg, HidroCLVariable):

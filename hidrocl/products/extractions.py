@@ -90,7 +90,7 @@ def load_era5(file, var, reducer='mean'):
         da = xarray.open_dataset(file, mask_and_scale=True)
         da = da[var]
         match var:
-            case ('e'|'pev'|'swvl1'|'swvl2'|'swvl3'|'swvl4'):
+            case ('e' | 'pev' | 'swvl1' | 'swvl2' | 'swvl3' | 'swvl4'):
                 return da.sel(time=da.time.values[-1])
         match reducer:
             case 'mean':
@@ -297,12 +297,13 @@ def min_datasets(dataset_list):
     template.values = min_values
     return template
 
-def len_event(dataset, limit = 1):
+
+def len_event(dataset, limit=1):
     """
     Function to get the length of the precipitation event
 
     Args:
-        dataset_list (list): list of xarray datasets
+        dataset (list): list of xarray datasets
         limit (int): limit to consider precipitation event
 
     Returns:
@@ -313,7 +314,7 @@ def len_event(dataset, limit = 1):
     return template
 
 
-def len_era5(dataset, limit = 1):
+def len_era5(dataset, limit=1):
     """
     Function to get the length of the precipitation event
     Args:
@@ -344,7 +345,7 @@ def mosaic_raster(raster_list, layer):
 
     for raster in raster_list:
         with rioxr.open_rasterio(raster, masked=True) as src:
-            #raster_single.append(getattr(src, layer))
+            # raster_single.append(getattr(src, layer))
             raster_single.append(src[layer])
 
     raster_mosaic = merge_arrays(raster_single)
@@ -548,7 +549,7 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
             try:
                 days = kwargs.get("days")
                 mos_list = []
-                for i in range(0,5):
+                for i in range(0, 5):
                     if i in days:
                         dataset = load_gfs(selected_files[0], kwargs.get("layer"), day=i)
                         if kwargs.get("aggregation") == "sum":
@@ -628,7 +629,7 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
                         if agg == "len":
                             try:
                                 file = selected_files[0]
-                                mos = len_era5(file, limit = kwargs.get("prec_threshold"))
+                                mos = len_era5(file, limit=kwargs.get("prec_threshold"))
                                 mos = mos * 10
                             except (OSError, ValueError):
                                 return print(f"Error in scene {scene}")
@@ -754,7 +755,6 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
                              temporal_raster,
                              result_file])
 
-
             days = kwargs.get("days")
 
             if 0 in days:
@@ -799,6 +799,6 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
     currenttime = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
     print(f"Time elapsed for {scene}: {str(round(end - start))} seconds")
     write_log(log_file, scene, currenttime, time_dif, kwargs.get("database"))
-    #os.remove(temporal_raster)
-    #os.remove(result_file)
+    os.remove(temporal_raster)
+    os.remove(result_file)
     gc.collect()

@@ -1839,9 +1839,9 @@ class Pdirnow:
         product_ids (list): List of product ids. Each product id is str with common tag by date \n
         all_scenes (list): List of all scenes (no matter the product id here) \n
         scenes_occurrences (list): List of scenes occurrences for each product id \n
-        overpopulated_scenes (list): List of overpopulated scenes (more than 1 scenes for modis) \n
-        complete_scenes (list): List of complete scenes (1 scenes for modis) \n
-        incomplete_scenes (list): List of incomplete scenes (less than 1 scenes for modis) \n
+        overpopulated_scenes (list): List of overpopulated scenes (more than 1 scene for modis) \n
+        complete_scenes (list): List of complete scenes (1 scene for modis) \n
+        incomplete_scenes (list): List of incomplete scenes (less than 1 scene for modis) \n
         scenes_to_process (list): List of scenes to process (complete scenes no processed) \n
     """
 
@@ -2694,9 +2694,9 @@ class Era5ppmax:
         product_ids (list): List of product ids. Each product id is str with common tag by date \n
         all_scenes (list): List of all scenes (no matter the product id here) \n
         scenes_occurrences (list): List of scenes occurrences for each product id \n
-        overpopulated_scenes (list): List of overpopulated scenes (more than 1 scenes for era5) \n
-        complete_scenes (list): List of complete scenes (1 scenes for era5) \n
-        incomplete_scenes (list): List of incomplete scenes (less than 1 scenes for era5) \n
+        overpopulated_scenes (list): List of overpopulated scenes (more than 1 scene for era5) \n
+        complete_scenes (list): List of complete scenes (1 scene for era5) \n
+        incomplete_scenes (list): List of incomplete scenes (less than 1 scene for era5) \n
         scenes_to_process (list): List of scenes to process (complete scenes no processed) \n
     """
 
@@ -2865,9 +2865,9 @@ class Era5pplen:
         product_ids (list): List of product ids. Each product id is str with common tag by date \n
         all_scenes (list): List of all scenes (no matter the product id here) \n
         scenes_occurrences (list): List of scenes occurrences for each product id \n
-        overpopulated_scenes (list): List of overpopulated scenes (more than 1 scenes for era5) \n
-        complete_scenes (list): List of complete scenes (1 scenes for era5) \n
-        incomplete_scenes (list): List of incomplete scenes (less than 1 scenes for era5) \n
+        overpopulated_scenes (list): List of overpopulated scenes (more than 1 scene for era5) \n
+        complete_scenes (list): List of complete scenes (1 scene for era5) \n
+        incomplete_scenes (list): List of incomplete scenes (less than 1 scene for era5) \n
         scenes_to_process (list): List of scenes to process (complete scenes no processed) \n
     """
 
@@ -3037,9 +3037,9 @@ class Era5_pressure:
         product_ids (list): List of product ids. Each product id is str with common tag by date \n
         all_scenes (list): List of all scenes (no matter the product id here) \n
         scenes_occurrences (list): List of scenes occurrences for each product id \n
-        overpopulated_scenes (list): List of overpopulated scenes (more than 1 scenes for era5) \n
-        complete_scenes (list): List of complete scenes (1 scenes for era5) \n
-        incomplete_scenes (list): List of incomplete scenes (less than 1 scenes for era5) \n
+        overpopulated_scenes (list): List of overpopulated scenes (more than 1 scene for era5) \n
+        complete_scenes (list): List of complete scenes (1 scene for era5) \n
+        incomplete_scenes (list): List of incomplete scenes (less than 1 scene for era5) \n
         scenes_to_process (list): List of scenes to process (complete scenes no processed) \n
     """
 
@@ -3206,9 +3206,9 @@ class Era5_rh:
         product_ids (list): List of product ids. Each product id is str with common tag by date \n
         all_scenes (list): List of all scenes (no matter the product id here) \n
         scenes_occurrences (list): List of scenes occurrences for each product id \n
-        overpopulated_scenes (list): List of overpopulated scenes (more than 1 scenes for era5) \n
-        complete_scenes (list): List of complete scenes (1 scenes for era5) \n
-        incomplete_scenes (list): List of incomplete scenes (less than 1 scenes for era5) \n
+        overpopulated_scenes (list): List of overpopulated scenes (more than 1 scene for era5) \n
+        complete_scenes (list): List of complete scenes (1 scene for era5) \n
+        incomplete_scenes (list): List of incomplete scenes (less than 1 scene for era5) \n
         scenes_to_process (list): List of scenes to process (complete scenes no processed) \n
     """
 
@@ -3381,9 +3381,9 @@ class Gfs:
         product_ids (list): List of product ids. Each product id is str with common tag by date \n
         all_scenes (list): List of all scenes (no matter the product id here) \n
         scenes_occurrences (list): List of scenes occurrences for each product id \n
-        overpopulated_scenes (list): List of overpopulated scenes (more than 1 scenes for era5) \n
-        complete_scenes (list): List of complete scenes (1 scenes for era5) \n
-        incomplete_scenes (list): List of incomplete scenes (less than 1 scenes for era5) \n
+        overpopulated_scenes (list): List of overpopulated scenes (more than 1 scene for era5) \n
+        complete_scenes (list): List of complete scenes (1 scene for era5) \n
+        incomplete_scenes (list): List of incomplete scenes (less than 1 scene for era5) \n
         scenes_to_process (list): List of scenes to process (complete scenes no processed) \n
     """
 
