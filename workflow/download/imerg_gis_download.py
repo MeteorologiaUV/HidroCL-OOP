@@ -1,6 +1,8 @@
+
 import os
 import hidrocl
 import pandas as pd
+from pathlib import Path
 import hidrocl.paths as hcl
 
 fpath = hcl.imerggis_path
@@ -18,13 +20,16 @@ for date in period:
     except:
         continue
 
-    downloaded_files = os.listdir(fpath)
-
-    files = [val for val in files if not val.split('/')[-1] in downloaded_files]
-
     for file in files:
-        try:
-            hidrocl.download.download_imerg(file, fpath, 'hidrocl@meteo.uv.cl', 'hidrocl@meteo.uv.cl', timeout=120)
-        except:
-            print('Error downloading file: ', file)
-            continue
+
+        year = file.split('/')[-1].split('.')[4][:4]
+        ffile = Path(os.path.join(fpath, year, file.split('/')[-1]))
+
+        if ffile.is_file():
+            print('already downloaded')
+        else:
+            try:
+                hidrocl.download.download_imerg(file, fpath, 'hidrocl@meteo.uv.cl', 'hidrocl@meteo.uv.cl', timeout=120)
+            except:
+                print('Error downloading file: ', file)
+                continue
