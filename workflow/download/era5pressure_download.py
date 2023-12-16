@@ -4,9 +4,11 @@
 import os
 import hidrocl
 import pandas as pd
+from pathlib import Path
 import hidrocl.paths as hcl
 
-files = os.listdir(hcl.era5_pressure_levels_hourly_path)
+product_path = hcl.era5_pressure_levels_hourly_path
+files = os.listdir(product_path)
 
 start = '2022-01-01'
 end = '2024-01-01'
@@ -22,7 +24,9 @@ for i in p:
     day = int(i.strftime('%d'))
 
     fname = f'era5-pressure_{year:04d}{month:02d}{day:02d}.nc'
-    if fname in files:
+    file = Path(os.path.join(product_path, f'{year:04d}', fname))
+
+    if file.is_file():
         print('already downloaded')
     else:
         try:
@@ -30,6 +34,6 @@ for i in p:
             hidrocl.download.download_era5pressure(year=year,
                                                    month=month,
                                                    day=day,
-                                                   path=hcl.era5_pressure_levels_hourly_path)
+                                                   path=product_path)
         except Exception:
             print('day out of range')
