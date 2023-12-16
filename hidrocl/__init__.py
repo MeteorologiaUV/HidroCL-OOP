@@ -3,6 +3,7 @@ from __future__ import absolute_import
 from .__version__ import __version__
 from .__conf__ import *
 import importlib
+from tempfile import TemporaryDirectory
 
 
 __title__ = "hidrocl"
@@ -49,3 +50,23 @@ def set_project_path(path):
     project_path = path
     reload_paths()
     return None
+
+def get_today_date():
+    """
+    Returns today's date
+
+    Returns:
+        str: today's date
+    """
+    from datetime import datetime
+    return datetime.today()
+
+
+def temporal_directory():
+    """
+    Returns the temporal directory
+
+    Returns:
+        str: temporal directory
+    """
+    return TemporaryDirectory()
