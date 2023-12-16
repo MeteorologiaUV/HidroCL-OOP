@@ -20,8 +20,7 @@ setup(
         'xarray>=0.20.1',
         'requests>=2.28.1',
         'setuptools>=63.4.1',
-
-
+        'wget>=3.2',
     ],
     python_requires='>=3.10',
 )

@@ -1,6 +1,11 @@
 # coding=utf-8
 
 import os
+import wget
+import gzip
+import time
+import shutil
+import ftplib
 import cdsapi
 import tarfile
 import logging
@@ -529,3 +534,66 @@ def earthdata_download(what, product_path, start, end):
                                             local_path=product_path)
 
     print('Downloaded finished')
+
+def download_pdirnow(start, end, product_path, check_ppath = False):
+    """
+    Download PDIRNow data from CHRS FTP server.
+
+    Args:
+        start: start date in YYYY-MM-DD format
+        end: end date in YYYY-MM-DD format
+        product_path: path to the folder where the files will be downloaded
+        check_ppath: if True, check the files in product_path and download only the missing ones (default: False).
+
+    Returns:
+        None
+    """
+
+    start = pd.to_datetime(start)
+    end = pd.to_datetime(end)
+
+    ftp_server = 'persiann.eng.uci.edu'
+    ftp_path = 'CHRSdata/PDIRNow/PDIRNowdaily'
+
+    while True:
+        try:
+            ftp = ftplib.FTP(ftp_server)
+            ftp.login()
+            ftp.cwd(ftp_path)
+            break
+        except:
+            print('FTP connection failed. Trying again in 5 seconds...')
+            time.sleep(5)
+            continue
+
+    dir_list = []
+    ftp.dir(dir_list.append)
+    files_list = [value.split(' ')[-1] for value in dir_list if 'bin' in value]
+
+    dates = [val.split('1d')[1].split('.')[0] for val in files_list]
+    dates = [pd.to_datetime(val, format='%y%m%d') for val in dates]
+    files_list = [files_list[i] for i in range(len(files_list)) if dates[i] >= start and dates[i] <= end]
+
+    if check_ppath:
+        files_list = [value for value in files_list if value.split('.gz')[0] not in os.listdir(product_path)]
+
+    while True:
+        try:
+            for file_name in files_list:
+                print(f'Downloading {file_name}')
+                wget.download(f'ftp://{ftp_server}/{ftp_path}/{file_name}', out=product_path)
+                print(f'Unzipping {file_name}')
+                with gzip.open(f'{product_path}/{file_name}', 'rb') as f_in:
+                    with open(f'{product_path}/{file_name.split(".gz")[0]}', 'wb') as f_out:
+                        shutil.copyfileobj(f_in, f_out)
+                os.remove(f'{product_path}/{file_name}')
+            break
+        except:
+            print('FTP connection failed. Trying again in 5 seconds...')
+            ftp.close()
+            time.sleep(5)
+            ftp = ftplib.FTP(ftp_server)
+            ftp.login()
+            ftp.cwd(ftp_path)
+            continue
+    ftp.close()
