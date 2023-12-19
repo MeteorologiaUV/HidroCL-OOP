@@ -127,6 +127,11 @@ def load_era5acc(file, var, reducer='max'):
     with t.HiddenPrints():
         da = xarray.open_dataset(file, mask_and_scale=True)
         da = da[var]
+        # check if "expver" is in the file
+        if 'expver' in da.coords:
+            da = da.sel(expver=1)
+            # drop "expver" coordinate
+            da = da.drop('expver')
         # aggregate to 3-hourly
         da = da.resample(time='3H')
         match reducer:
