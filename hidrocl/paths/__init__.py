@@ -1,25 +1,26 @@
 import os
-from .. import project_path
+from .. import project_path, observed_products_path, forecasted_products_path, processing_path
 
-mcd12q1_path = os.path.join(project_path, 'observed/MCD12Q1/')  # lulc
-mcd15a2h_path = os.path.join(project_path, 'observed/MCD15A2H/')  # lai/fpar
-mcd43a3_path = os.path.join(project_path, 'observed/MCD43A3/')  # albedo
-mod10a2_path = os.path.join(project_path, 'observed/MOD10A2/')  # snow
-mod13q1_path = os.path.join(project_path, 'observed/MOD13Q1/')  # vegetation
-mod16a2_path = os.path.join(project_path, 'observed/MOD16A2/')  # et
-# imerghhl_path = os.path.join(nas_path, 'observed/GPM_3IMERGHHL/')  # pp + other
-imerggis_path = os.path.join(project_path, 'observed/IMERG_GIS')  # pp
-persiann = os.path.join(project_path, 'observed/PERSIANN/')  # pp
-gldas_noah025_3h_path = os.path.join(project_path, 'observed/GLDAS_NOAH025_3H/')  # land data
-era5_land_hourly_path = os.path.join(project_path, 'observed/ERA5_LAND_HOURLY/')  # era5 land data
-era5_hourly_path = os.path.join(project_path, 'observed/ERA5_HOURLY/')  # era5 data
-era5_pressure_levels_hourly_path = os.path.join(project_path, 'observed/ERA5_PRESSURE_LEVELS_HOURLY/')  # era5 pressure levels data
-era5_relative_humidity_path = os.path.join(project_path, 'observed/ERA5_RH/')  # era5 pressure levels data
-satellite_soil_moisture = os.path.join(project_path, 'observed/SATELLITE_SOIL_MOISTURE/')  # satellite soil moisture
-pdirnow = os.path.join(project_path, 'observed/PDIRNOW/')  # pdirnow
+
+mcd12q1_path = os.path.join(processing_path, observed_products_path, 'MCD12Q1/')  # lulc
+mcd15a2h_path = os.path.join(processing_path, observed_products_path, 'MCD15A2H/')  # lai/fpar
+mcd43a3_path = os.path.join(processing_path, observed_products_path, 'MCD43A3/')  # albedo
+mod10a2_path = os.path.join(processing_path, observed_products_path, 'MOD10A2/')  # snow
+mod13q1_path = os.path.join(processing_path, observed_products_path, 'MOD13Q1/')  # vegetation
+mod16a2_path = os.path.join(processing_path, observed_products_path, 'MOD16A2/')  # et
+# imerghhl_path = os.path.join(processing_path, observed_products_path, 'GPM_3IMERGHHL/')  # pp + other
+imerggis_path = os.path.join(processing_path, observed_products_path, 'IMERG_GIS')  # pp
+persiann = os.path.join(processing_path, observed_products_path, 'PERSIANN/')  # pp
+gldas_noah025_3h_path = os.path.join(processing_path, observed_products_path, 'GLDAS_NOAH025_3H/')  # land data
+era5_land_hourly_path = os.path.join(processing_path, observed_products_path, 'ERA5_LAND_HOURLY/')  # era5 land data
+era5_hourly_path = os.path.join(processing_path, observed_products_path, 'ERA5_HOURLY/')  # era5 data
+era5_pressure_levels_hourly_path = os.path.join(processing_path, observed_products_path, 'ERA5_PRESSURE_LEVELS_HOURLY/')  # era5 pressure levels data
+era5_relative_humidity_path = os.path.join(processing_path, observed_products_path, 'ERA5_RH/')  # era5 pressure levels data
+satellite_soil_moisture = os.path.join(processing_path, observed_products_path, 'SATELLITE_SOIL_MOISTURE/')  # satellite soil moisture
+pdirnow = os.path.join(processing_path, observed_products_path, 'PDIRNOW/')  # pdirnow
 
 # forecasted
-gfs = os.path.join(project_path, 'forecasted')  # only forecasted variable
+gfs = os.path.join(processing_path, forecasted_products_path)  # only forecasted variable
 
 # path to files
 hidrocl_sinusoidal = os.path.join(project_path,
@@ -38,9 +39,6 @@ hidrocl_agr_sinu = os.path.join(project_path, 'base/boundaries/Agr_ModisSinu.shp
 
 # new variables
 pp_o_pdir_pp_mean_b_none_d1_p0d = os.path.join(project_path, 'databases/observed/pp_o_pdir_pp_mean_b_none_d1_p0d.csv')
-
-
-
 
 # observed
 snw_o_modis_sca_cum_n_d8_p0d = os.path.join(project_path, 'databases/observed/snw_o_modis_sca_cum_n_d8_p0d.csv')
@@ -358,9 +356,3 @@ log_tmp_f_gfs_tmp_mean_log = os.path.join(project_path, 'logs/tmp_f_gfs_tmp_mean
 log_tmp_f_gfs_tmp_min_log = os.path.join(project_path, 'logs/tmp_f_gfs_tmp_min_log.txt')
 log_tmp_f_gfs_tmp_max_log = os.path.join(project_path, 'logs/tmp_f_gfs_tmp_max_log.txt')
 log_pp_f_gfs_plen_mean_log = os.path.join(project_path, 'logs/pp_f_gfs_plen_mean_log.txt')
-
-"""
-polys = gpd.read_file(hidrocl_sinusoidal)  # for getting gauge_id values
-catchment_names = polys.gauge_id.tolist()
-del polys
-"""

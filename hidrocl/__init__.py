@@ -3,7 +3,6 @@ from __future__ import absolute_import
 from .__version__ import __version__
 from .__conf__ import *
 import importlib
-from tempfile import TemporaryDirectory
 
 
 __title__ = "hidrocl"
@@ -51,6 +50,72 @@ def set_project_path(path):
     reload_paths()
     return None
 
+
+def set_processing_path(path):
+    """
+    Sets the processing path
+
+    Args:
+        path (str): path to the processing
+
+    Returns:
+        None
+    """
+    global processing_path
+    processing_path = path
+    reload_paths()
+    return None
+def set_observed_products_path(path):
+    """
+    Sets the observed products path
+
+    Args:
+        path (str): path to the observed products
+
+    Returns:
+        None
+    """
+    global observed_products_path
+    observed_products_path = path
+    reload_paths()
+    return None
+
+
+def set_forecasted_products_path(path):
+    """
+    Sets the forecasted products path
+
+    Args:
+        path (str): path to the forecasted products
+
+    Returns:
+        None
+    """
+    global forecasted_products_path
+    forecasted_products_path = path
+    reload_paths()
+    return None
+
+
+def prepare_path(path):
+    """
+    Check if the path exists and if not, creates it
+    Args:
+        path (str): path to the folder
+
+    Returns:
+        print: path checked or created
+    """
+
+    import os
+    if not os.path.exists(path):
+        os.makedirs(path)
+        print(f'Path {path} created')
+    else:
+        print(f'Path {path} exists')
+    return None
+
+
 def get_today_date():
     """
     Returns today's date
@@ -69,4 +134,5 @@ def temporal_directory():
     Returns:
         str: temporal directory
     """
+    from tempfile import TemporaryDirectory
     return TemporaryDirectory()
