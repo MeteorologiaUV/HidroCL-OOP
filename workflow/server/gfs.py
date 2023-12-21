@@ -287,9 +287,6 @@ mins.append(min(lastdates))
 
 start = min(mins)
 
-print(start)
-print(today)
-
 if start == today:
     print('Database is up to date')
     sys.exit(0)
@@ -309,8 +306,6 @@ Download data
 urls = hidrocl.download.list_gfs()
 
 available_dates = [pd.to_datetime(val.split('/')[-2].split('gfs')[-1], format="%Y%m%d") for val in urls]
-
-print(available_dates)
 
 """
 Exit code=2 if today's data is not available
