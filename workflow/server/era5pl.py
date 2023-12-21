@@ -7,12 +7,13 @@ import pandas as pd
 
 import hidrocl
 import hidrocl.paths as hcl
+from config import project_path
 
 """
 Set the project path and the processing path
 """
 print('Setting paths')
-ppath = '/Users/aldotapia/hidrocl_test'
+ppath = project_path
 
 today = hidrocl.get_today_date()
 
@@ -40,7 +41,7 @@ Get last date of each database
 """
 print('Getting last dates')
 
-start = pd.to_datetime(gh.observations.index, format='%Y-%j').sort_values().max()
+start = pd.to_datetime(gh.observations.index, format='%Y-%m-%d').sort_values().max()
 start = start + pd.Timedelta(days=1)
 
 end = today
@@ -115,5 +116,9 @@ era5 = hidrocl.Era5_pressure(z=gh,
                              vector_path=hcl.hidrocl_wgs84)
 
 era5.run_extraction()
+
+if 'tempdir' in locals():
+    if tempdir.name == hidrocl.processing_path:
+        shutil.rmtree(product_path)
 
 print('Done')

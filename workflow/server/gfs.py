@@ -1,16 +1,15 @@
-import os
-import glob
 import shutil
+import pandas as pd
+
 import hidrocl
 import hidrocl.paths as hcl
-import pandas as pd
-from pathlib import Path
+from config import project_path
 
 """
 Set the project path and the processing path
 """
 print('Setting paths')
-ppath = '/Users/aldotapia/hidrocl_test'
+ppath = project_path
 
 today = hidrocl.get_today_date()
 
@@ -51,11 +50,11 @@ gfs_d4 = hidrocl.HidroCLVariable('test gfs día 4',
                                  hcl.atm_f_gfs_gh_mean_b_none_d1_p4d,
                                  hcl.atm_f_gfs_gh_mean_pc_p4d)
 
-lastgfs_d0 = pd.to_datetime(gfs_d0.observations.index, format='%Y-%j').sort_values().max()
-lastgfs_d1 = pd.to_datetime(gfs_d1.observations.index, format='%Y-%j').sort_values().max()
-lastgfs_d2 = pd.to_datetime(gfs_d2.observations.index, format='%Y-%j').sort_values().max()
-lastgfs_d3 = pd.to_datetime(gfs_d3.observations.index, format='%Y-%j').sort_values().max()
-lastgfs_d4 = pd.to_datetime(gfs_d4.observations.index, format='%Y-%j').sort_values().max()
+lastgfs_d0 = pd.to_datetime(gfs_d0.observations.index, format='%Y-%m-%d').sort_values().max()
+lastgfs_d1 = pd.to_datetime(gfs_d1.observations.index, format='%Y-%m-%d').sort_values().max()
+lastgfs_d2 = pd.to_datetime(gfs_d2.observations.index, format='%Y-%m-%d').sort_values().max()
+lastgfs_d3 = pd.to_datetime(gfs_d3.observations.index, format='%Y-%m-%d').sort_values().max()
+lastgfs_d4 = pd.to_datetime(gfs_d4.observations.index, format='%Y-%m-%d').sort_values().max()
 
 lastdates = [lastgfs_d0, lastgfs_d1, lastgfs_d2, lastgfs_d3, lastgfs_d4]
 mins.append(min(lastdates))
@@ -76,11 +75,11 @@ gfs_d4 = hidrocl.HidroCLVariable('test gfs día 4',
                                  hcl.pp_f_gfs_plen_mean_b_none_d1_p4d,
                                  hcl.pp_f_gfs_plen_mean_pc_p4d)
 
-lastgfs_d0 = pd.to_datetime(gfs_d0.observations.index, format='%Y-%j').sort_values().max()
-lastgfs_d1 = pd.to_datetime(gfs_d1.observations.index, format='%Y-%j').sort_values().max()
-lastgfs_d2 = pd.to_datetime(gfs_d2.observations.index, format='%Y-%j').sort_values().max()
-lastgfs_d3 = pd.to_datetime(gfs_d3.observations.index, format='%Y-%j').sort_values().max()
-lastgfs_d4 = pd.to_datetime(gfs_d4.observations.index, format='%Y-%j').sort_values().max()
+lastgfs_d0 = pd.to_datetime(gfs_d0.observations.index, format='%Y-%m-%d').sort_values().max()
+lastgfs_d1 = pd.to_datetime(gfs_d1.observations.index, format='%Y-%m-%d').sort_values().max()
+lastgfs_d2 = pd.to_datetime(gfs_d2.observations.index, format='%Y-%m-%d').sort_values().max()
+lastgfs_d3 = pd.to_datetime(gfs_d3.observations.index, format='%Y-%m-%d').sort_values().max()
+lastgfs_d4 = pd.to_datetime(gfs_d4.observations.index, format='%Y-%m-%d').sort_values().max()
 
 lastdates = [lastgfs_d0, lastgfs_d1, lastgfs_d2, lastgfs_d3, lastgfs_d4]
 mins.append(min(lastdates))
@@ -101,11 +100,11 @@ gfs_d4 = hidrocl.HidroCLVariable('test gfs día 4',
                                  hcl.pp_f_gfs_pp_max_b_none_d1_p4d,
                                  hcl.pp_f_gfs_pp_max_pc_p4d)
 
-lastgfs_d0 = pd.to_datetime(gfs_d0.observations.index, format='%Y-%j').sort_values().max()
-lastgfs_d1 = pd.to_datetime(gfs_d1.observations.index, format='%Y-%j').sort_values().max()
-lastgfs_d2 = pd.to_datetime(gfs_d2.observations.index, format='%Y-%j').sort_values().max()
-lastgfs_d3 = pd.to_datetime(gfs_d3.observations.index, format='%Y-%j').sort_values().max()
-lastgfs_d4 = pd.to_datetime(gfs_d4.observations.index, format='%Y-%j').sort_values().max()
+lastgfs_d0 = pd.to_datetime(gfs_d0.observations.index, format='%Y-%m-%d').sort_values().max()
+lastgfs_d1 = pd.to_datetime(gfs_d1.observations.index, format='%Y-%m-%d').sort_values().max()
+lastgfs_d2 = pd.to_datetime(gfs_d2.observations.index, format='%Y-%m-%d').sort_values().max()
+lastgfs_d3 = pd.to_datetime(gfs_d3.observations.index, format='%Y-%m-%d').sort_values().max()
+lastgfs_d4 = pd.to_datetime(gfs_d4.observations.index, format='%Y-%m-%d').sort_values().max()
 
 lastdates = [lastgfs_d0, lastgfs_d1, lastgfs_d2, lastgfs_d3, lastgfs_d4]
 mins.append(min(lastdates))
@@ -126,11 +125,11 @@ gfs_d4 = hidrocl.HidroCLVariable('test gfs día 4',
                                  hcl.pp_f_gfs_pp_mean_b_none_d1_p4d,
                                  hcl.pp_f_gfs_pp_mean_pc_p4d)
 
-lastgfs_d0 = pd.to_datetime(gfs_d0.observations.index, format='%Y-%j').sort_values().max()
-lastgfs_d1 = pd.to_datetime(gfs_d1.observations.index, format='%Y-%j').sort_values().max()
-lastgfs_d2 = pd.to_datetime(gfs_d2.observations.index, format='%Y-%j').sort_values().max()
-lastgfs_d3 = pd.to_datetime(gfs_d3.observations.index, format='%Y-%j').sort_values().max()
-lastgfs_d4 = pd.to_datetime(gfs_d4.observations.index, format='%Y-%j').sort_values().max()
+lastgfs_d0 = pd.to_datetime(gfs_d0.observations.index, format='%Y-%m-%d').sort_values().max()
+lastgfs_d1 = pd.to_datetime(gfs_d1.observations.index, format='%Y-%m-%d').sort_values().max()
+lastgfs_d2 = pd.to_datetime(gfs_d2.observations.index, format='%Y-%m-%d').sort_values().max()
+lastgfs_d3 = pd.to_datetime(gfs_d3.observations.index, format='%Y-%m-%d').sort_values().max()
+lastgfs_d4 = pd.to_datetime(gfs_d4.observations.index, format='%Y-%m-%d').sort_values().max()
 
 lastdates = [lastgfs_d0, lastgfs_d1, lastgfs_d2, lastgfs_d3, lastgfs_d4]
 mins.append(min(lastdates))
@@ -151,11 +150,11 @@ gfs_d4 = hidrocl.HidroCLVariable('test gfs día 4',
                                  hcl.awc_f_gfs_rh_mean_b_none_d1_p4d,
                                  hcl.awc_f_gfs_rh_mean_pc_p4d)
 
-lastgfs_d0 = pd.to_datetime(gfs_d0.observations.index, format='%Y-%j').sort_values().max()
-lastgfs_d1 = pd.to_datetime(gfs_d1.observations.index, format='%Y-%j').sort_values().max()
-lastgfs_d2 = pd.to_datetime(gfs_d2.observations.index, format='%Y-%j').sort_values().max()
-lastgfs_d3 = pd.to_datetime(gfs_d3.observations.index, format='%Y-%j').sort_values().max()
-lastgfs_d4 = pd.to_datetime(gfs_d4.observations.index, format='%Y-%j').sort_values().max()
+lastgfs_d0 = pd.to_datetime(gfs_d0.observations.index, format='%Y-%m-%d').sort_values().max()
+lastgfs_d1 = pd.to_datetime(gfs_d1.observations.index, format='%Y-%m-%d').sort_values().max()
+lastgfs_d2 = pd.to_datetime(gfs_d2.observations.index, format='%Y-%m-%d').sort_values().max()
+lastgfs_d3 = pd.to_datetime(gfs_d3.observations.index, format='%Y-%m-%d').sort_values().max()
+lastgfs_d4 = pd.to_datetime(gfs_d4.observations.index, format='%Y-%m-%d').sort_values().max()
 
 lastdates = [lastgfs_d0, lastgfs_d1, lastgfs_d2, lastgfs_d3, lastgfs_d4]
 mins.append(min(lastdates))
@@ -176,11 +175,11 @@ gfs_d4 = hidrocl.HidroCLVariable('test gfs día 4',
                                  hcl.tmp_f_gfs_tmp_max_b_none_d1_p4d,
                                  hcl.tmp_f_gfs_tmp_max_pc_p4d)
 
-lastgfs_d0 = pd.to_datetime(gfs_d0.observations.index, format='%Y-%j').sort_values().max()
-lastgfs_d1 = pd.to_datetime(gfs_d1.observations.index, format='%Y-%j').sort_values().max()
-lastgfs_d2 = pd.to_datetime(gfs_d2.observations.index, format='%Y-%j').sort_values().max()
-lastgfs_d3 = pd.to_datetime(gfs_d3.observations.index, format='%Y-%j').sort_values().max()
-lastgfs_d4 = pd.to_datetime(gfs_d4.observations.index, format='%Y-%j').sort_values().max()
+lastgfs_d0 = pd.to_datetime(gfs_d0.observations.index, format='%Y-%m-%d').sort_values().max()
+lastgfs_d1 = pd.to_datetime(gfs_d1.observations.index, format='%Y-%m-%d').sort_values().max()
+lastgfs_d2 = pd.to_datetime(gfs_d2.observations.index, format='%Y-%m-%d').sort_values().max()
+lastgfs_d3 = pd.to_datetime(gfs_d3.observations.index, format='%Y-%m-%d').sort_values().max()
+lastgfs_d4 = pd.to_datetime(gfs_d4.observations.index, format='%Y-%m-%d').sort_values().max()
 
 lastdates = [lastgfs_d0, lastgfs_d1, lastgfs_d2, lastgfs_d3, lastgfs_d4]
 mins.append(min(lastdates))
@@ -201,11 +200,11 @@ gfs_d4 = hidrocl.HidroCLVariable('test gfs día 4',
                                  hcl.tmp_f_gfs_tmp_mean_b_none_d1_p4d,
                                  hcl.tmp_f_gfs_tmp_mean_pc_p4d)
 
-lastgfs_d0 = pd.to_datetime(gfs_d0.observations.index, format='%Y-%j').sort_values().max()
-lastgfs_d1 = pd.to_datetime(gfs_d1.observations.index, format='%Y-%j').sort_values().max()
-lastgfs_d2 = pd.to_datetime(gfs_d2.observations.index, format='%Y-%j').sort_values().max()
-lastgfs_d3 = pd.to_datetime(gfs_d3.observations.index, format='%Y-%j').sort_values().max()
-lastgfs_d4 = pd.to_datetime(gfs_d4.observations.index, format='%Y-%j').sort_values().max()
+lastgfs_d0 = pd.to_datetime(gfs_d0.observations.index, format='%Y-%m-%d').sort_values().max()
+lastgfs_d1 = pd.to_datetime(gfs_d1.observations.index, format='%Y-%m-%d').sort_values().max()
+lastgfs_d2 = pd.to_datetime(gfs_d2.observations.index, format='%Y-%m-%d').sort_values().max()
+lastgfs_d3 = pd.to_datetime(gfs_d3.observations.index, format='%Y-%m-%d').sort_values().max()
+lastgfs_d4 = pd.to_datetime(gfs_d4.observations.index, format='%Y-%m-%d').sort_values().max()
 
 lastdates = [lastgfs_d0, lastgfs_d1, lastgfs_d2, lastgfs_d3, lastgfs_d4]
 mins.append(min(lastdates))
@@ -226,11 +225,11 @@ gfs_d4 = hidrocl.HidroCLVariable('test gfs día 4',
                                  hcl.tmp_f_gfs_tmp_min_b_none_d1_p4d,
                                  hcl.tmp_f_gfs_tmp_min_pc_p4d)
 
-lastgfs_d0 = pd.to_datetime(gfs_d0.observations.index, format='%Y-%j').sort_values().max()
-lastgfs_d1 = pd.to_datetime(gfs_d1.observations.index, format='%Y-%j').sort_values().max()
-lastgfs_d2 = pd.to_datetime(gfs_d2.observations.index, format='%Y-%j').sort_values().max()
-lastgfs_d3 = pd.to_datetime(gfs_d3.observations.index, format='%Y-%j').sort_values().max()
-lastgfs_d4 = pd.to_datetime(gfs_d4.observations.index, format='%Y-%j').sort_values().max()
+lastgfs_d0 = pd.to_datetime(gfs_d0.observations.index, format='%Y-%m-%d').sort_values().max()
+lastgfs_d1 = pd.to_datetime(gfs_d1.observations.index, format='%Y-%m-%d').sort_values().max()
+lastgfs_d2 = pd.to_datetime(gfs_d2.observations.index, format='%Y-%m-%d').sort_values().max()
+lastgfs_d3 = pd.to_datetime(gfs_d3.observations.index, format='%Y-%m-%d').sort_values().max()
+lastgfs_d4 = pd.to_datetime(gfs_d4.observations.index, format='%Y-%m-%d').sort_values().max()
 
 lastdates = [lastgfs_d0, lastgfs_d1, lastgfs_d2, lastgfs_d3, lastgfs_d4]
 mins.append(min(lastdates))
@@ -251,11 +250,11 @@ gfs_d4 = hidrocl.HidroCLVariable('test gfs día 4',
                                  hcl.atm_f_gfs_uw_mean_b_none_d1_p4d,
                                  hcl.atm_f_gfs_uw_mean_pc_p4d)
 
-lastgfs_d0 = pd.to_datetime(gfs_d0.observations.index, format='%Y-%j').sort_values().max()
-lastgfs_d1 = pd.to_datetime(gfs_d1.observations.index, format='%Y-%j').sort_values().max()
-lastgfs_d2 = pd.to_datetime(gfs_d2.observations.index, format='%Y-%j').sort_values().max()
-lastgfs_d3 = pd.to_datetime(gfs_d3.observations.index, format='%Y-%j').sort_values().max()
-lastgfs_d4 = pd.to_datetime(gfs_d4.observations.index, format='%Y-%j').sort_values().max()
+lastgfs_d0 = pd.to_datetime(gfs_d0.observations.index, format='%Y-%m-%d').sort_values().max()
+lastgfs_d1 = pd.to_datetime(gfs_d1.observations.index, format='%Y-%m-%d').sort_values().max()
+lastgfs_d2 = pd.to_datetime(gfs_d2.observations.index, format='%Y-%m-%d').sort_values().max()
+lastgfs_d3 = pd.to_datetime(gfs_d3.observations.index, format='%Y-%m-%d').sort_values().max()
+lastgfs_d4 = pd.to_datetime(gfs_d4.observations.index, format='%Y-%m-%d').sort_values().max()
 
 lastdates = [lastgfs_d0, lastgfs_d1, lastgfs_d2, lastgfs_d3, lastgfs_d4]
 mins.append(min(lastdates))
@@ -276,11 +275,11 @@ gfs_d4 = hidrocl.HidroCLVariable('test gfs día 4',
                                  hcl.atm_f_gfs_vw_mean_b_none_d1_p4d,
                                  hcl.atm_f_gfs_vw_mean_pc_p4d)
 
-lastgfs_d0 = pd.to_datetime(gfs_d0.observations.index, format='%Y-%j').sort_values().max()
-lastgfs_d1 = pd.to_datetime(gfs_d1.observations.index, format='%Y-%j').sort_values().max()
-lastgfs_d2 = pd.to_datetime(gfs_d2.observations.index, format='%Y-%j').sort_values().max()
-lastgfs_d3 = pd.to_datetime(gfs_d3.observations.index, format='%Y-%j').sort_values().max()
-lastgfs_d4 = pd.to_datetime(gfs_d4.observations.index, format='%Y-%j').sort_values().max()
+lastgfs_d0 = pd.to_datetime(gfs_d0.observations.index, format='%Y-%m-%d').sort_values().max()
+lastgfs_d1 = pd.to_datetime(gfs_d1.observations.index, format='%Y-%m-%d').sort_values().max()
+lastgfs_d2 = pd.to_datetime(gfs_d2.observations.index, format='%Y-%m-%d').sort_values().max()
+lastgfs_d3 = pd.to_datetime(gfs_d3.observations.index, format='%Y-%m-%d').sort_values().max()
+lastgfs_d4 = pd.to_datetime(gfs_d4.observations.index, format='%Y-%m-%d').sort_values().max()
 
 lastdates = [lastgfs_d0, lastgfs_d1, lastgfs_d2, lastgfs_d3, lastgfs_d4]
 mins.append(min(lastdates))
@@ -317,7 +316,8 @@ if max(available_dates) < today:
 
 pdate = [pd.to_datetime(val.strftime('%Y-%m-%d'), format="%Y-%m-%d") for val in p]
 missing_dates = [val for val in pdate if val in available_dates]
-missing_urls = [val for val in urls if pd.to_datetime(val.split('/')[-2].split('gfs')[-1], format="%Y%m%d") in missing_dates]
+missing_urls = [val for val in urls if
+                pd.to_datetime(val.split('/')[-2].split('gfs')[-1], format="%Y%m%d") in missing_dates]
 
 # print missing_urls for reference
 print(missing_urls)
@@ -642,5 +642,9 @@ gfs = hidrocl.products.Gfs(db0=gfs_d0,
                            vectorpath=hcl.hidrocl_wgs84)
 
 gfs.run_extraction()
+
+if 'tempdir' in locals():
+    if tempdir.name == hidrocl.processing_path:
+        shutil.rmtree(product_path)
 
 print('Done')

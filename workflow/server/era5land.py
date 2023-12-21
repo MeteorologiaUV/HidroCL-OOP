@@ -7,12 +7,13 @@ import pandas as pd
 
 import hidrocl
 import hidrocl.paths as hcl
+from config import project_path
 
 """
 Set the project path and the processing path
 """
 print('Setting paths')
-ppath = '/Users/aldotapia/hidrocl_test'
+ppath = project_path
 
 today = hidrocl.get_today_date()
 
@@ -64,13 +65,13 @@ Get last date of each database
 """
 print('Getting last dates')
 
-lasteto = pd.to_datetime(eto.observations.index, format='%Y-%j').sort_values().max()
-lastet = pd.to_datetime(et.observations.index, format='%Y-%j').sort_values().max()
-lastsca = pd.to_datetime(sca.observations.index, format='%Y-%j').sort_values().max()
-lastsna = pd.to_datetime(sna.observations.index, format='%Y-%j').sort_values().max()
-lastsnr = pd.to_datetime(snr.observations.index, format='%Y-%j').sort_values().max()
-lastsnd = pd.to_datetime(snd.observations.index, format='%Y-%j').sort_values().max()
-lastsm = pd.to_datetime(sm.observations.index, format='%Y-%j').sort_values().max()
+lasteto = pd.to_datetime(eto.observations.index, format='%Y-%m-%d').sort_values().max()
+lastet = pd.to_datetime(et.observations.index, format='%Y-%m-%d').sort_values().max()
+lastsca = pd.to_datetime(sca.observations.index, format='%Y-%m-%d').sort_values().max()
+lastsna = pd.to_datetime(sna.observations.index, format='%Y-%m-%d').sort_values().max()
+lastsnr = pd.to_datetime(snr.observations.index, format='%Y-%m-%d').sort_values().max()
+lastsnd = pd.to_datetime(snd.observations.index, format='%Y-%m-%d').sort_values().max()
+lastsm = pd.to_datetime(sm.observations.index, format='%Y-%m-%d').sort_values().max()
 
 lastdates = [lasteto, lastet, lastsca, lastsna, lastsnr, lastsnd, lastsm]
 
@@ -157,5 +158,9 @@ era5 = hidrocl.Era5_land(et=et, pet=eto,
                          vector_path=hcl.hidrocl_wgs84)
 
 era5.run_extraction()
+
+if 'tempdir' in locals():
+    if tempdir.name == hidrocl.processing_path:
+        shutil.rmtree(product_path)
 
 print('Done')

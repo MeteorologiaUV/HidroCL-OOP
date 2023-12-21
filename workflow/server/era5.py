@@ -7,12 +7,13 @@ import pandas as pd
 
 import hidrocl
 import hidrocl.paths as hcl
+from config import project_path
 
 """
 Set the project path and the processing path
 """
 print('Setting paths')
-ppath = '/Users/aldotapia/hidrocl_test'
+ppath = project_path
 
 today = hidrocl.get_today_date()
 
@@ -81,17 +82,17 @@ Get last date of each database
 """
 print('Getting last dates')
 
-lastpp = pd.to_datetime(pp.observations.index, format='%Y-%j').sort_values().max()
-lasttemp = pd.to_datetime(temp.observations.index, format='%Y-%j').sort_values().max()
-lasttempmin = pd.to_datetime(tempmin.observations.index, format='%Y-%j').sort_values().max()
-lasttempmax = pd.to_datetime(tempmax.observations.index, format='%Y-%j').sort_values().max()
-lastdew = pd.to_datetime(dew.observations.index, format='%Y-%j').sort_values().max()
-lastpres = pd.to_datetime(pres.observations.index, format='%Y-%j').sort_values().max()
-lastu = pd.to_datetime(u.observations.index, format='%Y-%j').sort_values().max()
-lastv = pd.to_datetime(v.observations.index, format='%Y-%j').sort_values().max()
-lastpplen = pd.to_datetime(pplen.observations.index, format='%Y-%j').sort_values().max()
-lastmaxpp = pd.to_datetime(maxpp.observations.index, format='%Y-%j').sort_values().max()
-lastrh = pd.to_datetime(rh.observations.index, format='%Y-%j').sort_values().max()
+lastpp = pd.to_datetime(pp.observations.index, format='%Y-%m-%d').sort_values().max()
+lasttemp = pd.to_datetime(temp.observations.index, format='%Y-%m-%d').sort_values().max()
+lasttempmin = pd.to_datetime(tempmin.observations.index, format='%Y-%m-%d').sort_values().max()
+lasttempmax = pd.to_datetime(tempmax.observations.index, format='%Y-%m-%d').sort_values().max()
+lastdew = pd.to_datetime(dew.observations.index, format='%Y-%m-%d').sort_values().max()
+lastpres = pd.to_datetime(pres.observations.index, format='%Y-%m-%d').sort_values().max()
+lastu = pd.to_datetime(u.observations.index, format='%Y-%m-%d').sort_values().max()
+lastv = pd.to_datetime(v.observations.index, format='%Y-%m-%d').sort_values().max()
+lastpplen = pd.to_datetime(pplen.observations.index, format='%Y-%m-%d').sort_values().max()
+lastmaxpp = pd.to_datetime(maxpp.observations.index, format='%Y-%m-%d').sort_values().max()
+lastrh = pd.to_datetime(rh.observations.index, format='%Y-%m-%d').sort_values().max()
 
 lastdates = [lastpp, lasttemp, lasttempmin, lasttempmax, lastdew, lastpres, lastu, lastv, lastpplen, lastmaxpp, lastrh]
 
@@ -205,5 +206,9 @@ era5.run_extraction()
 era5pplen.run_extraction()
 era5maxpp.run_extraction()
 era5rh.run_extraction()
+
+if 'tempdir' in locals():
+    if tempdir.name == hidrocl.processing_path:
+        shutil.rmtree(product_path)
 
 print('Done')
