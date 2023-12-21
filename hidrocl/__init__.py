@@ -118,13 +118,13 @@ def prepare_path(path):
 
 def get_today_date():
     """
-    Returns today's date
+    Returns today's date at 00:00:00
 
     Returns:
         str: today's date
     """
     from datetime import datetime
-    return datetime.today()
+    return datetime.fromisoformat(datetime.today().strftime('%Y-%m-%d') + 'T00:00:00')
 
 
 def temporal_directory():

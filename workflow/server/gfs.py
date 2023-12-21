@@ -1,3 +1,4 @@
+import sys
 import shutil
 import pandas as pd
 
@@ -285,16 +286,18 @@ lastdates = [lastgfs_d0, lastgfs_d1, lastgfs_d2, lastgfs_d3, lastgfs_d4]
 mins.append(min(lastdates))
 
 start = min(mins)
+
+print(start)
+print(today)
+
+if start == today:
+    print('Database is up to date')
+    sys.exit(0)
+
 start = start + pd.Timedelta(days=1)
 
-end = today
-
-if start == end:
-    print('No new data to download')
-    exit(code=0)
-
 start = start.strftime('%Y-%m-%d')
-end = end.strftime('%Y-%m-%d')
+end = today.strftime('%Y-%m-%d')
 
 p = pd.period_range(pd.to_datetime(start, format="%Y-%m-%d"),
                     pd.to_datetime(end, format="%Y-%m-%d"), freq='D')
@@ -307,12 +310,14 @@ urls = hidrocl.download.list_gfs()
 
 available_dates = [pd.to_datetime(val.split('/')[-2].split('gfs')[-1], format="%Y%m%d") for val in urls]
 
+print(available_dates)
+
 """
 Exit code=2 if today's data is not available
 """
 if max(available_dates) < today:
     print('No new data to download')
-    exit(code=2)
+    sys.exit(3)
 
 pdate = [pd.to_datetime(val.strftime('%Y-%m-%d'), format="%Y-%m-%d") for val in p]
 missing_dates = [val for val in pdate if val in available_dates]
