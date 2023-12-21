@@ -348,6 +348,9 @@ def list_gfs():
     """
     List the available GFS 0.5 products in nomads
 
+    Examples:
+        >>> list_gfs()
+
     Returns:
         list: a list of available GFS products or the status code if the request fails
     """
@@ -368,6 +371,10 @@ def list_gfs():
 
 def download_gfs(url, product_path):
     """
+    Download a GFS product from nomads
+
+    Examples:
+        >>> download_gfs('https://nomads.ncep.noaa.gov/dods/gfs_0p50/gfs20200601/gfs_0p50_00z', '/path/to/data')
 
     Args:
         url: url of the product
@@ -440,6 +447,9 @@ def earthdata_download(what, product_path, start, end):
     """
     Download data from earthdata.nasa.gov
 
+    Examples:
+        >>> earthdata_download('reflectance', '/path/to/data', '2019-01-01', '2019-01-31')
+
     Args:
         what: one of the following: reflectance, vegetation, lai, albedo, lulc, et0, snow, precipitation, landdata
         product_path: path to save the downloaded files
@@ -447,6 +457,7 @@ def earthdata_download(what, product_path, start, end):
         end: start date in format YYYY-MM-DD
 
     Returns:
+        None
 
     """
 
@@ -524,6 +535,10 @@ def earthdata_download(what, product_path, start, end):
     results = earthaccess.granule_query().short_name(earthdata_products[what]).\
         bounding_box(-73.73, -55.01, -67.05, -17.63).version(earthdata_version[what]).\
         temporal(start.strftime("%Y-%m-%d"), end.strftime("%Y-%m-%d")).get_all()
+
+    if len(results) == 0:
+        print('No results found')
+        return
 
     results = [value for value in results if any(substring in value.data_links()[0] for substring in grids)]
 
