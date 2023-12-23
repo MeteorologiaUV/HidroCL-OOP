@@ -60,7 +60,7 @@ et_o_modis_eto_cum_b_d8_p0d = os.path.join(project_path, 'databases/observed/et_
 et_o_modis_eta_cum_b_d8_p0d = os.path.join(project_path, 'databases/observed/et_o_modis_eta_cum_b_d8_p0d.csv')
 veg_o_modis_lai_mean_b_d8_p0d = os.path.join(project_path, 'databases/observed/veg_o_modis_lai_mean_b_d8_p0d.csv')
 veg_o_modis_fpar_mean_b_d8_p0d = os.path.join(project_path, 'databases/observed/veg_o_modis_fpar_mean_b_d8_p0d.csv')
-pp_o_imerg_pp_mean_b_d_p0d = os.path.join(project_path, 'databases/observed/pp_o_imerg_pp_mean_b_d_p0d.csv')
+pp_o_imerg_pp_mean_b_d_p0d = os.path.join(project_path, 'databases/observed/pp_o_imerg_pp_mean_b_none_d1_p0d.csv')
 # GLDAS products:
 snw_o_gldas_swe_cum_b_d8_p0d = os.path.join(project_path, 'databases/observed/snw_o_gldas_swe_cum_b_d8_p0d.csv')
 tmp_f_gldas_tmp_mean_b_d_p0d = os.path.join(project_path, 'databases/observed/tmp_f_gldas_tmp_mean_b_d_p0d.csv')
