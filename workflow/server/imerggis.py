@@ -26,7 +26,7 @@ hidrocl.set_processing_path(tempdir.name)
 
 hidrocl.prepare_path(hcl.imerggis_path)
 
-product_path = "/var/folders/t_/cbcq4k9d14l8g47hw5wpkrbw0000gn/T/tmpuhlzuloi/observed/IMERG_GIS/"#hcl.imerggis_path
+product_path = hcl.imerggis_path
 
 """
 Load databases
@@ -120,9 +120,6 @@ imerg = hidrocl.ImergGIS(pp,
                          product_path=product_path,
                          vector_path=hcl.hidrocl_wgs84,
                          pp_log=hcl.log_pp_o_imerg_pp_mean)
-
-print(imerg.scenes_occurrences)
-print(imerg.scenes_to_process)
 
 imerg.run_extraction()
 
