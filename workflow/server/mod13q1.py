@@ -1,8 +1,11 @@
+import os
 import shutil
-import hidrocl
-import hidrocl.paths as hcl
+import sys
+
 import pandas as pd
 
+import hidrocl
+import hidrocl.paths as hcl
 from config import project_path
 
 """
@@ -63,7 +66,7 @@ end = today
 
 if start == end:
     print('No new data to download')
-    exit(code=0)
+    sys.exit(4)
 
 start = start.strftime('%Y-%m-%d')
 end = end.strftime('%Y-%m-%d')
@@ -78,6 +81,12 @@ print('Downloading data')
 
 hidrocl.download.earthdata_download('vegetation', product_path, start, end)
 
+nfiles = len(os.listdir(product_path))
+
+if nfiles == 0:
+    print('No new files to process')
+    sys.exit(2)
+
 """
 Extract data
 """
@@ -90,7 +99,7 @@ mod13 = hidrocl.Mod13q1(ndvi, evi, nbr,
                         evi_log=hcl.log_veg_o_modis_evi_mean,
                         nbr_log=hcl.log_veg_o_int_nbr_mean)
 
-agrndvi = hidrocl.Mod13q1agr(ndvi = agr, product_path=hcl.mod13q1_path,
+agrndvi = hidrocl.Mod13q1agr(ndvi=agr, product_path=hcl.mod13q1_path,
                              vector_path=hcl.hidrocl_agr_sinu,
                              ndvi_log=hcl.log_veg_o_agr_ndvi_mean)
 

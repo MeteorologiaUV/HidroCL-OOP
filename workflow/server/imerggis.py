@@ -1,7 +1,7 @@
 import glob
 import os
-import sys
 import shutil
+import sys
 from pathlib import Path
 
 import pandas as pd
@@ -44,7 +44,7 @@ print('Getting last dates')
 
 if len(pp.observations.index) == 0:
     print('No data in database')
-    sys.exit(4)
+    sys.exit(1)
 
 start = pd.to_datetime(pp.observations.index, format='%Y-%m-%d').sort_values().max()
 start = start + pd.Timedelta(days=1)
@@ -75,7 +75,7 @@ files = [files[i] for i in range(len(files)) if dates[i] >= pd.to_datetime(start
 files = [files[i] for i in range(len(files)) if dates[i] < pd.to_datetime(end, format='%Y-%m-%d')]
 
 if len(files) < 48:
-    print(f'Insufficient data to download. Files: {len(files)})')
+    print(f'Insufficient data to download and process. Files: {len(files)})')
     sys.exit(5)
 
 for file in files:
@@ -87,7 +87,8 @@ for file in files:
         print('already downloaded')
     else:
         try:
-            hidrocl.download.download_imerg(file, product_path, 'hidrocl@meteo.uv.cl', 'hidrocl@meteo.uv.cl', timeout=120)
+            hidrocl.download.download_imerg(file, product_path, 'hidrocl@meteo.uv.cl', 'hidrocl@meteo.uv.cl',
+                                            timeout=120)
         except:
             print('Error downloading file: ', file)
             continue
@@ -98,6 +99,12 @@ Move files to subfolders
 print('Moving files to subfolders')
 
 os.chdir(product_path)
+
+nfiles = len(os.listdir(product_path))
+
+if nfiles == 0:
+    print('No new files to process')
+    sys.exit(2)
 
 for file in glob.glob("*.tif"):
     # get future subfolder from name

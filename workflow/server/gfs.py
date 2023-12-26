@@ -1,5 +1,6 @@
-import sys
 import shutil
+import sys
+
 import pandas as pd
 
 import hidrocl
@@ -289,7 +290,7 @@ start = min(mins)
 
 if start == today:
     print('Database is up to date')
-    sys.exit(0)
+    sys.exit(4)
 
 start = start + pd.Timedelta(days=1)
 

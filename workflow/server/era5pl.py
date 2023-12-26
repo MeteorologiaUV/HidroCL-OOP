@@ -1,6 +1,7 @@
 import glob
 import os
 import shutil
+import sys
 from pathlib import Path
 
 import pandas as pd
@@ -50,7 +51,7 @@ end = end - pd.Timedelta(days=5)
 
 if start == end:
     print('No new data to download')
-    exit(code=0)
+    sys.exit(2)
 
 start = start.strftime('%Y-%m-%d')
 end = end.strftime('%Y-%m-%d')
@@ -92,6 +93,12 @@ print('Moving files to subfolders')
 
 os.chdir(product_path)
 
+nfiles = len(os.listdir(product_path))
+
+if nfiles == 0:
+    print('No new files to process')
+    sys.exit(2)
+
 for file in glob.glob("*.nc"):
     # get future subfolder from name
     folder = file.split("_")[1][:4]
@@ -103,7 +110,6 @@ for file in glob.glob("*.nc"):
     print(f'Done with {file}')
 
 os.chdir(hidrocl.project_path)
-
 
 """
 Extract data

@@ -1,8 +1,11 @@
+import os
 import shutil
-import hidrocl
-import hidrocl.paths as hcl
+import sys
+
 import pandas as pd
 
+import hidrocl
+import hidrocl.paths as hcl
 from config import project_path
 
 """
@@ -53,7 +56,7 @@ end = today
 
 if start == end:
     print('No new data to download')
-    exit(code=0)
+    sys.exit(4)
 
 start = start.strftime('%Y-%m-%d')
 end = end.strftime('%Y-%m-%d')
@@ -67,6 +70,12 @@ Download data
 print('Downloading data')
 
 hidrocl.download.earthdata_download('snow', product_path, start, end)
+
+nfiles = len(os.listdir(product_path))
+
+if nfiles == 0:
+    print('No new files to process')
+    sys.exit(2)
 
 """
 Extract data

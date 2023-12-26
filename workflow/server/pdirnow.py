@@ -1,8 +1,6 @@
-import glob
 import os
-import sys
 import shutil
-from pathlib import Path
+import sys
 
 import pandas as pd
 
@@ -44,7 +42,7 @@ print('Getting last dates')
 
 if len(pp.observations.index) == 0:
     print('No data in database')
-    sys.exit(4)
+    sys.exit(1)
 
 start = pd.to_datetime(pp.observations.index, format='%Y-%m-%d').sort_values().max()
 start = start + pd.Timedelta(days=1)
@@ -64,6 +62,12 @@ Download data
 print('Downloading data')
 
 hidrocl.download.download_pdirnow(start, end, hcl.pdirnow, check_ppath=True)
+
+nfiles = len(os.listdir(product_path))
+
+if nfiles == 0:
+    print('No new files to process')
+    sys.exit(2)
 
 """
 Extract data
