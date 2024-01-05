@@ -1,6 +1,13 @@
 import subprocess
 
 import pandas as pd
+import sys
+
+
+today = pd.Timestamp.today().strftime('%Y%m%d%H%m%s')
+log_folder = 'path/to/extraction_logs'
+
+print('Starting run_all.py at', today)
 
 """
 Codes:
@@ -26,7 +33,9 @@ def run_stuff(file):
     try:
         code = subprocess.call(['python', file])
     except:
-        code = 1
+        sys.exit(1)
+    if code == 3:
+        sys.exit(1)
     return code
 
 
@@ -57,4 +66,4 @@ pd.DataFrame({'era5': [era51, era52],
               'mod13q1': [mod13q11, mod13q12],
               'pdirnow': [pdirnow1, pdirnow2],
               'imerggis': [imerggis1, imerggis2],
-              'gfs': [gfs1, gfs2]}).to_csv('log.csv', index=False)
+              'gfs': [gfs1, gfs2]}).to_csv(f'{log_folder}/log_{today}.csv', index=False)

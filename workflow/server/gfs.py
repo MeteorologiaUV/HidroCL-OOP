@@ -309,7 +309,7 @@ urls = hidrocl.download.list_gfs()
 available_dates = [pd.to_datetime(val.split('/')[-2].split('gfs')[-1], format="%Y%m%d") for val in urls]
 
 """
-Exit code=2 if today's data is not available
+Exit code=3 if today's data is not available
 """
 if max(available_dates) < today:
     print('No new data to download')
