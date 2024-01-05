@@ -1,4 +1,4 @@
-site_name: HidroCL documentation
+site_name: HidroCL-OOP documentation
 theme:
   name: material
   logo: assets/logo_reverse.svg
