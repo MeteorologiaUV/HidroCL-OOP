@@ -9,8 +9,10 @@ import xarray
 import subprocess
 import numpy as np
 import pandas as pd
+import exactextract
 from math import ceil
 from array import array
+import geopandas as gpd
 from pathlib import Path
 from . import tools as t
 from sys import platform
@@ -477,6 +479,9 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
     r = re.compile('.*' + str(scene) + '.*')
     selected_files = list(filter(r.match, scenes_path))
     start = time.time()
+
+    gdf = gpd.read_file(kwargs.get("vector_path"))
+
     match name:
         case "imerg":
             file_date = datetime.strptime(scene, '%Y%m%d').strftime('%Y-%m-%d')
@@ -725,10 +730,10 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
             except (rxre.RioXarrayError, rioe.RasterioIOError):
                 return print(f"Error in scene {scene}")
 
-    temporal_raster = os.path.join(tempfolder, name + "_" + scene + ".tif")
-    # temporal_raster = os.path.join("/Users/aldotapia/hidrocl_test/", name + "_" + scene + ".tif")
-    # result_file = os.path.join("/Users/aldotapia/hidrocl_test/", name + "_" + scene + ".csv")
-    result_file = os.path.join(tempfolder, name + "_" + scene + ".csv")
+    # temporal_raster = os.path.join(tempfolder, name + "_" + scene + ".tif")
+    temporal_raster = os.path.join("/Users/aldotapia/hidrocl_test/", name + "_" + scene + ".tif")
+    result_file = os.path.join("/Users/aldotapia/hidrocl_test/", name + "_" + scene + ".csv")
+    # result_file = os.path.join(tempfolder, name + "_" + scene + ".csv")
     mos.rio.to_raster(temporal_raster, compress="LZW")
     match name:
         case 'snow':
@@ -753,12 +758,21 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
             write_line(kwargs.get("south_pcdatabase"), result_file, catchment_names, scene, file_date, ncol=2)
 
         case 'gfs':
-            subprocess.call([rscript,
-                             "--vanilla",
-                             os.path.join(path, "Rfiles/WeightedMeanExtractionGFS.R"),
-                             kwargs.get("vector_path"),
-                             temporal_raster,
-                             result_file])
+            # subprocess.call([rscript,
+            #                  "--vanilla",
+            #                  os.path.join(path, "Rfiles/WeightedMeanExtractionGFS.R"),
+            #                  kwargs.get("vector_path"),
+            #                  temporal_raster,
+            #                  result_file])
+
+            r = rioxr.open_rasterio(temporal_raster)
+            result_val = exactextract.exact_extract(r, gdf, 'mean', include_cols='gauge_id', output='pandas')
+            result_pc = exactextract.exact_extract(xarray.where(r.isnull(), 0, 1), gdf, 'mean',
+                                                   include_cols='gauge_id', output='pandas')
+            result_pc.iloc[:, 1:] = result_pc.iloc[:, 1:] * 1000
+            result_val = result_val.merge(result_pc, on='gauge_id', how='left')
+            result_val = result_val.round(0).astype(int)
+            result_val.to_csv(result_file, index=False)
 
             days = kwargs.get("days")
 
@@ -804,6 +818,6 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
     currenttime = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
     print(f"Time elapsed for {scene}: {str(round(end - start))} seconds")
     write_log(log_file, scene, currenttime, time_dif, kwargs.get("database"))
-    os.remove(temporal_raster)
-    os.remove(result_file)
+    # os.remove(temporal_raster)
+    # os.remove(result_file)
     gc.collect()

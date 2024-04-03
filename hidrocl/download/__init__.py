@@ -19,7 +19,7 @@ from bs4 import BeautifulSoup
 from requests.auth import HTTPBasicAuth
 
 
-def download_era5land(year, month, day, path):
+def download_era5land(year, month, day, path, timeout=60, retry_max=10, sleep_max=120):
     """function to download era5-land reanalysis data from CDS
 
     This functions needs a .cdsapirc file in the home directory with the following content:
@@ -34,6 +34,7 @@ def download_era5land(year, month, day, path):
         month (int): month of the data to be downloaded
         day (int): day of the data to be downloaded
         path (str):path to save the data
+        timeout (int):
 
     Returns:
         None
@@ -42,7 +43,7 @@ def download_era5land(year, month, day, path):
 
     fname = os.path.join(path, f'era5-land_{year:04d}{month:02d}{day:02d}.nc')
 
-    c = cdsapi.Client()
+    c = cdsapi.Client(timeout=timeout, retry_max=retry_max, sleep_max=sleep_max)
 
     c.retrieve(
         'reanalysis-era5-land',
@@ -105,7 +106,7 @@ def download_era5(year, month, day, path):
 
     fname = os.path.join(path, f'era5_{year:04d}{month:02d}{day:02d}.nc')
 
-    c = cdsapi.Client()
+    c = cdsapi.Client(retry_max=10)
 
     c.retrieve(
         'reanalysis-era5-single-levels',
@@ -166,7 +167,7 @@ def download_era5pressure(year, month, day, path):
 
     fname = os.path.join(path, f'era5-pressure_{year:04d}{month:02d}{day:02d}.nc')
 
-    c = cdsapi.Client()
+    c = cdsapi.Client(retry_max=10)
 
     c.retrieve(
         'reanalysis-era5-pressure-levels',
@@ -218,7 +219,7 @@ def download_satsoilmoist(year, month, day, path):
         None
     """
 
-    c = cdsapi.Client()
+    c = cdsapi.Client(retry_max=10)
 
     c.retrieve(
         'satellite-soil-moisture',
