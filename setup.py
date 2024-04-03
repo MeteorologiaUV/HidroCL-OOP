@@ -21,7 +21,8 @@ setup(
         'requests>=2.28.1',
         'setuptools>=63.4.1',
         'wget>=3.2',
-        'exactextract>=0.2.0.dev0'
+        'exactextract>=0.2.0.dev0',
+        'python-dotenv>=1.0.0',
     ],
     python_requires='>=3.10',
 )
