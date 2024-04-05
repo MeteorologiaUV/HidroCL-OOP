@@ -6,7 +6,6 @@ import re
 import csv
 import time
 import xarray
-import subprocess
 import numpy as np
 import pandas as pd
 import exactextract
@@ -22,13 +21,11 @@ from rasterio import errors as rioe
 from rioxarray import exceptions as rxre
 from rioxarray.merge import merge_arrays
 
-if platform == "linux" or platform == "linux2":
-    rscript = "Rscript"
-elif platform == "darwin":
-    rscript = "RScript"
 
 path = Path(__file__).parent.absolute()
 
+debug = False
+debug_path = None
 
 # elif platform == "win32":
 # Windows...
@@ -426,6 +423,34 @@ def write_line(database, result, catchment_names, file_id, file_date, ncol=1):
         print('Inconsistencies with gauge ids!')
 
 
+def write_line2(database, result, catchment_names, file_id, file_date, ncol=1):
+    """
+    Write line to database
+
+    Args:
+        database (str): database path
+        result (str): result dataframe
+        catchment_names (list): list of catchment names
+        file_id (str): file id
+        file_date (str): file date
+        ncol (int): number of columns
+
+    Returns:
+        None
+    """
+    gauge_id_result = result.iloc[:,0].astype(str).tolist()
+    value_result = result.iloc[:,ncol].astype(str).tolist()
+
+    if catchment_names == gauge_id_result:
+        value_result.insert(0, file_id)
+        value_result.insert(1, file_date)
+        data_line = ','.join(value_result) + '\n'
+        with open(database, 'a') as the_file:
+            the_file.write(data_line)
+    else:
+        print('Inconsistencies with gauge ids!')
+
+
 def write_log(log_file, file_id, currenttime, time_dif, database):
     """
     Write log file
@@ -442,6 +467,42 @@ def write_log(log_file, file_id, currenttime, time_dif, database):
     """
     with open(log_file, 'a') as txt_file:
         txt_file.write(f'ID {file_id}. Date: {currenttime}. Process time: {time_dif} s. Database: {database}. \n')
+
+
+def extract_data(v, r, fun, debug=False, debug_path=None, name=None):
+    """
+    Function to extract data from a raster file
+
+    Args:
+        v (str): vector path
+        r (str): raster path
+        fun (str): function to apply
+        debug (bool): debug flag
+        debug_path (str): debug path
+        name (str): name of the file
+
+    Returns:
+        pd.DataFrame: pandas DataFrame with the extracted data
+    """
+    gdf = gpd.read_file(v)
+
+    result_val = exactextract.exact_extract(r, gdf, fun, include_cols='gauge_id', output='pandas',
+                                            max_cells_in_memory = 300000000)
+    result_pc = exactextract.exact_extract(xarray.where(r.isnull(), 0, 1), gdf, 'mean',
+                                           include_cols='gauge_id', output='pandas',
+                                           max_cells_in_memory = 300000000)
+    result_pc.iloc[:, 1:] = result_pc.iloc[:, 1:] * 1000
+    result_val = result_val.merge(result_pc, on='gauge_id', how='left')
+    result_val = result_val.fillna(0).round(0).astype(int)
+
+    if debug:
+        if not os.path.exists(debug_path):
+            os.makedirs(debug_path)
+        if name is None:
+            name = 'debug.csv'
+        result_val.to_csv(os.path.join(debug_path, name), index=False)
+        print(f"Debug file saved on {debug_path}/{name}")
+    return result_val
 
 
 def zonal_stats(scene, scenes_path, tempfolder, name,
@@ -479,8 +540,6 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
     r = re.compile('.*' + str(scene) + '.*')
     selected_files = list(filter(r.match, scenes_path))
     start = time.time()
-
-    gdf = gpd.read_file(kwargs.get("vector_path"))
 
     match name:
         case "imerg":
@@ -522,6 +581,7 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
                 mos = xarray.where(mos == 0, np.nan, mos)
                 mos = xarray.where((mos == 25) | (mos == 37) | (mos == 39), 0, mos)
                 mos = xarray.where((mos == 0) | (mos == 1), mos, np.nan)
+                mos = mos * 100
             except (rxre.RioXarrayError, rioe.RasterioIOError):
                 return print(f"Error in scene {scene}")
 
@@ -592,6 +652,8 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
 
                 for i in range(0, len(mos_list)):
                     mos[f"day_{i}"] = mos_list[i]
+
+                mos = mos.to_array(dim='day')
 
             except (rxre.RioXarrayError, rioe.RasterioIOError, ValueError, IndexError, KeyError):
                 return print(f"Error in scene {scene}")
@@ -730,94 +792,71 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
             except (rxre.RioXarrayError, rioe.RasterioIOError):
                 return print(f"Error in scene {scene}")
 
-    # temporal_raster = os.path.join(tempfolder, name + "_" + scene + ".tif")
-    temporal_raster = os.path.join("/Users/aldotapia/hidrocl_test/", name + "_" + scene + ".tif")
-    result_file = os.path.join("/Users/aldotapia/hidrocl_test/", name + "_" + scene + ".csv")
-    # result_file = os.path.join(tempfolder, name + "_" + scene + ".csv")
-    mos.rio.to_raster(temporal_raster, compress="LZW")
+    temporal_raster = os.path.join(debug_path, name + "_" + scene + ".tif")
+    result_file = f"{name}_{scene}.csv"
+    if debug:
+        mos.rio.to_raster(temporal_raster, compress="LZW")
+
     match name:
         case 'snow':
-            subprocess.call([rscript,
-                             "--vanilla",
-                             os.path.join(path, "Rfiles/WeightedPercExtraction.R"),
-                             kwargs.get("north_vector_path"),
-                             temporal_raster,
-                             result_file])
+            result_df = extract_data(kwargs.get("north_vector_path"), mos, 'mean', debug=debug,
+                                       debug_path=debug_path, name='n_'+result_file)
 
-            write_line(kwargs.get("north_database"), result_file, catchment_names, scene, file_date, ncol=1)
-            write_line(kwargs.get("north_pcdatabase"), result_file, catchment_names, scene, file_date, ncol=2)
+            write_line2(kwargs.get("north_database"), result_df, catchment_names, scene, file_date, ncol=1)
+            write_line2(kwargs.get("north_pcdatabase"), result_df, catchment_names, scene, file_date, ncol=2)
 
-            subprocess.call([rscript,
-                             "--vanilla",
-                             os.path.join(path, "Rfiles/WeightedPercExtraction.R"),
-                             kwargs.get("south_vector_path"),
-                             temporal_raster,
-                             result_file])
+            result_df = extract_data(kwargs.get("south_vector_path"), mos, 'mean', debug=debug,
+                                       debug_path=debug_path, name='s_'+result_file)
 
-            write_line(kwargs.get("south_database"), result_file, catchment_names, scene, file_date, ncol=1)
-            write_line(kwargs.get("south_pcdatabase"), result_file, catchment_names, scene, file_date, ncol=2)
+            write_line2(kwargs.get("south_database"), result_df, catchment_names, scene, file_date, ncol=1)
+            write_line2(kwargs.get("south_pcdatabase"), result_df, catchment_names, scene, file_date, ncol=2)
 
         case 'gfs':
-            # subprocess.call([rscript,
-            #                  "--vanilla",
-            #                  os.path.join(path, "Rfiles/WeightedMeanExtractionGFS.R"),
-            #                  kwargs.get("vector_path"),
-            #                  temporal_raster,
-            #                  result_file])
+            result_df = extract_data(kwargs.get("vector_path"), mos, 'mean', debug=debug,
+                                     debug_path=debug_path, name='n_' + result_file)
 
-            r = rioxr.open_rasterio(temporal_raster)
-            result_val = exactextract.exact_extract(r, gdf, 'mean', include_cols='gauge_id', output='pandas')
-            result_pc = exactextract.exact_extract(xarray.where(r.isnull(), 0, 1), gdf, 'mean',
-                                                   include_cols='gauge_id', output='pandas')
-            result_pc.iloc[:, 1:] = result_pc.iloc[:, 1:] * 1000
-            result_val = result_val.merge(result_pc, on='gauge_id', how='left')
-            result_val = result_val.round(0).astype(int)
-            result_val.to_csv(result_file, index=False)
+            write_line2(kwargs.get("databases")[0], result_df, catchment_names, scene, file_date, ncol=(days.index(0)+1))
+            write_line2(kwargs.get("databases")[1], result_df, catchment_names, scene, file_date, ncol=(days.index(0)+1)+len(days))
+
 
             days = kwargs.get("days")
 
             if 0 in days:
-                write_line(kwargs.get("databases")[0], result_file, catchment_names, scene,
-                           file_date, ncol=(days.index(0)+1))
-                write_line(kwargs.get("pcdatabases")[0], result_file, catchment_names, scene,
-                           file_date, ncol=(days.index(0)+1)+len(days))
+                write_line2(kwargs.get("databases")[0], result_df, catchment_names, scene, file_date,
+                            ncol=(days.index(0) + 1))
+                write_line2(kwargs.get("databases")[0], result_df, catchment_names, scene, file_date,
+                            ncol=(days.index(0) + 1) + len(days))
             if 1 in days:
-                write_line(kwargs.get("databases")[1], result_file, catchment_names, scene,
-                           file_date, ncol=(days.index(1)+1))
-                write_line(kwargs.get("pcdatabases")[1], result_file, catchment_names, scene,
-                           file_date, ncol=(days.index(1)+1)+len(days))
+                write_line2(kwargs.get("databases")[1], result_df, catchment_names, scene, file_date,
+                            ncol=(days.index(1) + 1))
+                write_line2(kwargs.get("databases")[1], result_df, catchment_names, scene, file_date,
+                            ncol=(days.index(1) + 1) + len(days))
             if 2 in days:
-                write_line(kwargs.get("databases")[2], result_file, catchment_names, scene,
-                           file_date, ncol=(days.index(2)+1))
-                write_line(kwargs.get("pcdatabases")[2], result_file, catchment_names, scene,
-                           file_date, ncol=(days.index(2)+1)+len(days))
+                write_line2(kwargs.get("databases")[2], result_df, catchment_names, scene, file_date,
+                            ncol=(days.index(2) + 1))
+                write_line2(kwargs.get("databases")[2], result_df, catchment_names, scene, file_date,
+                            ncol=(days.index(2) + 1) + len(days))
             if 3 in days:
-                write_line(kwargs.get("databases")[3], result_file, catchment_names, scene,
-                           file_date, ncol=(days.index(3)+1))
-                write_line(kwargs.get("pcdatabases")[3], result_file, catchment_names, scene,
-                           file_date, ncol=(days.index(3)+1)+len(days))
+                write_line2(kwargs.get("databases")[3], result_df, catchment_names, scene, file_date,
+                            ncol=(days.index(3) + 1))
+                write_line2(kwargs.get("databases")[3], result_df, catchment_names, scene, file_date,
+                            ncol=(days.index(3) + 1) + len(days))
             if 4 in days:
-                write_line(kwargs.get("databases")[4], result_file, catchment_names, scene,
-                           file_date, ncol=(days.index(4)+1))
-                write_line(kwargs.get("pcdatabases")[4], result_file, catchment_names, scene,
-                           file_date, ncol=(days.index(4)+1)+len(days))
+                write_line2(kwargs.get("databases")[4], result_df, catchment_names, scene, file_date,
+                            ncol=(days.index(4) + 1))
+                write_line2(kwargs.get("databases")[4], result_df, catchment_names, scene, file_date,
+                            ncol=(days.index(4) + 1) + len(days))
 
         case _:
-            subprocess.call([rscript,
-                             "--vanilla",
-                             os.path.join(path, "Rfiles/WeightedMeanExtraction.R"),
-                             kwargs.get("vector_path"),
-                             temporal_raster,
-                             result_file])
+            result_df = extract_data(kwargs.get("vector_path"), mos, 'mean', debug=debug,
+                                     debug_path=debug_path, name= result_file)
 
-            write_line(kwargs.get("database"), result_file, catchment_names, scene, file_date, ncol=1)
-            write_line(kwargs.get("pcdatabase"), result_file, catchment_names, scene, file_date, ncol=2)
+            write_line2(kwargs.get("database"), result_df, catchment_names, scene, file_date, ncol=1)
+            write_line2(kwargs.get("pcdatabase"), result_df, catchment_names, scene, file_date, ncol=2)
 
     end = time.time()
     time_dif = str(round(end - start))
     currenttime = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
     print(f"Time elapsed for {scene}: {str(round(end - start))} seconds")
     write_log(log_file, scene, currenttime, time_dif, kwargs.get("database"))
-    # os.remove(temporal_raster)
-    # os.remove(result_file)
     gc.collect()
