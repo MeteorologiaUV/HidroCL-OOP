@@ -44,8 +44,8 @@ hidrocl_agr_sinu = os.path.join(project_path, 'base/boundaries/Agr_ModisSinu.shp
 pp_o_pdir_pp_mean_b_none_d1_p0d = os.path.join(project_path, 'databases/observed/pp_o_pdir_pp_mean_b_none_d1_p0d.csv')
 
 # observed
-snw_o_modis_sca_cum_n_d8_p0d = os.path.join(project_path, 'databases/observed/snw_o_modis_sca_cum_n_d8_p0d.csv')
-snw_o_modis_sca_cum_s_d8_p0d = os.path.join(project_path, 'databases/observed/snw_o_modis_sca_cum_s_d8_p0d.csv')
+snw_o_modis_sca_cum_n_d8_p0d = os.path.join(project_path, 'databases/observed/snw_o_modis_sca_tot_n_none_d1_p0d.csv')
+snw_o_modis_sca_cum_s_d8_p0d = os.path.join(project_path, 'databases/observed/snw_o_modis_sca_tot_s_none_d1_p0d.csv')
 veg_o_modis_ndvi_mean_b_d16_p0d = os.path.join(project_path,
                                                'databases/observed/veg_o_modis_ndvi_mean_b_none_d1_p0d.csv')
 veg_o_modis_evi_mean_b_d16_p0d = os.path.join(project_path, 'databases/observed/veg_o_modis_evi_mean_b_none_d1_p0d.csv')
