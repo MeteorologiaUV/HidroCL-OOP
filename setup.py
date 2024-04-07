@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 from hidrocl import __version__
-from hidrocl import __init__
+# from hidrocl import __init__
 
 setup(
     name='hidrocl',
