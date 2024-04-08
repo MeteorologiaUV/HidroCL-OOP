@@ -3,8 +3,7 @@
 ----
 
 [![pythonversion](https://img.shields.io/badge/python-v3.10-blue?style=plastic&logo=python&logoColor=yellow)](https://www.python.org/downloads/release/python-3100/)
-[![packageversion](https://img.shields.io/badge/r-v4.1.2-blue?style=plastic&logo=r&logoColor=9cf)](https://anaconda.org/conda-forge/r-base?version=4.2.1)
-![packageversion](https://img.shields.io/badge/version-v0.0.14-blue?style=plastic)
+![packageversion](https://img.shields.io/badge/version-v0.0.17-blue?style=plastic)
 
 **Python minimum version**: 3.10
 
@@ -26,43 +25,8 @@
 
 
 Installation commands:
-**Environment creation and first steps:**
 ```bash
-# installing Python and R
-conda create -n hidrocl_test python=3.10
-conda activate hidrocl_test
-# for running tests
-conda install -c conda-forge jupyter
-```
-
-Install R and the following packages:
-```bash
-sudo R
-> install.packages(c('terra', 'sf', 'exactextractr', 'tibble'))
-> quit()
-```
-
-Then:
-
-```
-pip install .
-```
-or
-
-```
-cd dist
-pip install hidrocl-0.0.14.tar.gz 
-```
-
-Check if hidrocl/products/Rfiles are copied to
-`env_name/lib/python3.10/site-packages/hidrocl/products/Rfiles`,
-if not, copy them manually. **This is quite important** (I'm gonna
-work on it when I have time)
-
-**R package needed for sf/terra warning messages**
-
-```bash
-R -e 'install.packages("codetools", dependencies = TRUE)'
+pip install git+https://github.com/MeteorologiaUV/HidroCL-OOP/
 ```
 
 ## Configuration
@@ -112,4 +76,5 @@ Then, run the following command:
 
 ````bash
 python workflow/server/run_all.py
+python workflow/server/run_gfs.py
 ````
