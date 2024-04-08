@@ -758,6 +758,518 @@ ET database path: {self.et.database}
 
 
 """
+Extraction of MODIS MOD12Q1 product:
+"""
+
+
+class Mod12q1:
+    """
+    A class to process MOD12AQ1 to hidrocl variables
+
+    The MOD12Q1 product has the following land cover classes:
+    - barren (brn): value 16
+    - cropland (crp): value 12
+    - closed shrubland (csh): value 6
+    - cropland/natural vegetation mosaic (cvm): value 14
+    - deciduous broadleaf forest (dbf): value 4
+    - deciduous needleleaf forest (dnf): value 3
+    - evergreen broadleaf forest (ebf): value 2
+    - evergreen needleleaf forest (enf): value 1
+    - grassland (grs): value 10
+    - mixed forest (mxf): value 5
+    - open shrubland (osh): value 7
+    - permanent wetland (pwt): value 11
+    - snow and ice (snw): value 15
+    - savannas (svn): value 9
+    - urban and built-up (urb): value 13
+    - water bodies (wat): value 17
+    - woody savannas (wsv): value 8
+
+
+    Attributes:
+        brn (HidroCLVariable): HidroCLVariable object with barren data \n
+        crp (HidroCLVariable): HidroCLVariable object with cropland data \n
+        csh (HidroCLVariable): HidroCLVariable object with closed shrubland data \n
+        cvm (HidroCLVariable): HidroCLVariable object with cropland/natural vegetation mosaic data \n
+        dbf (HidroCLVariable): HidroCLVariable object with deciduous broadleaf forest data \n
+        dnf (HidroCLVariable): HidroCLVariable object with deciduous needleleaf forest data \n
+        ebf (HidroCLVariable): HidroCLVariable object with evergreen broadleaf forest data \n
+        enf (HidroCLVariable): HidroCLVariable object with evergreen needleleaf forest data \n
+        grs (HidroCLVariable): HidroCLVariable object with grassland data \n
+        mxf (HidroCLVariable): HidroCLVariable object with mixed forest data \n
+        osh (HidroCLVariable): HidroCLVariable object with open shrubland data \n
+        pwt (HidroCLVariable): HidroCLVariable object with permanent wetland data \n
+        snw (HidroCLVariable): HidroCLVariable object with snow and ice data \n
+        svn (HidroCLVariable): HidroCLVariable object with savannas data \n
+        urb (HidroCLVariable): HidroCLVariable object with urban and built-up data \n
+        wat (HidroCLVariable): HidroCLVariable object with water bodies data \n
+        wsv (HidroCLVariable): HidroCLVariable object with woody savannas data \n
+        var_log (str): Path to the log file for the variable extraction \n
+        productname (str): Name of the remote sensing product to be processed \n
+        productpath (str): Path to the product folder where the product files are located \n
+        vectorpath (str): Path to the vector folder with Shapefile with areas to be processed \n
+        agg (str): Aggregation method to be used \n
+        common_elements (list): Elements in pet database \n
+        product_files (list): List of product files in the product folder \n
+        product_ids (list): List of product ids. Each product id is str with common tag by date \n
+        all_scenes (list): List of all scenes (no matter the product id here) \n
+        scenes_occurrences (list): List of scenes occurrences for each product id \n
+        overpopulated_scenes (list): List of overpopulated scenes (more than 9 scenes for modis) \n
+        complete_scenes (list): List of complete scenes (9 scenes for modis) \n
+        incomplete_scenes (list): List of incomplete scenes (less than 9 scenes for modis) \n
+        scenes_to_process (list): List of scenes to process (complete scenes no processed) \n
+    """
+
+    def __init__(self, brn, crp, csh, cvm, dbf, dnf, ebf, enf, grs, mxf,
+                 osh, pwt, snw, svn, urb, wat, wsv, product_path, vector_path, var_log, agg):
+        """
+        Examples:
+            >>> from hidrocl import HidroCLVariable
+            >>> from hidrocl import Mod12q1
+            >>> brn = HidroCLVariable('brn', 'modis', 'mod12q1', 'barren')
+            >>> crp = HidroCLVariable('crp', 'modis', 'mod12q1', 'cropland')
+            >>> csh = HidroCLVariable('csh', 'modis', 'mod12q1', 'closed shrubland')
+            >>> cvm = HidroCLVariable('cvm', 'modis', 'mod12q1', 'cropland/natural vegetation mosaic')
+            >>> dbf = HidroCLVariable('dbf', 'modis', 'mod12q1', 'deciduous broadleaf forest')
+            >>> dnf = HidroCLVariable('dnf', 'modis', 'mod12q1', 'deciduous needleleaf forest')
+            >>> ebf = HidroCLVariable('ebf', 'modis', 'mod12q1', 'evergreen broadleaf forest')
+            >>> enf = HidroCLVariable('enf', 'modis', 'mod12q1', 'evergreen needleleaf forest')
+            >>> grs = HidroCLVariable('grs', 'modis', 'mod12q1', 'grassland')
+            >>> mxf = HidroCLVariable('mxf', 'modis', 'mod12q1', 'mixed forest')
+            >>> osh = HidroCLVariable('osh', 'modis', 'mod12q1', 'open shrubland')
+            >>> pwt = HidroCLVariable('pwt', 'modis', 'mod12q1', 'permanent wetland')
+            >>> snw = HidroCLVariable('snw', 'modis', 'mod12q1', 'snow')
+            >>> svn = HidroCLVariable('svn', 'modis', 'mod12q1', 'savannas')
+            >>> urb = HidroCLVariable('urb', 'modis', 'mod12q1', 'urban and built-up')
+            >>> wat = HidroCLVariable('wat', 'modis', 'mod12q1', 'water bodies')
+            >>> wsv = HidroCLVariable('wsv', 'modis', 'mod12q1', 'woody savannas')
+            >>> product_path = '/home/user/mod12q1'
+            >>> vector_path = '/home/user/vector.shp'
+            >>> var_log = '/home/user/var.log'
+            >>> mod12q1 = Mod12q1(brn, crp, csh, cvm, dbf, dnf, ebf, enf, grs, mxf,
+            ...                   osh, pwt, snw, svn, urb, wat, wsv, product_path, vector_path, var_log, 'mean')
+            >>> mod12q1
+            "Class to extract MODIS MOD12Q1 Version 6.1"
+
+        Args:
+            brn (HidroCLVariable): Object with the barren data \n
+            crp (HidroCLVariable): Object with the cropland data \n
+            csh (HidroCLVariable): Object with the closed shrubland data \n
+            cvm (HidroCLVariable): Object with the cropland/natural vegetation mosaic data \n
+            dbf (HidroCLVariable): Object with the deciduous broadleaf forest data \n
+            dnf (HidroCLVariable): Object with the deciduous needleleaf forest data \n
+            ebf (HidroCLVariable): Object with the evergreen broadleaf forest data \n
+            enf (HidroCLVariable): Object with the evergreen needleleaf forest data \n
+            grs (HidroCLVariable): Object with the grassland data \n
+            mxf (HidroCLVariable): Object with the mixed forest data \n
+            osh (HidroCLVariable): Object with the open shrubland data \n
+            pwt (HidroCLVariable): Object with the permanent wetland data \n
+            snw (HidroCLVariable): Object with the snow and ice data \n
+            svn (HidroCLVariable): Object with the savannas data \n
+            urb (HidroCLVariable): Object with the urban and built-up data \n
+            wat (HidroCLVariable): Object with the water bodies data \n
+            wsv (HidroCLVariable): Object with the woody savannas data \n
+            product_path (str): Path to the product folder \n
+            vector_path (str): Path to the vector folder \n
+            var_log (str): Path to the log file for the variable extraction \n
+            agg (str): Aggregation method to be used \n
+
+        Raises:
+            TypeError: If pet is not a HidroCLVariable object
+        """
+        if t.check_instance(brn, crp, csh, cvm, dbf, dnf, ebf, enf, grs, mxf,
+                            osh, pwt, snw, svn, urb, wat, wsv):
+            self.brn = brn
+            self.crp = crp
+            self.csh = csh
+            self.cvm = cvm
+            self.dbf = dbf
+            self.dnf = dnf
+            self.ebf = ebf
+            self.enf = enf
+            self.grs = grs
+            self.mxf = mxf
+            self.osh = osh
+            self.pwt = pwt
+            self.snw = snw
+            self.svn = svn
+            self.urb = urb
+            self.wat = wat
+            self.wsv = wsv
+            if agg not in ['mean', 'sum']:
+                raise ValueError('agg must be mean or sum')
+            self.agg = agg
+            self.var_log = var_log
+            self.productname = "Class to extract MODIS MOD12Q1 Version 6.1"
+            self.productpath = product_path
+            self.vectorpath = vector_path
+            self.common_elements = t.compare_indatabase(self.brn.indatabase,
+                                                        self.crp.indatabase,
+                                                        self.csh.indatabase,
+                                                        self.cvm.indatabase,
+                                                        self.dbf.indatabase,
+                                                        self.dnf.indatabase,
+                                                        self.ebf.indatabase,
+                                                        self.enf.indatabase,
+                                                        self.grs.indatabase,
+                                                        self.mxf.indatabase,
+                                                        self.osh.indatabase,
+                                                        self.pwt.indatabase,
+                                                        self.snw.indatabase,
+                                                        self.svn.indatabase,
+                                                        self.urb.indatabase,
+                                                        self.wat.indatabase,
+                                                        self.wsv.indatabase)
+            self.product_files = t.read_product_files(self.productpath, "modis")
+            self.product_ids = t.get_product_ids(self.product_files, "modis")
+            self.all_scenes = t.check_product_files(self.product_ids)
+            self.scenes_occurrences = t.count_scenes_occurrences(self.all_scenes, self.product_ids)
+            (self.overpopulated_scenes,
+             self.complete_scenes,
+             self.incomplete_scenes) = t.classify_occurrences(self.scenes_occurrences, "modis")
+            self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes,
+                                                            self.common_elements, what='modis')
+        else:
+            raise TypeError('brn, crp, csh, cvm, dbf, dnf, ebf, enf, grs, mxf,' +
+                            'osh, pwt, snw, svn, urb, wat and wsv must be HidroCLVariable objects')
+
+    def __repr__(self):
+        """
+        Return a string representation of the object
+
+        Returns:
+             str: String representation of the object
+        """
+        return f'Class to extract {self.productname}'
+
+    def __str__(self):
+        """
+        Return a string representation of the object
+
+        Returns:
+            str: String representation of the object
+        """
+        return f'''
+Product: {self.productname}
+
+Barren records: {len(self.brn.indatabase)}.
+Barren database path: {self.brn.database}
+
+Cropland records: {len(self.crp.indatabase)}.
+Cropland database path: {self.crp.database}
+
+Closed shrubland records: {len(self.csh.indatabase)}.
+Closed shrubland database path: {self.csh.database}
+
+Cropland/natural vegetation mosaic records: {len(self.cvm.indatabase)}.
+Cropland/natural vegetation mosaic database path: {self.cvm.database}
+
+Deciduous broadleaf forest records: {len(self.dbf.indatabase)}.
+Deciduous broadleaf forest database path: {self.dbf.database}
+
+Deciduous needleleaf forest records: {len(self.dnf.indatabase)}.
+Deciduous needleleaf forest database path: {self.dnf.database}
+
+Evergreen broadleaf forest records: {len(self.ebf.indatabase)}.
+Evergreen broadleaf forest database path: {self.ebf.database}
+
+Evergreen needleleaf forest records: {len(self.enf.indatabase)}.
+Evergreen needleleaf forest database path: {self.enf.database}
+
+Grassland records: {len(self.grs.indatabase)}.
+Grassland database path: {self.grs.database}
+
+Mixed forest records: {len(self.mxf.indatabase)}.
+Mixed forest database path: {self.mxf.database}
+
+Open shrubland records: {len(self.osh.indatabase)}.
+Open shrubland database path: {self.osh.database}
+
+Permanent wetland records: {len(self.pwt.indatabase)}.
+Permanent wetland database path: {self.pwt.database}
+
+Snow records: {len(self.snw.indatabase)}.
+Snow database path: {self.snw.database}
+
+Savannas records: {len(self.svn.indatabase)}.
+Savannas database path: {self.svn.database}
+
+Urban and built-up records: {len(self.urb.indatabase)}.
+Urban and built-up database path: {self.urb.database}
+
+Water bodies records: {len(self.wat.indatabase)}.
+Water bodies database path: {self.wat.database}
+
+Woody savannas records: {len(self.wsv.indatabase)}.
+Woody savannas database path: {self.wsv.database}
+        '''
+
+    def run_extraction(self, limit=None):
+        """
+        Run the extraction of the product.
+        If limit is None, all scenes will be processed.
+        If limit is a number, only the first limit scenes will be processed.
+
+        Args:
+            limit (int): length of the scenes_to_process
+
+        Returns:
+            str: Print
+        """
+
+        with t.HiddenPrints():
+            self.brn.checkdatabase()
+            self.crp.checkdatabase()
+            self.csh.checkdatabase()
+            self.cvm.checkdatabase()
+            self.dbf.checkdatabase()
+            self.dnf.checkdatabase()
+            self.ebf.checkdatabase()
+            self.enf.checkdatabase()
+            self.grs.checkdatabase()
+            self.mxf.checkdatabase()
+            self.osh.checkdatabase()
+            self.pwt.checkdatabase()
+            self.snw.checkdatabase()
+            self.svn.checkdatabase()
+            self.urb.checkdatabase()
+            self.wat.checkdatabase()
+            self.wsv.checkdatabase()
+
+        self.common_elements = t.compare_indatabase(self.brn.indatabase,
+                                                    self.crp.indatabase,
+                                                    self.csh.indatabase,
+                                                    self.cvm.indatabase,
+                                                    self.dbf.indatabase,
+                                                    self.dnf.indatabase,
+                                                    self.ebf.indatabase,
+                                                    self.enf.indatabase,
+                                                    self.grs.indatabase,
+                                                    self.mxf.indatabase,
+                                                    self.osh.indatabase,
+                                                    self.pwt.indatabase,
+                                                    self.snw.indatabase,
+                                                    self.svn.indatabase,
+                                                    self.urb.indatabase,
+                                                    self.wat.indatabase,
+                                                    self.wsv.indatabase)
+
+        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.common_elements)
+
+        scenes_path = t.get_scenes_path(self.product_files, self.productpath)
+
+        with TemporaryDirectory() as tempdirname:
+            temp_dir = Path(tempdirname)
+
+            if limit is not None:
+                scenes_to_process = self.scenes_to_process[:limit]
+            else:
+                scenes_to_process = self.scenes_to_process
+
+            for scene in scenes_to_process:
+                if scene not in self.brn.indatabase:
+                    e.zonal_stats(scene, scenes_path,
+                                  temp_dir, 'lulc_brn',
+                                  self.brn.catchment_names, self.var_log,
+                                  database=self.brn.database,
+                                  pcdatabase=self.brn.pcdatabase,
+                                  vector_path=self.vectorpath,
+                                  layer="LC_Type1",
+                                  aggregation=self.agg, value=16)
+                if scene not in self.crp.indatabase:
+                    e.zonal_stats(scene, scenes_path,
+                                  temp_dir, 'lulc_crp',
+                                  self.crp.catchment_names, self.var_log,
+                                  database=self.crp.database,
+                                  pcdatabase=self.crp.pcdatabase,
+                                  vector_path=self.vectorpath,
+                                  layer="LC_Type1",
+                                  aggregation=self.agg, value=12)
+                if scene not in self.csh.indatabase:
+                    e.zonal_stats(scene, scenes_path,
+                                  temp_dir, 'lulc_csh',
+                                  self.csh.catchment_names, self.var_log,
+                                  database=self.csh.database,
+                                  pcdatabase=self.csh.pcdatabase,
+                                  vector_path=self.vectorpath,
+                                  layer="LC_Type1",
+                                  aggregation=self.agg, value=6)
+                if scene not in self.cvm.indatabase:
+                    e.zonal_stats(scene, scenes_path,
+                                  temp_dir, 'lulc_cvm',
+                                  self.cvm.catchment_names, self.var_log,
+                                  database=self.cvm.database,
+                                  pcdatabase=self.cvm.pcdatabase,
+                                  vector_path=self.vectorpath,
+                                  layer="LC_Type1",
+                                  aggregation=self.agg, value=14)
+                if scene not in self.dbf.indatabase:
+                    e.zonal_stats(scene, scenes_path,
+                                  temp_dir, 'lulc_dbf',
+                                  self.dbf.catchment_names, self.var_log,
+                                  database=self.dbf.database,
+                                  pcdatabase=self.dbf.pcdatabase,
+                                  vector_path=self.vectorpath,
+                                  layer="LC_Type1",
+                                  aggregation=self.agg, value=4)
+                if scene not in self.dnf.indatabase:
+                    e.zonal_stats(scene, scenes_path,
+                                    temp_dir, 'lulc_dnf',
+                                    self.dnf.catchment_names, self.var_log,
+                                    database=self.dnf.database,
+                                    pcdatabase=self.dnf.pcdatabase,
+                                    vector_path=self.vectorpath,
+                                    layer="LC_Type1",
+                                    aggregation=self.agg, value=3)
+                if scene not in self.ebf.indatabase:
+                    e.zonal_stats(scene, scenes_path,
+                                  temp_dir, 'lulc_ebf',
+                                  self.ebf.catchment_names, self.var_log,
+                                  database=self.ebf.database,
+                                  pcdatabase=self.ebf.pcdatabase,
+                                  vector_path=self.vectorpath,
+                                  layer="LC_Type1",
+                                  aggregation=self.agg, value=2)
+                if scene not in self.enf.indatabase:
+                    e.zonal_stats(scene, scenes_path,
+                                  temp_dir, 'lulc_enf',
+                                  self.enf.catchment_names, self.var_log,
+                                  database=self.enf.database,
+                                  pcdatabase=self.enf.pcdatabase,
+                                  vector_path=self.vectorpath,
+                                  layer="LC_Type1",
+                                  aggregation=self.agg, value=1)
+                if scene not in self.grs.indatabase:
+                    e.zonal_stats(scene, scenes_path,
+                                  temp_dir, 'lulc_grs',
+                                  self.grs.catchment_names, self.var_log,
+                                  database=self.grs.database,
+                                  pcdatabase=self.grs.pcdatabase,
+                                  vector_path=self.vectorpath,
+                                  layer="LC_Type1",
+                                  aggregation=self.agg, value=10)
+                if scene not in self.mxf.indatabase:
+                    e.zonal_stats(scene, scenes_path,
+                                  temp_dir, 'lulc_mxf',
+                                  self.mxf.catchment_names, self.var_log,
+                                  database=self.mxf.database,
+                                  pcdatabase=self.mxf.pcdatabase,
+                                  vector_path=self.vectorpath,
+                                  layer="LC_Type1",
+                                  aggregation=self.agg, value=5)
+                if scene not in self.osh.indatabase:
+                    e.zonal_stats(scene, scenes_path,
+                                  temp_dir, 'lulc_osh',
+                                  self.osh.catchment_names, self.var_log,
+                                  database=self.osh.database,
+                                  pcdatabase=self.osh.pcdatabase,
+                                  vector_path=self.vectorpath,
+                                  layer="LC_Type1",
+                                  aggregation=self.agg, value=7)
+                if scene not in self.pwt.indatabase:
+                    e.zonal_stats(scene, scenes_path,
+                                  temp_dir, 'lulc_pwt',
+                                  self.pwt.catchment_names, self.var_log,
+                                  database=self.pwt.database,
+                                  pcdatabase=self.pwt.pcdatabase,
+                                  vector_path=self.vectorpath,
+                                  layer="LC_Type1",
+                                  aggregation=self.agg, value=11)
+                if scene not in self.snw.indatabase:
+                    e.zonal_stats(scene, scenes_path,
+                                  temp_dir, 'lulc_snw',
+                                  self.snw.catchment_names, self.var_log,
+                                  database=self.snw.database,
+                                  pcdatabase=self.snw.pcdatabase,
+                                  vector_path=self.vectorpath,
+                                  layer="LC_Type1",
+                                  aggregation=self.agg, value=15)
+                if scene not in self.svn.indatabase:
+                    e.zonal_stats(scene, scenes_path,
+                                  temp_dir, 'lulc_svn',
+                                  self.svn.catchment_names, self.var_log,
+                                  database=self.svn.database,
+                                  pcdatabase=self.svn.pcdatabase,
+                                  vector_path=self.vectorpath,
+                                  layer="LC_Type1",
+                                  aggregation=self.agg, value=9)
+                if scene not in self.urb.indatabase:
+                    e.zonal_stats(scene, scenes_path,
+                                  temp_dir, 'lulc_urb',
+                                  self.urb.catchment_names, self.var_log,
+                                  database=self.urb.database,
+                                  pcdatabase=self.urb.pcdatabase,
+                                  vector_path=self.vectorpath,
+                                  layer="LC_Type1",
+                                  aggregation=self.agg, value=13)
+                if scene not in self.wat.indatabase:
+                    e.zonal_stats(scene, scenes_path,
+                                  temp_dir, 'lulc_wat',
+                                  self.wat.catchment_names, self.var_log,
+                                  database=self.wat.database,
+                                  pcdatabase=self.wat.pcdatabase,
+                                  vector_path=self.vectorpath,
+                                  layer="LC_Type1",
+                                  aggregation=self.agg, value=17)
+                if scene not in self.wsv.indatabase:
+                    e.zonal_stats(scene, scenes_path,
+                                  temp_dir, 'lulc_wsv',
+                                  self.wsv.catchment_names, self.var_log,
+                                  database=self.wsv.database,
+                                  pcdatabase=self.wsv.pcdatabase,
+                                  vector_path=self.vectorpath,
+                                  layer="LC_Type1",
+                                  aggregation=self.agg, value=8)
+
+
+    def run_maintainer(self, log_file, limit=None):
+        """
+        Run file maintainer. It will remove any file with problems
+
+        Args:
+            log_file (str): log file path
+            limit (int): length of the scenes_to_process
+
+        Returns:
+            str: Print
+        """
+
+        with t.HiddenPrints():
+            self.brn.checkdatabase()
+            self.crp.checkdatabase()
+            self.csh.checkdatabase()
+            self.cvm.checkdatabase()
+            self.dbf.checkdatabase()
+            self.dnf.checkdatabase()
+            self.ebf.checkdatabase()
+            self.enf.checkdatabase()
+            self.grs.checkdatabase()
+            self.mxf.checkdatabase()
+            self.osh.checkdatabase()
+            self.pwt.checkdatabase()
+            self.snw.checkdatabase()
+            self.svn.checkdatabase()
+            self.urb.checkdatabase()
+            self.wat.checkdatabase()
+            self.wsv.checkdatabase()
+
+        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.common_elements)
+
+        scenes_path = t.get_scenes_path(self.product_files, self.productpath)
+
+        if limit is not None:
+            scenes_to_process = self.scenes_to_process[:limit]
+        else:
+            scenes_to_process = self.scenes_to_process
+
+        for scene in scenes_to_process:
+            m.file_maintainer(scene=scene,
+                              scenes_path=scenes_path,
+                              name='modis',
+                              log_file=log_file)
+
+
+"""
 Extraction of MODIS MCD15A2H product:
 """
 

@@ -25,7 +25,7 @@ from rioxarray.merge import merge_arrays
 path = Path(__file__).parent.absolute()
 
 debug = False
-debug_path = None
+debug_path = ""
 
 # elif platform == "win32":
 # Windows...
@@ -601,6 +601,18 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
             except (rxre.RioXarrayError, rioe.RasterioIOError):
                 return print(f"Error in scene {scene}")
 
+        case name if "lulc" in name:
+            try:
+                mos = mosaic_raster(selected_files, kwargs.get("layer"))
+                val = kwargs.get("value")
+                mos = xarray.where(mos == val, 1, 0)
+                agg = kwargs.get("aggregation")
+                if agg == "mean":
+                    mos = mos*1000
+
+            except (rxre.RioXarrayError, rioe.RasterioIOError):
+                return print(f"Error in scene {scene}")
+
         case 'imerg':
             try:
                 datasets_list = [load_hdf5(ds, kwargs.get("layer")) for ds in selected_files]
@@ -792,9 +804,9 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
             except (rxre.RioXarrayError, rioe.RasterioIOError):
                 return print(f"Error in scene {scene}")
 
-    temporal_raster = os.path.join(debug_path, name + "_" + scene + ".tif")
     result_file = f"{name}_{scene}.csv"
     if debug:
+        temporal_raster = os.path.join(debug_path, name + "_" + scene + ".tif")
         mos.rio.to_raster(temporal_raster, compress="LZW")
 
     match name:
@@ -846,6 +858,13 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
                             ncol=(days.index(4) + 1))
                 write_line2(kwargs.get("databases")[4], result_df, catchment_names, scene, file_date,
                             ncol=(days.index(4) + 1) + len(days))
+
+        case name if "lulc" in name:
+            result_df = extract_data(kwargs.get("vector_path"), mos, agg, debug=debug,
+                                     debug_path=debug_path, name=result_file)
+
+            write_line2(kwargs.get("database"), result_df, catchment_names, scene, file_date, ncol=1)
+            write_line2(kwargs.get("pcdatabase"), result_df, catchment_names, scene, file_date, ncol=2)
 
         case _:
             result_df = extract_data(kwargs.get("vector_path"), mos, 'mean', debug=debug,
