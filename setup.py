@@ -1,11 +1,10 @@
 from setuptools import setup, find_packages
-from hidrocl import __version__
-# from hidrocl import __init__
 
 setup(
     name='hidrocl',
-    version=__version__,
-    packages=find_packages(),
+    version="0.0.16",
+    package_dir={'':"src"},
+    packages=find_packages("src"),
     install_requires=[
         'pandas>=1.4.3',
         'rioxarray>=0.12.0',
