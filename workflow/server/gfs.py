@@ -5,7 +5,13 @@ import pandas as pd
 
 import hidrocl
 import hidrocl.paths as hcl
-from config import project_path
+#from config import project_path
+import os
+import dotenv
+
+dotenv.load_dotenv()
+project_path = os.getenv('PROJECT_PATH')
+
 
 """
 Set the project path and the processing path
@@ -20,6 +26,8 @@ hidrocl.set_project_path(ppath)
 tempdir = hidrocl.temporal_directory()
 
 hidrocl.set_processing_path(tempdir.name)
+
+print(tempdir.name)
 
 hidrocl.prepare_path(hcl.gfs)
 
@@ -309,7 +317,7 @@ urls = hidrocl.download.list_gfs()
 available_dates = [pd.to_datetime(val.split('/')[-2].split('gfs')[-1], format="%Y%m%d") for val in urls]
 
 """
-Exit code=3 if today's data is not available
+Exit code=2 if today's data is not available
 """
 if max(available_dates) < today:
     print('No new data to download')
@@ -330,6 +338,16 @@ for url in missing_urls:
         print('Download done')
     except ValueError:
         print("Fail")
+        sys.exit(3)
+    except OSError:
+        print("Server error")
+        sys.exit(3)
+    except TypeError:
+        print("File error")
+        sys.exit(3)
+    except:
+        print("Unknown error")
+        sys.exit(3)
 
 """
 Extract data

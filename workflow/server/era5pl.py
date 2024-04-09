@@ -8,7 +8,12 @@ import pandas as pd
 
 import hidrocl
 import hidrocl.paths as hcl
-from config import project_path
+#from config import project_path
+import dotenv
+
+dotenv.load_dotenv()
+project_path = os.getenv('PROJECT_PATH')
+
 
 """
 Set the project path and the processing path
@@ -51,7 +56,7 @@ end = end - pd.Timedelta(days=5)
 
 if start == end:
     print('No new data to download')
-    sys.exit(2)
+    sys.exit(0)
 
 start = start.strftime('%Y-%m-%d')
 end = end.strftime('%Y-%m-%d')
@@ -97,7 +102,7 @@ nfiles = len(os.listdir(product_path))
 
 if nfiles == 0:
     print('No new files to process')
-    sys.exit(2)
+    sys.exit(0)
 
 for file in glob.glob("*.nc"):
     # get future subfolder from name

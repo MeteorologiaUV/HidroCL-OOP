@@ -1,1 +1,0 @@
-project_path = '/Users/aldotapia/hidrocl_test'

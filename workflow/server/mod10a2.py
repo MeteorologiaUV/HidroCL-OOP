@@ -6,7 +6,11 @@ import pandas as pd
 
 import hidrocl
 import hidrocl.paths as hcl
-from config import project_path
+#from config import project_path
+import dotenv
+
+dotenv.load_dotenv()
+project_path = os.getenv('PROJECT_PATH')
 
 """
 Set the project path and the processing path
@@ -75,7 +79,7 @@ nfiles = len(os.listdir(product_path))
 
 if nfiles == 0:
     print('No new files to process')
-    sys.exit(2)
+    sys.exit(0)
 
 """
 Extract data

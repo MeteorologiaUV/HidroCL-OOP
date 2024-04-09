@@ -4,10 +4,15 @@ import subprocess
 import pandas as pd
 import sys
 
-os.chdir('/home/modelo_test/dbmanager/hidrocl_test/workflow/server')
+import dotenv
+
+dotenv.load_dotenv()
+wd = os.getenv('DOWNLOAD_SCRIPT_PATH')
+log_folder = os.getenv('DOWNLOAD_LOG_PATH')
+
+os.chdir(wd)
 
 today = pd.Timestamp.today().strftime('%Y%m%d%H%M')
-log_folder = '/home/modelo_test/dbmanager/hidrocl_test/extraction_logs'
 
 exit_code = 0
 
@@ -17,7 +22,7 @@ print('Starting run_all.py at', today)
 Codes:
     0: success
     1: error
-    2: no data to process
+    0: no data to process
     3: no new data to download, although it should be
     4: no new data to download, up to date
     5: insufficient data to download and process
@@ -45,6 +50,9 @@ def run_stuff(file, alias=None):
     except:
         code = 1
         exit_code = 1
+        raise(f'Error running extraction of {alias}')
+    if code == 2:
+        exit_code = 1
     return code
 
 
@@ -54,8 +62,8 @@ era5pl = run_stuff('era5pl.py', alias='ERA5PL')
 mcd15a2h = run_stuff('mcd15a2h.py', alias='MCD15A2H')
 mod10a2 = run_stuff('mod10a2.py', alias='MOD10A2')
 mod13q1 = run_stuff('mod13q1.py', alias='MOD13Q1')
-pdirnow = run_stuff('pdirnow.py')
-imerggis = run_stuff('imerggis.py')
+pdirnow = run_stuff('pdirnow.py', alias='PDIRNOW')
+imerggis = run_stuff('imerggis.py', alias='IMERGGIS')
 
 pd.DataFrame({'era5': [era5],
               'era5land': [era5land],
@@ -67,3 +75,4 @@ pd.DataFrame({'era5': [era5],
               'imerggis': [imerggis]}).to_csv(f'{log_folder}/log_{today}.csv',
                                               index=False)
 sys.exit(exit_code)
+

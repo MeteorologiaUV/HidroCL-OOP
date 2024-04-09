@@ -5,13 +5,18 @@ import time
 import pandas as pd
 import sys
 
-os.chdir('/home/modelo_test/dbmanager/hidrocl_test/workflow/server')
+import dotenv
+
+dotenv.load_dotenv()
+wd = os.getenv('DOWNLOAD_SCRIPT_PATH')
+log_folder = os.getenv('DOWNLOAD_LOG_PATH')
+
+os.chdir(wd)
 
 today = pd.Timestamp.today().strftime('%Y%m%d%H%M')
-log_folder = '/home/modelo_test/dbmanager/hidrocl_test/extraction_logs'
 
 SLEEPTIME = 60*10
-TIMES = 6
+TIMES = 72
 exit_code = 0
 
 print('Starting run_gfs.py at', today)
@@ -47,12 +52,14 @@ def run_stuff(file, alias=None):
         print(f"{alias} finished at {then.strftime('%Y%m%d%H%M')}. It took {diff.seconds} seconds")
     except:
         code = 1
-        if exit_code != 3:
-            "keep GFS value"
-            exit_code = 1
+        exit_code = 1
+        raise(f'Error running extraction of {alias}')
     if code == 3:
-        code = 3
         exit_code = 3
+    elif code == 0:
+        exit_code = 0
+    else:
+        pass
     return code
 
 
@@ -70,5 +77,11 @@ while i < TIMES:
         print(f"Waking up at {pd.Timestamp.today().strftime('%Y%m%d%H%M')}")
 
 
-pd.DataFrame({'gfs': [gfs]}).to_csv(f'{log_folder}/gfs_log_{today}.csv', index=False)
-sys.exit(exit_code)
+if gfs in [0,4]:
+    print('GFS ran successfully')
+    pd.DataFrame({'gfs': [gfs]}).to_csv(f'{log_folder}/gfs_log_{today}.csv', index=False)
+    sys.exit(0)
+else:
+    # raise an error
+    print('GFS failed')
+    raise ValueError(f'GFS failed')
