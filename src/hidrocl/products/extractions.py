@@ -14,7 +14,6 @@ from array import array
 import geopandas as gpd
 from pathlib import Path
 from . import tools as t
-from sys import platform
 import rioxarray as rioxr
 from datetime import datetime
 from rasterio import errors as rioe
@@ -26,9 +25,6 @@ path = Path(__file__).parent.absolute()
 
 debug = False
 debug_path = ""
-
-# elif platform == "win32":
-# Windows...
 
 
 def load_hdf5(file, var):

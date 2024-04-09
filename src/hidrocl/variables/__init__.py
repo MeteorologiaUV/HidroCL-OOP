@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as mtick
 from . import methods
 
+create = None
+
 
 class HidroCLVariable:
     """A class to hold information about a hidrocl variable
@@ -84,7 +86,7 @@ Pixel count database path: {self.pcdatabase}.
         Returns:
             pandas.DataFrame: Dataframe with the observations
         """
-        self.observations = methods.checkdatabase(self.database, self.catchment_names)
+        self.observations = methods.checkdatabase(self.database, self.catchment_names, supportcreation=create)
         self.indatabase = self.checkindatabase()
         try:
             self.catchment_names = self.observations.columns[1:].tolist()
@@ -98,7 +100,7 @@ Pixel count database path: {self.pcdatabase}.
         Returns:
             pandas.DataFrame: Dataframe with the pixel count
         """
-        self.pcobservations = methods.checkdatabase(self.pcdatabase, self.catchment_names)
+        self.pcobservations = methods.checkdatabase(self.pcdatabase, self.catchment_names, supportcreation=create)
 
     def add_catchment_names(self, catchment_names_list):
         """

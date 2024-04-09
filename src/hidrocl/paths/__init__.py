@@ -88,7 +88,7 @@ sm_o_era5_sm_mean_b_d_p0d = os.path.join(project_path,
 pp_o_pdir_pp_mean_b_none_d1_p0d = os.path.join(project_path,
                                                'databases/observed/pp_o_pdir_pp_mean_b_none_d1_p0d.csv')  # new persiann
 pp_o_era5_plen_mean_b_d1_p0d = os.path.join(project_path,
-                                            'databases/observed/pp_o_era5_plen_mean_b_d1_p0d.csv')  # pp length
+                                            'databases/observed/pp_o_era5_plen_mean_b_none_d1_p0d.csv')  # pp length
 
 ## new variables with new names
 veg_o_modis_agr_mean_b_none_d1_p0d = os.path.join(project_path,
