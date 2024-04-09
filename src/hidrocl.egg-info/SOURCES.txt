@@ -1,7 +1,6 @@
 LICENSE
 README.md
 setup.py
-src/hidrocl/__conf__.py
 src/hidrocl/__init__.py
 src/hidrocl/__version__.py
 src/hidrocl.egg-info/PKG-INFO
