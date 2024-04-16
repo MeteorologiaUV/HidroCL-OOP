@@ -191,40 +191,74 @@ et_o_era5_eto_mean = os.path.join(project_path, 'databases/observed/et_o_era5_et
 swc_o_era5_sm_mean = os.path.join(project_path, 'databases/observed/swc_o_era5_sm_mean_b_none_d1_p0d.csv')
 veg_o_modis_fpar_mean = os.path.join(project_path, 'databases/observed/veg_o_modis_fpar_mean_b_none_d1_p0d.csv')
 veg_o_modis_lai_mean = os.path.join(project_path, 'databases/observed/veg_o_modis_lai_mean_b_none_d1_p0d.csv')
-lulc_o_modis_brn_frac_b_none_d1_p0d = os.path.join(project_path, 'databases/observed/lulc_o_modis_brn_frac_b_none_d1_p0d.csv')
-lulc_o_modis_crp_frac_b_none_d1_p0d = os.path.join(project_path, 'databases/observed/lulc_o_modis_crp_frac_b_none_d1_p0d.csv')
-lulc_o_modis_csh_frac_b_none_d1_p0d = os.path.join(project_path, 'databases/observed/lulc_o_modis_csh_frac_b_none_d1_p0d.csv')
-lulc_o_modis_cvm_frac_b_none_d1_p0d = os.path.join(project_path, 'databases/observed/lulc_o_modis_cvm_frac_b_none_d1_p0d.csv')
-lulc_o_modis_dbf_frac_b_none_d1_p0d = os.path.join(project_path, 'databases/observed/lulc_o_modis_dbf_frac_b_none_d1_p0d.csv')
-lulc_o_modis_dnf_frac_b_none_d1_p0d = os.path.join(project_path, 'databases/observed/lulc_o_modis_dnf_frac_b_none_d1_p0d.csv')
-lulc_o_modis_ebf_frac_b_none_d1_p0d = os.path.join(project_path, 'databases/observed/lulc_o_modis_ebf_frac_b_none_d1_p0d.csv')
-lulc_o_modis_enf_frac_b_none_d1_p0d = os.path.join(project_path, 'databases/observed/lulc_o_modis_enf_frac_b_none_d1_p0d.csv')
-lulc_o_modis_grs_frac_b_none_d1_p0d = os.path.join(project_path, 'databases/observed/lulc_o_modis_grs_frac_b_none_d1_p0d.csv')
-lulc_o_modis_mxf_frac_b_none_d1_p0d = os.path.join(project_path, 'databases/observed/lulc_o_modis_mxf_frac_b_none_d1_p0d.csv')
-lulc_o_modis_osh_frac_b_none_d1_p0d = os.path.join(project_path, 'databases/observed/lulc_o_modis_osh_frac_b_none_d1_p0d.csv')
-lulc_o_modis_pwt_frac_b_none_d1_p0d = os.path.join(project_path, 'databases/observed/lulc_o_modis_pwt_frac_b_none_d1_p0d.csv')
-lulc_o_modis_snw_frac_b_none_d1_p0d = os.path.join(project_path, 'databases/observed/lulc_o_modis_snw_frac_b_none_d1_p0d.csv')
-lulc_o_modis_svn_frac_b_none_d1_p0d = os.path.join(project_path, 'databases/observed/lulc_o_modis_svn_frac_b_none_d1_p0d.csv')
-lulc_o_modis_urb_frac_b_none_d1_p0d = os.path.join(project_path, 'databases/observed/lulc_o_modis_urb_frac_b_none_d1_p0d.csv')
-lulc_o_modis_wat_frac_b_none_d1_p0d = os.path.join(project_path, 'databases/observed/lulc_o_modis_wat_frac_b_none_d1_p0d.csv')
-lulc_o_modis_wsv_frac_b_none_d1_p0d = os.path.join(project_path, 'databases/observed/lulc_o_modis_wsv_frac_b_none_d1_p0d.csv')
-lulc_o_modis_brn_sum_b_none_d1_p0d = os.path.join(project_path, 'databases/observed/lulc_o_modis_brn_sum_b_none_d1_p0d.csv')
-lulc_o_modis_crp_sum_b_none_d1_p0d = os.path.join(project_path, 'databases/observed/lulc_o_modis_crp_sum_b_none_d1_p0d.csv')
-lulc_o_modis_csh_sum_b_none_d1_p0d = os.path.join(project_path, 'databases/observed/lulc_o_modis_csh_sum_b_none_d1_p0d.csv')
-lulc_o_modis_cvm_sum_b_none_d1_p0d = os.path.join(project_path, 'databases/observed/lulc_o_modis_cvm_sum_b_none_d1_p0d.csv')
-lulc_o_modis_dbf_sum_b_none_d1_p0d = os.path.join(project_path, 'databases/observed/lulc_o_modis_dbf_sum_b_none_d1_p0d.csv')
-lulc_o_modis_dnf_sum_b_none_d1_p0d = os.path.join(project_path, 'databases/observed/lulc_o_modis_dnf_sum_b_none_d1_p0d.csv')
-lulc_o_modis_ebf_sum_b_none_d1_p0d = os.path.join(project_path, 'databases/observed/lulc_o_modis_ebf_sum_b_none_d1_p0d.csv')
-lulc_o_modis_enf_sum_b_none_d1_p0d = os.path.join(project_path, 'databases/observed/lulc_o_modis_enf_sum_b_none_d1_p0d.csv')
-lulc_o_modis_grs_sum_b_none_d1_p0d = os.path.join(project_path, 'databases/observed/lulc_o_modis_grs_sum_b_none_d1_p0d.csv')
-lulc_o_modis_mxf_sum_b_none_d1_p0d = os.path.join(project_path, 'databases/observed/lulc_o_modis_mxf_sum_b_none_d1_p0d.csv')
-lulc_o_modis_osh_sum_b_none_d1_p0d = os.path.join(project_path, 'databases/observed/lulc_o_modis_osh_sum_b_none_d1_p0d.csv')
-lulc_o_modis_pwt_sum_b_none_d1_p0d = os.path.join(project_path, 'databases/observed/lulc_o_modis_pwt_sum_b_none_d1_p0d.csv')
-lulc_o_modis_snw_sum_b_none_d1_p0d = os.path.join(project_path, 'databases/observed/lulc_o_modis_snw_sum_b_none_d1_p0d.csv')
-lulc_o_modis_svn_sum_b_none_d1_p0d = os.path.join(project_path, 'databases/observed/lulc_o_modis_svn_sum_b_none_d1_p0d.csv')
-lulc_o_modis_urb_sum_b_none_d1_p0d = os.path.join(project_path, 'databases/observed/lulc_o_modis_urb_sum_b_none_d1_p0d.csv')
-lulc_o_modis_wat_sum_b_none_d1_p0d = os.path.join(project_path, 'databases/observed/lulc_o_modis_wat_sum_b_none_d1_p0d.csv')
-lulc_o_modis_wsv_sum_b_none_d1_p0d = os.path.join(project_path, 'databases/observed/lulc_o_modis_wsv_sum_b_none_d1_p0d.csv')
+lulc_o_modis_brn_frac_b_none_d1_p0d = os.path.join(project_path,
+                                                   'databases/observed/lulc_o_modis_brn_frac_b_none_d1_p0d.csv')
+lulc_o_modis_crp_frac_b_none_d1_p0d = os.path.join(project_path,
+                                                   'databases/observed/lulc_o_modis_crp_frac_b_none_d1_p0d.csv')
+lulc_o_modis_csh_frac_b_none_d1_p0d = os.path.join(project_path,
+                                                   'databases/observed/lulc_o_modis_csh_frac_b_none_d1_p0d.csv')
+lulc_o_modis_cvm_frac_b_none_d1_p0d = os.path.join(project_path,
+                                                   'databases/observed/lulc_o_modis_cvm_frac_b_none_d1_p0d.csv')
+lulc_o_modis_dbf_frac_b_none_d1_p0d = os.path.join(project_path,
+                                                   'databases/observed/lulc_o_modis_dbf_frac_b_none_d1_p0d.csv')
+lulc_o_modis_dnf_frac_b_none_d1_p0d = os.path.join(project_path,
+                                                   'databases/observed/lulc_o_modis_dnf_frac_b_none_d1_p0d.csv')
+lulc_o_modis_ebf_frac_b_none_d1_p0d = os.path.join(project_path,
+                                                   'databases/observed/lulc_o_modis_ebf_frac_b_none_d1_p0d.csv')
+lulc_o_modis_enf_frac_b_none_d1_p0d = os.path.join(project_path,
+                                                   'databases/observed/lulc_o_modis_enf_frac_b_none_d1_p0d.csv')
+lulc_o_modis_grs_frac_b_none_d1_p0d = os.path.join(project_path,
+                                                   'databases/observed/lulc_o_modis_grs_frac_b_none_d1_p0d.csv')
+lulc_o_modis_mxf_frac_b_none_d1_p0d = os.path.join(project_path,
+                                                   'databases/observed/lulc_o_modis_mxf_frac_b_none_d1_p0d.csv')
+lulc_o_modis_osh_frac_b_none_d1_p0d = os.path.join(project_path,
+                                                   'databases/observed/lulc_o_modis_osh_frac_b_none_d1_p0d.csv')
+lulc_o_modis_pwt_frac_b_none_d1_p0d = os.path.join(project_path,
+                                                   'databases/observed/lulc_o_modis_pwt_frac_b_none_d1_p0d.csv')
+lulc_o_modis_snw_frac_b_none_d1_p0d = os.path.join(project_path,
+                                                   'databases/observed/lulc_o_modis_snw_frac_b_none_d1_p0d.csv')
+lulc_o_modis_svn_frac_b_none_d1_p0d = os.path.join(project_path,
+                                                   'databases/observed/lulc_o_modis_svn_frac_b_none_d1_p0d.csv')
+lulc_o_modis_urb_frac_b_none_d1_p0d = os.path.join(project_path,
+                                                   'databases/observed/lulc_o_modis_urb_frac_b_none_d1_p0d.csv')
+lulc_o_modis_wat_frac_b_none_d1_p0d = os.path.join(project_path,
+                                                   'databases/observed/lulc_o_modis_wat_frac_b_none_d1_p0d.csv')
+lulc_o_modis_wsv_frac_b_none_d1_p0d = os.path.join(project_path,
+                                                   'databases/observed/lulc_o_modis_wsv_frac_b_none_d1_p0d.csv')
+lulc_o_modis_brn_sum_b_none_d1_p0d = os.path.join(project_path,
+                                                  'databases/observed/lulc_o_modis_brn_sum_b_none_d1_p0d.csv')
+lulc_o_modis_crp_sum_b_none_d1_p0d = os.path.join(project_path,
+                                                  'databases/observed/lulc_o_modis_crp_sum_b_none_d1_p0d.csv')
+lulc_o_modis_csh_sum_b_none_d1_p0d = os.path.join(project_path,
+                                                  'databases/observed/lulc_o_modis_csh_sum_b_none_d1_p0d.csv')
+lulc_o_modis_cvm_sum_b_none_d1_p0d = os.path.join(project_path,
+                                                  'databases/observed/lulc_o_modis_cvm_sum_b_none_d1_p0d.csv')
+lulc_o_modis_dbf_sum_b_none_d1_p0d = os.path.join(project_path,
+                                                  'databases/observed/lulc_o_modis_dbf_sum_b_none_d1_p0d.csv')
+lulc_o_modis_dnf_sum_b_none_d1_p0d = os.path.join(project_path,
+                                                  'databases/observed/lulc_o_modis_dnf_sum_b_none_d1_p0d.csv')
+lulc_o_modis_ebf_sum_b_none_d1_p0d = os.path.join(project_path,
+                                                  'databases/observed/lulc_o_modis_ebf_sum_b_none_d1_p0d.csv')
+lulc_o_modis_enf_sum_b_none_d1_p0d = os.path.join(project_path,
+                                                  'databases/observed/lulc_o_modis_enf_sum_b_none_d1_p0d.csv')
+lulc_o_modis_grs_sum_b_none_d1_p0d = os.path.join(project_path,
+                                                  'databases/observed/lulc_o_modis_grs_sum_b_none_d1_p0d.csv')
+lulc_o_modis_mxf_sum_b_none_d1_p0d = os.path.join(project_path,
+                                                  'databases/observed/lulc_o_modis_mxf_sum_b_none_d1_p0d.csv')
+lulc_o_modis_osh_sum_b_none_d1_p0d = os.path.join(project_path,
+                                                  'databases/observed/lulc_o_modis_osh_sum_b_none_d1_p0d.csv')
+lulc_o_modis_pwt_sum_b_none_d1_p0d = os.path.join(project_path,
+                                                  'databases/observed/lulc_o_modis_pwt_sum_b_none_d1_p0d.csv')
+lulc_o_modis_snw_sum_b_none_d1_p0d = os.path.join(project_path,
+                                                  'databases/observed/lulc_o_modis_snw_sum_b_none_d1_p0d.csv')
+lulc_o_modis_svn_sum_b_none_d1_p0d = os.path.join(project_path,
+                                                  'databases/observed/lulc_o_modis_svn_sum_b_none_d1_p0d.csv')
+lulc_o_modis_urb_sum_b_none_d1_p0d = os.path.join(project_path,
+                                                  'databases/observed/lulc_o_modis_urb_sum_b_none_d1_p0d.csv')
+lulc_o_modis_wat_sum_b_none_d1_p0d = os.path.join(project_path,
+                                                  'databases/observed/lulc_o_modis_wat_sum_b_none_d1_p0d.csv')
+lulc_o_modis_wsv_sum_b_none_d1_p0d = os.path.join(project_path,
+                                                  'databases/observed/lulc_o_modis_wsv_sum_b_none_d1_p0d.csv')
 
 lulc_o_modis_brn_frac_pc = os.path.join(project_path, 'pcdatabases/observed/lulc_o_modis_brn_frac_pc.csv')
 lulc_o_modis_crp_frac_pc = os.path.join(project_path, 'pcdatabases/observed/lulc_o_modis_crp_frac_pc.csv')

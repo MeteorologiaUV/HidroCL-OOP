@@ -823,36 +823,32 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
             result_df = extract_data(kwargs.get("vector_path"), mos, 'mean', debug=debug,
                                      debug_path=debug_path, name='n_' + result_file)
 
-            write_line2(kwargs.get("databases")[0], result_df, catchment_names, scene, file_date, ncol=(days.index(0)+1))
-            write_line2(kwargs.get("databases")[1], result_df, catchment_names, scene, file_date, ncol=(days.index(0)+1)+len(days))
-
-
             days = kwargs.get("days")
 
             if 0 in days:
                 write_line2(kwargs.get("databases")[0], result_df, catchment_names, scene, file_date,
                             ncol=(days.index(0) + 1))
-                write_line2(kwargs.get("databases")[0], result_df, catchment_names, scene, file_date,
+                write_line2(kwargs.get("pcdatabases")[0], result_df, catchment_names, scene, file_date,
                             ncol=(days.index(0) + 1) + len(days))
             if 1 in days:
                 write_line2(kwargs.get("databases")[1], result_df, catchment_names, scene, file_date,
                             ncol=(days.index(1) + 1))
-                write_line2(kwargs.get("databases")[1], result_df, catchment_names, scene, file_date,
+                write_line2(kwargs.get("pcdatabases")[1], result_df, catchment_names, scene, file_date,
                             ncol=(days.index(1) + 1) + len(days))
             if 2 in days:
                 write_line2(kwargs.get("databases")[2], result_df, catchment_names, scene, file_date,
                             ncol=(days.index(2) + 1))
-                write_line2(kwargs.get("databases")[2], result_df, catchment_names, scene, file_date,
+                write_line2(kwargs.get("pcdatabases")[2], result_df, catchment_names, scene, file_date,
                             ncol=(days.index(2) + 1) + len(days))
             if 3 in days:
                 write_line2(kwargs.get("databases")[3], result_df, catchment_names, scene, file_date,
                             ncol=(days.index(3) + 1))
-                write_line2(kwargs.get("databases")[3], result_df, catchment_names, scene, file_date,
+                write_line2(kwargs.get("pcdatabases")[3], result_df, catchment_names, scene, file_date,
                             ncol=(days.index(3) + 1) + len(days))
             if 4 in days:
                 write_line2(kwargs.get("databases")[4], result_df, catchment_names, scene, file_date,
                             ncol=(days.index(4) + 1))
-                write_line2(kwargs.get("databases")[4], result_df, catchment_names, scene, file_date,
+                write_line2(kwargs.get("pcdatabases")[4], result_df, catchment_names, scene, file_date,
                             ncol=(days.index(4) + 1) + len(days))
 
         case name if "lulc" in name:
