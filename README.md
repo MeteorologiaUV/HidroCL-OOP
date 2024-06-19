@@ -3,7 +3,7 @@
 ----
 
 [![pythonversion](https://img.shields.io/badge/python-v3.10-blue?style=plastic&logo=python&logoColor=yellow)](https://www.python.org/downloads/release/python-3100/)
-![packageversion](https://img.shields.io/badge/version-v0.0.19-blue?style=plastic)
+![packageversion](https://img.shields.io/badge/version-v0.0.21-blue?style=plastic)
 
 **Python minimum version**: 3.10
 

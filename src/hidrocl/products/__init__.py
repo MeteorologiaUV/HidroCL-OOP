@@ -3871,7 +3871,7 @@ Extraction of GFS data product:
 class Gfs:
     """
     A class to process GFS to hidrocl variables. The used variables are:
-    - gh: Geopotential height
+    - gh: Isotherm geopotential height
     - prate: Precipitation rate
     - r2: 2m relative humidity
     - t2m: 2m temperature

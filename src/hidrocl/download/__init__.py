@@ -390,7 +390,7 @@ def download_gfs(url, product_path):
            'pratesfc': 'prate',
            'tmp2m': 't2m',
            'rh2m': 'r2',
-           'hgtprs': 'gh'}
+           'hgt0c': 'gh'}
 
     dims = {'time': 'valid_time',
             'lat': 'latitude',
