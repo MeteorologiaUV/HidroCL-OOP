@@ -43,12 +43,12 @@ def download_era5land(year, month, day, path, timeout=60, retry_max=10, sleep_ma
 
     fname = os.path.join(path, f'era5-land_{year:04d}{month:02d}{day:02d}.nc')
 
-    c = cdsapi.Client(timeout=timeout, retry_max=retry_max, sleep_max=sleep_max)
+    dataset = 'reanalysis-era5-land'
 
-    c.retrieve(
-        'reanalysis-era5-land',
-        {
-            'format': 'netcdf',
+    request = {
+            'data_format': 'netcdf',
+            'download_format': 'unarchived',
+            'product_type': ['reanalysis'],
             'variable': [
                 '2m_temperature', 'potential_evaporation', 'snow_albedo',
                 'snow_cover', 'snow_density', 'snow_depth',
@@ -79,8 +79,10 @@ def download_era5land(year, month, day, path, timeout=60, retry_max=10, sleep_ma
                 -15, -75, -55,
                 -65,
             ],
-        },
-        fname)
+        }
+
+    client = cdsapi.Client(timeout=timeout, retry_max=retry_max, sleep_max=sleep_max)
+    client.retrieve(dataset, request, fname)
 
 
 def download_era5(year, month, day, path):
@@ -106,13 +108,13 @@ def download_era5(year, month, day, path):
 
     fname = os.path.join(path, f'era5_{year:04d}{month:02d}{day:02d}.nc')
 
-    c = cdsapi.Client(retry_max=10)
 
-    c.retrieve(
-        'reanalysis-era5-single-levels',
-        {
-            'product_type': 'reanalysis',
-            'format': 'netcdf',
+    dataset = 'reanalysis-era5-single-levels'
+
+    request = {
+            'data_format': 'netcdf',
+            'download_format': 'unarchived',
+            'product_type': ['reanalysis'],
             'variable': [
                 '10m_u_component_of_wind', '10m_v_component_of_wind', '2m_dewpoint_temperature',
                 '2m_temperature', 'surface_pressure', 'total_precipitation',
@@ -140,8 +142,10 @@ def download_era5(year, month, day, path):
                 -15, -75, -55,
                 -65,
             ],
-        },
-        fname)
+        }
+
+    client = cdsapi.Client(retry_max=10)
+    client.retrieve(dataset, request, fname)
 
 
 def download_era5pressure(year, month, day, path):
@@ -167,15 +171,14 @@ def download_era5pressure(year, month, day, path):
 
     fname = os.path.join(path, f'era5-pressure_{year:04d}{month:02d}{day:02d}.nc')
 
-    c = cdsapi.Client(retry_max=10)
+    dataset = 'reanalysis-era5-pressure-levels'
 
-    c.retrieve(
-        'reanalysis-era5-pressure-levels',
-        {
-            'product_type': 'reanalysis',
-            'format': 'netcdf',
-            'variable': 'geopotential',
-            'pressure_level': '500',
+    request = {
+            'data_format': 'netcdf',
+            'download_format': 'unarchived',
+            'product_type': ['reanalysis'],
+            'variable': ['geopotential'],
+            'pressure_level': ['500'],
             'month': [
                 str(month).zfill(2),
             ],
@@ -199,49 +202,10 @@ def download_era5pressure(year, month, day, path):
                 -15, -75, -55,
                 -65,
             ],
-        },
-        fname)
+        }
 
-
-def download_satsoilmoist(year, month, day, path):
-    """function to download Soil moisture gridded data from CDS
-
-    Examples:
-        >>> download_satsoilmoist(2000, 6, 1, '/path/to/data')
-
-    Args:
-        year (int): year of the data to be downloaded
-        month (int): month of the data to be downloaded
-        day (int): day of the data to be downloaded
-        path (str): path to save the data
-
-    Returns:
-        None
-    """
-
-    c = cdsapi.Client(retry_max=10)
-
-    c.retrieve(
-        'satellite-soil-moisture',
-        {
-            'format': 'tgz',
-            'variable': 'volumetric_surface_soil_moisture',
-            'type_of_sensor': [
-                'combined_passive_and_active', 'passive',
-            ],
-            'time_aggregation': 'day_average',
-            'month': str(month).zfill(2),
-            'year': str(year).zfill(4),
-            'day': str(day).zfill(2),
-            'type_of_record': 'cdr',
-            'version': 'v202012.0.0',
-        },
-        'download.tar.gz')
-
-    with tarfile.open('download.tar.gz') as tar:
-        tar.extractall(path=path)
-
-    os.remove('download.tar.gz')
+    client = cdsapi.Client(retry_max=10)
+    client.retrieve(dataset, request, fname)
 
 
 def get_imerg(start, end, user, password, timeout=60):
