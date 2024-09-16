@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='hidrocl',
-    version="0.0.22",
+    version="0.0.23",
     package_dir={'':"src"},
     packages=find_packages("src"),
     install_requires=[
@@ -11,7 +11,7 @@ setup(
         'matplotlib>=3.5.3',
         'geopandas>=0.11.1',
         'netCDF4>=1.6.0',
-        'cdsapi>=0.7.2',
+        'cdsapi>=0.7.3',
         'earthaccess>=0.8.1',
         'beautifulsoup4>=4.11.1',
         'rasterio>=1.3.2',
@@ -22,6 +22,7 @@ setup(
         'wget>=3.2',
         'exactextract>=0.2.0.dev0',
         'python-dotenv>=1.0.0',
+        'netcdf4>=1.7'
     ],
     python_requires='>=3.10',
 )
