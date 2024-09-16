@@ -9,6 +9,7 @@ import ftplib
 import cdsapi
 import tarfile
 import logging
+import zipfile
 import requests
 import earthaccess
 import pandas as pd
@@ -41,14 +42,15 @@ def download_era5land(year, month, day, path, timeout=60, retry_max=10, sleep_ma
 
     """
 
-    fname = os.path.join(path, f'era5-land_{year:04d}{month:02d}{day:02d}.nc')
+    fname = os.path.join(path, f'era5-land_{year:04d}{month:02d}{day:02d}.zip')
+    pth = os.path.join(path, f'era5-land_{year:04d}{month:02d}{day:02d}')
+    fnameout = os.path.join(path, f'era5-land_{year:04d}{month:02d}{day:02d}.nc')
 
     dataset = 'reanalysis-era5-land'
 
     request = {
             'data_format': 'netcdf',
-            'download_format': 'unarchived',
-            'product_type': ['reanalysis'],
+            'download_format': 'zip',
             'variable': [
                 '2m_temperature', 'potential_evaporation', 'snow_albedo',
                 'snow_cover', 'snow_density', 'snow_depth',
@@ -83,6 +85,24 @@ def download_era5land(year, month, day, path, timeout=60, retry_max=10, sleep_ma
 
     client = cdsapi.Client(timeout=timeout, retry_max=retry_max, sleep_max=sleep_max)
     client.retrieve(dataset, request, fname)
+
+    with zipfile.ZipFile(fname, 'r') as zip_ref:
+        zip_ref.extractall(pth)
+
+    os.remove(fname)
+
+    ds0 = xr.open_dataset(os.path.join(pth,'data_0.nc'))
+    ds1 = xr.open_dataset(os.path.join(pth,'data_1.nc'))
+    ds2 = xr.open_dataset(os.path.join(pth,'data_2.nc'))
+
+    ds = xr.merge([ds0, ds1, ds2])
+    ds = ds.drop(['number', 'expver'])
+    ds.to_netcdf(fnameout)
+
+    shutil.rmtree(pth)
+
+
+
 
 
 def download_era5(year, month, day, path):

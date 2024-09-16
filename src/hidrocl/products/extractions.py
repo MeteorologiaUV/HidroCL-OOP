@@ -89,13 +89,13 @@ def load_era5(file, var, reducer='mean'):
                 return da.sel(time=da.time.values[-1])
         match reducer:
             case 'mean':
-                da = da.mean(dim='time')
+                da = da.mean(dim='valid_time')
             case 'sum':
-                da = da.sum(dim='time')
+                da = da.sum(dim='valid_time')
             case 'min':
-                da = da.min(dim='time')
+                da = da.min(dim='valid_time')
             case 'max':
-                da = da.max(dim='time')
+                da = da.max(dim='valid_time')
             case _:
                 raise ValueError("Reducer not supported")
         match var:
@@ -131,13 +131,13 @@ def load_era5acc(file, var, reducer='max'):
         da = da.resample(time='3H')
         match reducer:
             case 'mean':
-                da = da.mean(dim='time')
+                da = da.mean(dim='valid_time')
             case 'sum':
-                da = da.sum(dim='time')
+                da = da.sum(dim='valid_time')
             case 'min':
-                da = da.min(dim='time')
+                da = da.min(dim='valid_time')
             case 'max':
-                da = da.max(dim='time')
+                da = da.max(dim='valid_time')
             case _:
                 raise ValueError("Reducer not supported")
         return da
@@ -326,8 +326,8 @@ def len_era5(dataset, limit=1):
     """
     da = xarray.open_dataset(dataset, mask_and_scale=True)
     da = da['tp']
-    da = da.resample(time='3H').sum('time') > 0.001 * limit
-    return da.sum('time') * 3
+    da = da.resample(time='3H').sum('valid_time') > 0.001 * limit
+    return da.sum('valid_time') * 3
 
 
 def mosaic_raster(raster_list, layer):
