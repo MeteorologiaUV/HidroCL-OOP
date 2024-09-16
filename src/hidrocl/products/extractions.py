@@ -326,7 +326,7 @@ def len_era5(dataset, limit=1):
     """
     da = xarray.open_dataset(dataset, mask_and_scale=True)
     da = da['tp']
-    da = da.resample(time='3H').sum('valid_time') > 0.001 * limit
+    da = da.resample(valid_time='3H').sum('valid_time') > 0.001 * limit
     return da.sum('valid_time') * 3
 
 
