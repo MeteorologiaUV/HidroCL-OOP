@@ -86,7 +86,7 @@ def load_era5(file, var, reducer='mean'):
         da = da[var]
         match var:
             case ('e' | 'pev' | 'swvl1' | 'swvl2' | 'swvl3' | 'swvl4'):
-                return da.sel(time=da.time.values[-1])
+                return da.sel(time=da.valid_time.values[-1])
         match reducer:
             case 'mean':
                 da = da.mean(dim='valid_time')
@@ -123,12 +123,12 @@ def load_era5acc(file, var, reducer='max'):
         da = xarray.open_dataset(file, mask_and_scale=True)
         da = da[var]
         # check if "expver" is in the file
-        if 'expver' in da.coords:
-            da = da.sel(expver=1)
-            # drop "expver" coordinate
-            da = da.drop('expver')
+        # if 'expver' in da.coords:
+        #     da = da.sel(expver=1)
+        #     # drop "expver" coordinate
+        #     da = da.drop('expver')
         # aggregate to 3-hourly
-        da = da.resample(time='3H')
+        da = da.resample(valid_time='3H')
         match reducer:
             case 'mean':
                 da = da.mean(dim='valid_time')
