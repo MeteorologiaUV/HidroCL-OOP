@@ -86,7 +86,7 @@ def load_era5(file, var, reducer='mean'):
         da = da[var]
         match var:
             case ('e' | 'pev' | 'swvl1' | 'swvl2' | 'swvl3' | 'swvl4'):
-                return da.sel(time=da.valid_time.values[-1])
+                return da.sel(valid_time=da.valid_time.values[-1])
         match reducer:
             case 'mean':
                 da = da.mean(dim='valid_time')
