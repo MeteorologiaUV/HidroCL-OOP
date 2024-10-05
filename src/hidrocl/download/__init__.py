@@ -95,8 +95,8 @@ def download_era5land(year, month, day, path, timeout=60, retry_max=10, sleep_ma
     ds1 = xr.open_dataset(os.path.join(pth,'data_1.nc'))
     ds2 = xr.open_dataset(os.path.join(pth,'data_2.nc'))
 
-    ds = xr.merge([ds0, ds1, ds2])
-    ds = ds.drop(['number', 'expver'])
+    ds = xr.merge([ds0, ds1, ds2], join = 'override')
+    ds = ds.drop_vars(['number', 'expver'])
     ds.to_netcdf(fnameout)
 
     shutil.rmtree(pth)
