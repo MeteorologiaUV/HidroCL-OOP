@@ -20,7 +20,6 @@ from rasterio import errors as rioe
 from rioxarray import exceptions as rxre
 from rioxarray.merge import merge_arrays
 
-
 path = Path(__file__).parent.absolute()
 
 debug = False
@@ -187,8 +186,8 @@ def load_persiann(file):
                                     ))
 
         persiann.coords['lon'] = (persiann.coords['lon'] + 180) % 360 - 180
-        return persiann.sortby(persiann.lon)\
-            .sortby(persiann.lat).sel(lat=slice(-55, -15), lon=slice(-75, -65))\
+        return persiann.sortby(persiann.lon) \
+            .sortby(persiann.lat).sel(lat=slice(-55, -15), lon=slice(-75, -65)) \
             .rename({'lon': 'x', 'lat': 'y'})
 
 
@@ -209,8 +208,8 @@ def load_gfs(file, var, day=0):
         da = xarray.open_dataset(file, mask_and_scale=True)
         da = da[var]
         da.load()
-        da = da.sel(valid_time=slice(da.time+pd.to_timedelta(24*day + 3, unit='H'),
-                                     da.time+pd.to_timedelta(24*day + 26, unit='H')))\
+        da = da.sel(valid_time=slice(da.time + pd.to_timedelta(24 * day + 3, unit='H'),
+                                     da.time + pd.to_timedelta(24 * day + 26, unit='H'))) \
             .transpose('valid_time', 'latitude', 'longitude')
         da.coords['longitude'] = (da.coords['longitude'] + 180) % 360 - 180
         return da
@@ -434,8 +433,8 @@ def write_line2(database, result, catchment_names, file_id, file_date, ncol=1):
     Returns:
         None
     """
-    gauge_id_result = result.iloc[:,0].astype(str).tolist()
-    value_result = result.iloc[:,ncol].astype(str).tolist()
+    gauge_id_result = result.iloc[:, 0].astype(str).tolist()
+    value_result = result.iloc[:, ncol].astype(str).tolist()
 
     if catchment_names == gauge_id_result:
         value_result.insert(0, file_id)
@@ -483,10 +482,10 @@ def extract_data(v, r, fun, debug=False, debug_path=None, name=None):
     gdf = gpd.read_file(v)
 
     result_val = exactextract.exact_extract(r, gdf, fun, include_cols='gauge_id', output='pandas',
-                                            max_cells_in_memory = 300000000)
+                                            max_cells_in_memory=300000000)
     result_pc = exactextract.exact_extract(xarray.where(r.isnull(), 0, 1), gdf, 'mean',
                                            include_cols='gauge_id', output='pandas',
-                                           max_cells_in_memory = 300000000)
+                                           max_cells_in_memory=300000000)
     result_pc.iloc[:, 1:] = result_pc.iloc[:, 1:] * 1000
     result_val = result_val.merge(result_pc, on='gauge_id', how='left')
     result_val = result_val.fillna(0).round(0).astype(int)
@@ -604,7 +603,7 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
                 mos = xarray.where(mos == val, 1, 0)
                 agg = kwargs.get("aggregation")
                 if agg == "mean":
-                    mos = mos*1000
+                    mos = mos * 1000
 
             except (rxre.RioXarrayError, rioe.RasterioIOError):
                 return print(f"Error in scene {scene}")
@@ -652,7 +651,7 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
                         elif kwargs.get("layer") == 'gh':
                             pass
                         elif kwargs.get("layer") == 't2m':
-                            mos_pre = (mos_pre - 273.15)*10
+                            mos_pre = (mos_pre - 273.15) * 10
                         else:
                             mos_pre = mos_pre * 10
                         mos_list.append(mos_pre)
@@ -808,13 +807,13 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
     match name:
         case 'snow':
             result_df = extract_data(kwargs.get("north_vector_path"), mos, 'mean', debug=debug,
-                                       debug_path=debug_path, name='n_'+result_file)
+                                     debug_path=debug_path, name='n_' + result_file)
 
             write_line2(kwargs.get("north_database"), result_df, catchment_names, scene, file_date, ncol=1)
             write_line2(kwargs.get("north_pcdatabase"), result_df, catchment_names, scene, file_date, ncol=2)
 
             result_df = extract_data(kwargs.get("south_vector_path"), mos, 'mean', debug=debug,
-                                       debug_path=debug_path, name='s_'+result_file)
+                                     debug_path=debug_path, name='s_' + result_file)
 
             write_line2(kwargs.get("south_database"), result_df, catchment_names, scene, file_date, ncol=1)
             write_line2(kwargs.get("south_pcdatabase"), result_df, catchment_names, scene, file_date, ncol=2)
@@ -860,7 +859,7 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
 
         case _:
             result_df = extract_data(kwargs.get("vector_path"), mos, 'mean', debug=debug,
-                                     debug_path=debug_path, name= result_file)
+                                     debug_path=debug_path, name=result_file)
 
             write_line2(kwargs.get("database"), result_df, catchment_names, scene, file_date, ncol=1)
             write_line2(kwargs.get("pcdatabase"), result_df, catchment_names, scene, file_date, ncol=2)

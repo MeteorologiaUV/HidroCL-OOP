@@ -5,7 +5,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 
-def checkdatabase(database, catchment_names=None, supportcreation = None):
+def checkdatabase(database, catchment_names=None, supportcreation=None):
     """
     Check if the database exists and is valid
 
@@ -30,7 +30,6 @@ def checkdatabase(database, catchment_names=None, supportcreation = None):
                 print('Database not found. Please, add catchment names before creating the database')
             else:
                 raise ImportError('Database not found. Check filename or create it')
-
 
         else:
             print('Database not found, creating it for ' + database)

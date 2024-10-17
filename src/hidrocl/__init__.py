@@ -32,6 +32,7 @@ try:
 except ImportError:
     print("ImportError")
 
+
 def reload_paths():
     """
     Reloads the paths module
@@ -105,6 +106,7 @@ def set_forecasted_products_path(path):
     forecasted_products_path = path
     reload_paths()
     return None
+
 
 def prepare_path(path):
     """

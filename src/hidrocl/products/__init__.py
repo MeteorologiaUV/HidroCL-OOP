@@ -1114,13 +1114,13 @@ Woody savannas database path: {self.wsv.database}
                                   aggregation=self.agg, value=4)
                 if scene not in self.dnf.indatabase:
                     e.zonal_stats(scene, scenes_path,
-                                    temp_dir, 'lulc_dnf',
-                                    self.dnf.catchment_names, self.var_log,
-                                    database=self.dnf.database,
-                                    pcdatabase=self.dnf.pcdatabase,
-                                    vector_path=self.vectorpath,
-                                    layer="LC_Type1",
-                                    aggregation=self.agg, value=3)
+                                  temp_dir, 'lulc_dnf',
+                                  self.dnf.catchment_names, self.var_log,
+                                  database=self.dnf.database,
+                                  pcdatabase=self.dnf.pcdatabase,
+                                  vector_path=self.vectorpath,
+                                  layer="LC_Type1",
+                                  aggregation=self.agg, value=3)
                 if scene not in self.ebf.indatabase:
                     e.zonal_stats(scene, scenes_path,
                                   temp_dir, 'lulc_ebf',
@@ -1220,7 +1220,6 @@ Woody savannas database path: {self.wsv.database}
                                   vector_path=self.vectorpath,
                                   layer="LC_Type1",
                                   aggregation=self.agg, value=8)
-
 
     def run_maintainer(self, log_file, limit=None):
         """

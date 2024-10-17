@@ -91,18 +91,15 @@ def download_era5land(year, month, day, path, timeout=60, retry_max=10, sleep_ma
 
     os.remove(fname)
 
-    ds0 = xr.open_dataset(os.path.join(pth,'data_0.nc'))
-    ds1 = xr.open_dataset(os.path.join(pth,'data_1.nc'))
-    ds2 = xr.open_dataset(os.path.join(pth,'data_2.nc'))
+    ds0 = xr.open_dataset(os.path.join(pth, 'data_0.nc'))
+    ds1 = xr.open_dataset(os.path.join(pth, 'data_1.nc'))
+    ds2 = xr.open_dataset(os.path.join(pth, 'data_2.nc'))
 
-    ds = xr.merge([ds0, ds1, ds2], join = 'override')
+    ds = xr.merge([ds0, ds1, ds2], join='override')
     ds = ds.drop_vars(['number', 'expver'])
     ds.to_netcdf(fnameout)
 
     shutil.rmtree(pth)
-
-
-
 
 
 def download_era5(year, month, day, path):
@@ -127,7 +124,6 @@ def download_era5(year, month, day, path):
     """
 
     fname = os.path.join(path, f'era5_{year:04d}{month:02d}{day:02d}.nc')
-
 
     dataset = 'reanalysis-era5-single-levels'
 
@@ -535,7 +531,8 @@ def earthdata_download(what, product_path, start, end):
 
     print('Downloaded finished')
 
-def download_pdirnow(start, end, product_path, check_ppath = False):
+
+def download_pdirnow(start, end, product_path, check_ppath=False):
     """
     Download PDIRNow data from CHRS FTP server.
 
@@ -555,7 +552,9 @@ def download_pdirnow(start, end, product_path, check_ppath = False):
     ftp_server = 'persiann.eng.uci.edu'
     ftp_path = 'CHRSdata/PDIRNow/PDIRNowdaily'
 
-    while True:
+    i = 0
+
+    while i < 5:
         try:
             ftp = ftplib.FTP(ftp_server)
             ftp.login()
@@ -564,7 +563,12 @@ def download_pdirnow(start, end, product_path, check_ppath = False):
         except:
             print('FTP connection failed. Trying again in 5 seconds...')
             time.sleep(5)
+            i += 1
             continue
+
+    if i == 5:
+        print('FTP connection failed. Please try again later')
+        return
 
     dir_list = []
     ftp.dir(dir_list.append)
