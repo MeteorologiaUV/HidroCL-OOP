@@ -123,13 +123,15 @@ def download_era5(year, month, day, path):
 
     """
 
-    fname = os.path.join(path, f'era5_{year:04d}{month:02d}{day:02d}.nc')
+    fname = os.path.join(path, f'era5_{year:04d}{month:02d}{day:02d}.zip')
+    pth = os.path.join(path, f'era5_{year:04d}{month:02d}{day:02d}')
+    fnameout = os.path.join(path, f'era5_{year:04d}{month:02d}{day:02d}.nc')
 
     dataset = 'reanalysis-era5-single-levels'
 
     request = {
             'data_format': 'netcdf',
-            'download_format': 'unarchived',
+            'download_format': 'zip',
             'product_type': ['reanalysis'],
             'variable': [
                 '10m_u_component_of_wind', '10m_v_component_of_wind', '2m_dewpoint_temperature',
@@ -161,8 +163,21 @@ def download_era5(year, month, day, path):
         }
 
     client = cdsapi.Client(retry_max=10)
-    client.retrieve(dataset, request, fname)
+    client.retrieve(dataset, request,fname)#.download()#, fname)
 
+    with zipfile.ZipFile(fname, 'r') as zip_ref:
+        zip_ref.extractall(pth)
+
+    os.remove(fname)
+
+    ds0 = xr.open_dataset(os.path.join(pth, 'data_stream-oper_stepType-instant.nc'))
+    ds1 = xr.open_dataset(os.path.join(pth, 'data_stream-oper_stepType-accum.nc'))
+
+    ds = xr.merge([ds0, ds1], join='override')
+    ds = ds.drop_vars(['number', 'expver'])
+    ds.to_netcdf(fnameout)
+
+    shutil.rmtree(pth)
 
 def download_era5pressure(year, month, day, path):
     """function to download era5 pressure levels reanalysis data from CDS
