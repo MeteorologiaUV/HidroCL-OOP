@@ -1,6 +1,6 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.2
 Name: hidrocl
-Version: 0.0.26
+Version: 0.0.27
 Requires-Python: >=3.10
 License-File: LICENSE
 Requires-Dist: pandas>=1.4.3
@@ -20,3 +20,5 @@ Requires-Dist: wget>=3.2
 Requires-Dist: exactextract>=0.2.0.dev0
 Requires-Dist: python-dotenv>=1.0.0
 Requires-Dist: netcdf4>=1.7
+Dynamic: requires-dist
+Dynamic: requires-python

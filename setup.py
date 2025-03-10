@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='hidrocl',
-    version="0.0.26",
+    version="0.0.27",
     package_dir={'':"src"},
     packages=find_packages("src"),
     install_requires=[
