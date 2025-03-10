@@ -2670,13 +2670,14 @@ Volumetric soil water records: {len(self.soilm.indatabase)}.
 Volumetric soil water path: {self.soilm.database}
                 '''
 
-    def run_extraction(self, limit=None):
+    def run_extraction(self, scene=None, limit=None):
         """
         Run the extraction of the product.
         If limit is None, all scenes will be processed.
         If limit is a number, only the first limit scenes will be processed.
 
         Args:
+            scene (str): scene name
             limit (int): length of the scenes_to_process
 
         Returns:
@@ -2701,6 +2702,13 @@ Volumetric soil water path: {self.soilm.database}
                                                     self.soilm.indatabase)
 
         self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.common_elements, "era5")
+
+        if scene is not None:
+            if scene in self.scenes_to_process:
+                self.scenes_to_process = [scene]
+            else:
+                print(f'{scene} not in the scenes to process. Please, check the scene name.')
+                return
 
         scenes_path = t.get_scenes_path(self.product_files, self.productpath)
 
@@ -3013,13 +3021,14 @@ V wind component records: {len(self.v.indatabase)}.
 V wind component path: {self.v.database}
                 '''
 
-    def run_extraction(self, limit=None):
+    def run_extraction(self, scene=None, limit=None):
         """
         Run the extraction of the product.
         If limit is None, all scenes will be processed.
         If limit is a number, only the first limit scenes will be processed.
 
         Args:
+            scene (str): scene name
             limit (int): length of the scenes_to_process
 
         Returns:
@@ -3046,6 +3055,13 @@ V wind component path: {self.v.database}
                                                     self.v.indatabase)
 
         self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.common_elements, "era5")
+
+        if scene is not None:
+            if scene in self.scenes_to_process:
+                self.scenes_to_process = [scene]
+            else:
+                print(f'{scene} not in the scenes to process. Please, check the scene name.')
+                return
 
         scenes_path = t.get_scenes_path(self.product_files, self.productpath)
 
@@ -3278,13 +3294,14 @@ Maximum precipitation records: {len(self.ppmax.indatabase)}.
 Maximum precipitation path: {self.ppmax.database}
                 '''
 
-    def run_extraction(self, limit=None):
+    def run_extraction(self, scene=None, limit=None):
         """
         Run the extraction of the product.
         If limit is None, all scenes will be processed.
         If limit is a number, only the first limit scenes will be processed.
 
         Args:
+            scene (str): scene name
             limit (int): length of the scenes_to_process
 
         Returns:
@@ -3297,6 +3314,13 @@ Maximum precipitation path: {self.ppmax.database}
         self.common_elements = t.compare_indatabase(self.ppmax.indatabase)
 
         self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.common_elements, "era5")
+
+        if scene is not None:
+            if scene in self.scenes_to_process:
+                self.scenes_to_process = [scene]
+            else:
+                print(f'{scene} not in the scenes to process. Please, check the scene name.')
+                return
 
         scenes_path = t.get_scenes_path(self.product_files, self.productpath)
 
@@ -3449,13 +3473,14 @@ Precipitation length records: {len(self.pplen.indatabase)}.
 Precipitation length path: {self.pplen.database}
                 '''
 
-    def run_extraction(self, limit=None):
+    def run_extraction(self, scene=None, limit=None):
         """
         Run the extraction of the product.
         If limit is None, all scenes will be processed.
         If limit is a number, only the first limit scenes will be processed.
 
         Args:
+            scene (str): scene name
             limit (int): length of the scenes_to_process
 
         Returns:
@@ -3468,6 +3493,13 @@ Precipitation length path: {self.pplen.database}
         self.common_elements = t.compare_indatabase(self.pplen.indatabase)
 
         self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.common_elements, "era5")
+
+        if scene is not None:
+            if scene in self.scenes_to_process:
+                self.scenes_to_process = [scene]
+            else:
+                print(f'{scene} not in the scenes to process. Please, check the scene name.')
+                return
 
         scenes_path = t.get_scenes_path(self.product_files, self.productpath)
 
@@ -3620,13 +3652,14 @@ Geo potential height records: {len(self.z.indatabase)}.
 Geo potential height path: {self.z.database}
                 '''
 
-    def run_extraction(self, limit=None):
+    def run_extraction(self, scene=None, limit=None):
         """
         Run the extraction of the product.
         If limit is None, all scenes will be processed.
         If limit is a number, only the first limit scenes will be processed.
 
         Args:
+            scene (str): scene name
             limit (int): length of the scenes_to_process
 
         Returns:
@@ -3639,6 +3672,13 @@ Geo potential height path: {self.z.database}
         self.common_elements = self.z.indatabase
 
         self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.common_elements, "era5")
+
+        if scene is not None:
+            if scene in self.scenes_to_process:
+                self.scenes_to_process = [scene]
+            else:
+                print(f'{scene} not in the scenes to process. Please, check the scene name.')
+                return
 
         scenes_path = t.get_scenes_path(self.product_files, self.productpath)
 
@@ -3789,13 +3829,14 @@ Relative humidity records: {len(self.rh.indatabase)}.
 Relative humidity path: {self.rh.database}
                 '''
 
-    def run_extraction(self, limit=None):
+    def run_extraction(self, scene=None, limit=None):
         """
         Run the extraction of the product.
         If limit is None, all scenes will be processed.
         If limit is a number, only the first limit scenes will be processed.
 
         Args:
+            scene (str): scene name
             limit (int): length of the scenes_to_process
 
         Returns:
@@ -3808,6 +3849,13 @@ Relative humidity path: {self.rh.database}
         self.common_elements = self.rh.indatabase
 
         self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.common_elements, "era5")
+
+        if scene is not None:
+            if scene in self.scenes_to_process:
+                self.scenes_to_process = [scene]
+            else:
+                print(f'{scene} not in the scenes to process. Please, check the scene name.')
+                return
 
         scenes_path = t.get_scenes_path(self.product_files, self.productpath)
 
