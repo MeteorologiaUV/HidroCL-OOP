@@ -126,10 +126,21 @@ era5 = hidrocl.Era5_pressure(z=gh,
                              product_path=hcl.era5_pressure_levels_hourly_path,
                              vector_path=hcl.hidrocl_wgs84)
 
-era5.run_extraction()
+exit_code = 0
+
+scenes = era5.scenes_to_process
+
+for scene in scenes:
+    try:
+        era5.run_extraction(scene = scene)
+    except:
+        exit_code = 1
+        continue
 
 if 'tempdir' in locals():
     if tempdir.name == hidrocl.processing_path:
         shutil.rmtree(product_path)
 
 print('Done')
+
+sys.exit(exit_code)

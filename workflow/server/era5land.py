@@ -39,12 +39,12 @@ Load databases
 print('Loading databases')
 
 eto = hidrocl.HidroCLVariable("eto",
-                              hcl.et_o_era5_eta_mean,
-                              hcl.et_o_era5_eta_pc)
+                              hcl.et_o_era5_eto_mean,
+                              hcl.et_o_era5_eto_pc)
 
 et = hidrocl.HidroCLVariable("et",
-                             hcl.et_o_era5_eto_mean,
-                             hcl.et_o_era5_eto_pc)
+                             hcl.et_o_era5_eta_mean,
+                             hcl.et_o_era5_eta_pc)
 
 sca = hidrocl.HidroCLVariable("sca",
                               hcl.snw_o_era5_sca_mean,
@@ -93,6 +93,7 @@ if start == end:
     sys.exit(4)
 
 start = start.strftime('%Y-%m-%d')
+#start = pd.to_datetime('2025-02-24', format="%Y-%m-%d")
 end = end.strftime('%Y-%m-%d')
 
 p = pd.period_range(pd.to_datetime(start, format="%Y-%m-%d"),
@@ -168,10 +169,21 @@ era5 = hidrocl.Era5_land(et=et, pet=eto,
                          product_path=hcl.era5_land_hourly_path,
                          vector_path=hcl.hidrocl_wgs84)
 
-era5.run_extraction()
+exit_code = 0
+
+scenes = era5.scenes_to_process
+
+for scene in scenes:
+    try:
+        era5.run_extraction(scene = scene)
+    except:
+        exit_code = 1
+        continue
 
 if 'tempdir' in locals():
     if tempdir.name == hidrocl.processing_path:
         shutil.rmtree(product_path)
 
 print('Done')
+
+sys.exit(exit_code)

@@ -212,13 +212,48 @@ era5rh = hidrocl.Era5_rh(rh=rh,
                          product_path=hcl.era5_relative_humidity_path,
                          vector_path=hcl.hidrocl_wgs84)
 
-era5.run_extraction()
-era5pplen.run_extraction()
-era5maxpp.run_extraction()
-era5rh.run_extraction()
+exit_code = 0
+
+scenes = era5.scenes_to_process
+
+for scene in scenes:
+    try:
+        era5.run_extraction(scene = scene)
+    except:
+        exit_code = 1
+        continue
+
+scenes = era5pplen.scenes_to_process
+
+for scene in scenes:
+    try:
+        era5pplen.run_extraction(scene = scene)
+    except:
+        exit_code = 1
+        continue
+
+scenes = era5maxpp.scenes_to_process
+
+for scene in scenes:
+    try:
+        era5maxpp.run_extraction(scene = scene)
+    except:
+        exit_code = 1
+        continue
+
+scenes = era5rh.scenes_to_process
+
+for scene in scenes:
+    try:
+        era5rh.run_extraction(scene = scene)
+    except:
+        exit_code = 1
+        continue
 
 if 'tempdir' in locals():
     if tempdir.name == hidrocl.processing_path:
         shutil.rmtree(product_path)
 
 print('Done')
+
+sys.exit(exit_code)
