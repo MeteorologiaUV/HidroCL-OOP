@@ -46,9 +46,9 @@ def read_product_files(productpath, what="modis", variable=None):
     """
     match what:
         case "modis":
-            return [value for value in os.listdir(productpath) if ".hdf" in value]
+            return [value for value in os.listdir(productpath) if value.endswith(".hdf")]
         case "imerg":
-            return [value for value in os.listdir(productpath) if ".HDF5" in value]
+            return [value for value in os.listdir(productpath) if value.endswith(".HDF5")]
         case "imgis":
             return [str(value.relative_to(productpath)) for value in Path(productpath).rglob("*.tif")]
         case "gldas":
