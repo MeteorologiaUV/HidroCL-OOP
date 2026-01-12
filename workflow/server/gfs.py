@@ -312,29 +312,29 @@ p = pd.period_range(pd.to_datetime(start, format="%Y-%m-%d"),
 Download data
 """
 
-urls = hidrocl.download.list_gfs()
+dates = hidrocl.download.list_gfs()
 
-available_dates = [pd.to_datetime(val.split('/')[-2].split('gfs')[-1], format="%Y%m%d") for val in urls]
+available_dates = [pd.to_datetime(val) for val in dates]
 
 """
 Exit code=2 if today's data is not available
 """
+
+pdate = [pd.to_datetime(val.strftime('%Y-%m-%d'), format="%Y-%m-%d") for val in p]
+missing_dates = [val for val in pdate if val in available_dates]
+
 if max(available_dates) < today:
     print('No new data to download')
     sys.exit(3)
 
-pdate = [pd.to_datetime(val.strftime('%Y-%m-%d'), format="%Y-%m-%d") for val in p]
-missing_dates = [val for val in pdate if val in available_dates]
-missing_urls = [val for val in urls if
-                pd.to_datetime(val.split('/')[-2].split('gfs')[-1], format="%Y%m%d") in missing_dates]
+if len(missing_dates) == 0:
+    print('No new data to download')
+    sys.exit(4)
 
-# print missing_urls for reference
-print(missing_urls)
-
-for url in missing_urls:
-    date = url.split('/')[-2].replace('gfs', '')
+for date in missing_dates:
+    date = date.strftime('%Y-%m-%d')
     try:
-        hidrocl.download.download_gfs(url, product_path)
+        hidrocl.download.download_gfs(date, product_path)
         print('Download done')
     except ValueError:
         print("Fail")

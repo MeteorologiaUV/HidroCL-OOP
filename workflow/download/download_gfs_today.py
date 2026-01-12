@@ -1,12 +1,17 @@
 # coding=utf-8
 
 import os
+import sys
+import time
 import shutil
 import hidrocl
 from datetime import datetime
 from hidrocl import paths as hcl
 
-product_path = hcl.gfs
+start = time.time()
+
+#product_path = hcl.gfs
+product_path = "/Users/aldotapia/Documents/GitHub/HidroCL-OOP/tests/gfs"
 
 today = datetime.utcnow()
 year = today.strftime('%Y')
@@ -15,15 +20,22 @@ folder = f'{today}00'
 
 today_folder = os.path.join(product_path, year, folder)
 
-urls = hidrocl.download.list_gfs()
-dates = [val.split('/')[-2].replace('gfs', '') for val in urls]
+dates = hidrocl.download.list_gfs()
+
+if not isinstance(dates, list):
+    print("Error retrieving dates")
+    sys.exit()
+
+if today not in dates:
+    print("Today's date is not available for download")
+    sys.exit()
+
 
 print(f'GFS download for {today}')
 
 if not os.path.exists(today_folder):
     try:
-        pos = dates.index(today)
-        hidrocl.download.download_gfs(urls[pos], product_path)
+        hidrocl.download.download_gfs(today, product_path)
         print('Download done')
     except ValueError:
         print("Today's date is not available for download")
@@ -31,10 +43,12 @@ elif len(os.listdir(today_folder)) < 6:
     print('Folder exists but is not complete, deleting and downloading again')
     shutil.rmtree(today_folder)
     try:
-        pos = dates.index(today)
-        hidrocl.download.download_gfs(urls[pos], product_path)
+        hidrocl.download.download_gfs(today, product_path)
         print('Download done')
     except ValueError:
         print("Today's date is not available for download")
 else:
     print(f'Folder {today_folder} and files already exists')
+
+end = time.time()
+print(f'Time elapsed: {end - start} seconds')
