@@ -15,3 +15,4 @@ local_test_persiann_css_cdr_extraction.ipynb
 local_test_gldas_extraction.ipynb
 gfs_test.ipynb
 local_tests.ipynb
+tests*

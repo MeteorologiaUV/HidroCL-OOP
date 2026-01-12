@@ -1,6 +1,8 @@
 # coding=utf-8
 
 import os
+import re
+import sys
 import wget
 import gzip
 import time
@@ -11,10 +13,12 @@ import tarfile
 import logging
 import zipfile
 import requests
+import tempfile
 import earthaccess
 import pandas as pd
 import xarray as xr
 from . import tools as t
+from pathlib import Path
 from datetime import datetime
 from bs4 import BeautifulSoup
 from requests.auth import HTTPBasicAuth
@@ -351,92 +355,141 @@ def list_gfs():
         list: a list of available GFS products or the status code if the request fails
     """
 
-    baseurl = 'https://nomads.ncep.noaa.gov/dods/gfs_0p50'
+    baseurl = 'https://nomads.ncep.noaa.gov/gribfilter.php?ds=gfs_0p50'
 
     response = requests.get(baseurl)
 
     if response.status_code == 200:
         soup = BeautifulSoup(response.text, 'html.parser')
-        variables = soup.find_all('a')
-        urls = [val.get('href') + '/gfs_0p50_00z' for val in variables if 'gfs_0p50/' in val.get('href')]
-        return urls
+        variables = soup.find_all('span', string=re.compile(r"^gfs\."))
+        dates = [val.text.split('.')[1] for val in variables]
+        dates = [f'{val[:4]}-{val[4:6]}-{val[6:]}' for val in dates]
+        return dates
     else:
         print('Error: ', response.status_code)
         return response.status_code
 
 
-def download_gfs(url, product_path):
+def download_gfs(date, product_path, days=5, temp_files_folder=None):
     """
-    Download a GFS product from nomads
+    Download a GFS product from NOMADS server using GRIB data access
 
     Examples:
-        >>> download_gfs('https://nomads.ncep.noaa.gov/dods/gfs_0p50/gfs20200601/gfs_0p50_00z', '/path/to/data')
+        >>> download_gfs('2025-12-31', '/path/to/data')
 
     Args:
-        url: url of the product
+        date: date of the product in the format YYYY-MM-DD
         product_path: path to save the product
 
     Returns:
         None
     """
 
-    dic = {'ugrd10m': 'u10',
-           'vgrd10m': 'v10',
-           'pratesfc': 'prate',
-           'tmp2m': 't2m',
-           'rh2m': 'r2',
-           'hgt0c': 'gh'}
+    hours = range(0, days * 24 + 3, 3)
 
-    dims = {'time': 'valid_time',
-            'lat': 'latitude',
-            'lon': 'longitude'}
+    date_str = date.replace('-', '')
 
-    dims.update(dic)
+    vars = ['u10', 'v10', 'prate', 't2m', 'r2', 'gh']
 
     leveltype = {'u10': 'heightAboveGround',
-                 'v10': 'heightAboveGround',
-                 'prate': 'surface',
-                 't2m': 'heightAboveGround',
-                 'r2': 'heightAboveGround',
-                 'gh': 'isothermZero'}
-
+                     'v10': 'heightAboveGround',
+                     'prate': 'surface',
+                     't2m': 'heightAboveGround',
+                     'r2': 'heightAboveGround',
+                     'gh': 'isothermZero'}
+    
     steptype = {'u10': 'instant',
-                'v10': 'instant',
-                'prate': 'avg',
-                't2m': 'instant',
-                'r2': 'instant',
-                'gh': 'instant'}
+                    'v10': 'instant',
+                    'prate': 'avg',
+                    't2m': 'instant',
+                    'r2': 'instant',
+                    'gh': 'instant'}
+    
+    with tempfile.TemporaryDirectory() as tmpdir:
+        if temp_files_folder is None:
+            tmpdir = Path(tmpdir)
+        else:
+            tmpdir = Path(temp_files_folder)
+        
+        for hour in hours:
+            url1 = f'https://nomads.ncep.noaa.gov/cgi-bin/filter_gfs_0p50.pl?dir=%2Fgfs.{date_str}%2F00%2Fatmos&file=gfs.t00z.pgrb2full.0p50.f{hour:03d}&var_UGRD=on&var_VGRD=on&lev_10_m_above_ground=on&subregion=&toplat=-13&leftlon=-79&rightlon=-63&bottomlat=-61'
+            url2 = f'https://nomads.ncep.noaa.gov/cgi-bin/filter_gfs_0p50.pl?dir=%2Fgfs.{date_str}%2F00%2Fatmos&file=gfs.t00z.pgrb2full.0p50.f{hour:03d}&var_PRATE=on&lev_surface=on&subregion=&toplat=-13&leftlon=-79&rightlon=-63&bottomlat=-61'
+            url3 = f'https://nomads.ncep.noaa.gov/cgi-bin/filter_gfs_0p50.pl?dir=%2Fgfs.{date_str}%2F00%2Fatmos&file=gfs.t00z.pgrb2full.0p50.f{hour:03d}&var_RH=on&var_TMP=on&lev_2_m_above_ground=on&subregion=&toplat=-13&leftlon=-79&rightlon=-63&bottomlat=-61'
+            url4 = f'https://nomads.ncep.noaa.gov/cgi-bin/filter_gfs_0p50.pl?dir=%2Fgfs.{date_str}%2F00%2Fatmos&file=gfs.t00z.pgrb2full.0p50.f{hour:03d}&var_HGT=on&lev_0C_isotherm=on&subregion=&toplat=-13&leftlon=-79&rightlon=-63&bottomlat=-61'
+    
+            urls = [url1, url2, url3, url4]
+            
+            for i in range(4):
+                response = requests.get(urls[i])
+                
+                if response.status_code != 200:
+                    print(f'Failed to download from {urls[i]}. Status code: {response.status_code}')
+                    sys.exit(3)
 
-    date = url.split('/')[-2].replace('gfs', '')
-    year = date[:4]
-    date = date + '00'
+                path_name = tmpdir / f'gfs_part{i+1}_d{date_str}_f{hour:03d}.grb2'
+                
+                if path_name.exists():
+                    print(f'File {path_name} already exists. Skipping download.')
+                    continue
+                with open(path_name, 'wb') as f:
+                    f.write(response.content)
+                print(f'Downloaded {path_name}')
+                time.sleep(1)
+        
+        files = os.listdir(tmpdir)
 
-    if not os.path.exists(os.path.join(product_path, year)):
-        os.makedirs(os.path.join(product_path, year))
-    else:
-        print(f'Folder {year} already exists')
-    if not os.path.exists(os.path.join(product_path, year, date)):
-        os.makedirs(os.path.join(product_path, year, date))
-    else:
-        print(f'Folder {date} already exists')
+        parts = []
+    
+        for k in range(1, 5):
+            
+            files_temp = [f for f in files if f.startswith(f'gfs_part{k}_d{date_str}')]
+                
+            files_temp = sorted(files_temp)
+            files_temp = [f for f in files_temp if f.endswith('.grb2')]
+        
+            l = []
+        
+            for file in files_temp:
+                if k == 2:            
+                    ds_temp = xr.open_dataset(os.path.join(tmpdir, file), engine='cfgrib', 
+                                                backend_kwargs={'filter_by_keys': {'stepType': 'instant'}})
+                else:
+                    ds_temp = xr.open_dataset(os.path.join(tmpdir, file), engine='cfgrib')
+                l.append(ds_temp)
+            
+            ds_part = xr.concat(l, dim='valid_time')
+            parts.append(ds_part)
+        
+        ds_gfs = xr.merge(parts, compat='override')
+        
+        ds_gfs = xr.merge(parts, compat='override')
+        ds_gfs = ds_gfs.sortby(['valid_time', 'latitude', 'longitude'])
+        
+        ds_gfs = ds_gfs.drop_vars(['step', 'heightAboveGround', 'surface', 'isothermZero'])
 
-    logging.info(url)
+        ds_gfs = ds_gfs.sel(latitude=slice(-61, -13), longitude=slice(281, 297),
+                    valid_time=slice(ds_gfs.valid_time[0].values,
+                                     ds_gfs.valid_time[0].values + pd.to_timedelta(24 * 5, unit='H')))
+        
+        ds_gfs = ds_gfs.assign_coords({'time': ds_gfs.valid_time.values[0]})
 
-    with t.HiddenPrints():
-        ds = xr.open_dataset(url)
-
-        ds = ds.sel(lev=500)[list(dic.keys())].drop('lev')
-        ds = ds.rename(dims)
-        ds = ds.sel(latitude=slice(-61, -13), longitude=slice(281, 297),
-                    valid_time=slice(ds.valid_time[0].values,
-                                     ds.valid_time[0].values + pd.to_timedelta(24 * 5, unit='H')))
-        # create a new coordinate
-        ds = ds.assign_coords({'time': ds.valid_time.values[0]})
-
-        for var in dic.values():
-            name = f'GFS0.5_{var}_{leveltype.get(var)}_{steptype.get(var)}_{date}.nc'
-            ds[var].to_netcdf(os.path.join(product_path, year, date, name))
+        date_name = date.replace('-', '') + '00'
+        year = date.split('-')[0]
+        
+        if not os.path.exists(os.path.join(product_path, year)):
+            os.makedirs(os.path.join(product_path, year))
+        else:
+            print(f'Folder {year} already exists')
+        if not os.path.exists(os.path.join(product_path, year, date_name)):
+            os.makedirs(os.path.join(product_path, year, date_name))
+        else:
+            print(f'Folder {date_name} already exists')
+        
+        for var in vars:
+            name = f'GFS0.5_{var}_{leveltype.get(var)}_{steptype.get(var)}_{date_name}.nc'
+            ds_gfs[var].to_netcdf(os.path.join(product_path, year, date_name, name))
             print(f'{date} {var} saved')
+
 
 
 def earthdata_download(what, product_path, start, end):
