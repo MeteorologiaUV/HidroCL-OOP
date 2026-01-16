@@ -47,6 +47,8 @@ def read_product_files(productpath, what="modis", variable=None):
     match what:
         case "modis":
             return [value for value in os.listdir(productpath) if value.endswith(".hdf")]
+        case "viirs":
+            return [value for value in os.listdir(productpath) if value.endswith(".h5")]
         case "imerg":
             return [value for value in os.listdir(productpath) if value.endswith(".HDF5")]
         case "imgis":
@@ -88,6 +90,8 @@ def get_product_ids(product_files, what="modis"):
     """
     match what:
         case "modis":
+            return [value.split(".")[1] for value in product_files]
+        case "viirs":
             return [value.split(".")[1] for value in product_files]
         case "imerg":
             return [value.split(".")[4].split("-")[0] for value in product_files]
@@ -154,6 +158,10 @@ def classify_occurrences(scenes_occurrences, what="modis"):
     match what:
         case "modis":
             correctvalue = 9
+        case "viirs":
+            correctvalue = 9
+        case "viirs_snow":
+            correctvalue = 10
         case "imerg":
             correctvalue = 48
         case "imgis":
@@ -192,6 +200,8 @@ def get_scenes_out_of_db(complete_scenes, common_elements, what='modis'):
 
     match what:
         case "modis":
+            idlenght = 7
+        case "viirs":
             idlenght = 7
         case "imerg":
             idlenght = 8

@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='hidrocl',
-    version="0.0.29",
+    version="0.0.30",
     package_dir={'':"src"},
     packages=find_packages("src"),
     install_requires=[
@@ -17,12 +17,15 @@ setup(
         'rasterio>=1.3.2',
         'numpy>=1.23.2',
         'xarray>=0.20.1',
-        'requests>=2.28.1',
+        'requests>=2.32',
         'setuptools>=63.4.1',
         'wget>=3.2',
         'exactextract>=0.2.0.dev0',
         'python-dotenv>=1.0.0',
-        'netcdf4>=1.7'
+        'netcdf4>=1.7',
+        'ecCodes>=2.44.0',
+        'cfgrib~=0.9.15.1',
+
     ],
     python_requires='>=3.10',
 )

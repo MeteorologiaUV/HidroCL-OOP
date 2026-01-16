@@ -600,6 +600,98 @@ def earthdata_download(what, product_path, start, end):
     print('Downloaded finished')
 
 
+def viirs_download(what, product_path, start, end,
+                       bbox=(-73.73, -55.01, -67.05, -17.63)):
+    """
+    Download VIIRS replacement products (and a WorldCover option for LULC).
+
+    Args:
+        what: reflectance, vegetation, lai, albedo, lulc, et0, snow, precipitation, landdata
+        product_path: directory to save files
+        start/end: YYYY-MM-DD
+        bbox: (west, south, east, north) in lon/lat (Chile bbox by default)
+    """
+
+
+    viirs_products = {
+        "reflectance": ["VNP09A1"],
+        "vegetation": ["VNP13A1"],
+        "lai": ["VNP15A2H"],
+        "snow": ["VNP10A1"],
+    }
+
+
+    version = {
+        "reflectance": "002",
+        "vegetation": "002",
+        "lai": "002",
+        "snow": None,
+    }
+
+    try:
+        what = what.lower()
+    except AttributeError:
+        raise ValueError("what must be a string")
+
+    allowed = {"reflectance","vegetation","lai","snow"}
+    if what not in allowed:
+        raise ValueError(f"what must be one of: {sorted(allowed)}")
+
+    try:
+        start_dt = pd.to_datetime(start, format="%Y-%m-%d")
+        end_dt   = pd.to_datetime(end,   format="%Y-%m-%d")
+    except ValueError:
+        raise ValueError("start and end must be in format YYYY-MM-DD")
+    if start_dt > end_dt:
+        raise ValueError("start must be before end")
+
+    os.makedirs(product_path, exist_ok=True)
+    earthaccess.login()
+
+    west, south, east, north = bbox
+
+    short_names = viirs_products[what]
+    if not short_names:
+        print(f"No short-names configured for '{what}'.")
+        return
+
+    results_all = []
+    for sn in short_names:
+        q = (earthaccess.granule_query()
+             .short_name(sn)
+             .bounding_box(west, south, east, north)
+             .temporal(start_dt.strftime("%Y-%m-%d"), end_dt.strftime("%Y-%m-%d")))
+
+        if version.get(what):
+            q = q.version(version[what])
+
+        results = q.get_all()
+        results_all.extend(results)
+
+    if len(results_all) == 0:
+        print("No results found")
+        return
+
+    grids = ['h13v14', 'h14v14', 'h12v13', 'h13v13', 'h11v12',
+             'h12v12', 'h11v11', 'h12v11', 'h11v10']
+
+    def has_any_tile(granule):
+        links = granule.data_links()
+        if not links:
+            return False
+        return any(tile in links[0] for tile in grids)
+
+    if what in {"reflectance","vegetation","lai"}:
+        results_all = [g for g in results_all if has_any_tile(g)]
+
+    if len(results_all) == 0:
+        print("No results found after tile filtering")
+        return
+
+    earthaccess.download(results_all, local_path=product_path)
+    print("Download finished")
+
+
 def download_pdirnow(start, end, product_path, check_ppath=False):
     """
     Download PDIRNow data from CHRS FTP server.

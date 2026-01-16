@@ -224,6 +224,222 @@ NBR database path: {self.nbr.database}
 
 
 """
+Extraction of VIIRS VNP13Q1 product:
+"""
+
+
+class Vnp13q1:
+    """
+    A class to process VNP13Q1 to hidrocl variables
+
+    Attributes:
+        ndvi (HidroCLVariable): HidroCLVariable object with the NDVI data \n
+        evi (HidroCLVariable): HidroCLVariable object with the EVI data \n
+        nbr (HidroCLVariable): HidroCLVariable object with the NBR data \n
+        ndvi_log (str): Path to the log file for the NDVI extraction \n
+        evi_log (str): Path to the log file for the EVI extraction \n
+        nbr_log (str): Path to the log file for the NBR extraction \n
+        productname (str): Name of the remote sensing product to be processed \n
+        productpath (str): Path to the product folder where the product files are located \n
+        vectorpath (str): Path to the vector folder with Shapefile with areas to be processed \n
+        common_elements (list): List of common elements between the NDVI, EVI and NBR databases \n
+        product_files (list): List of product files in the product folder \n
+        product_ids (list): List of product ids. Each product id is str with common tag by date \n
+        all_scenes (list): List of all scenes (no matter the product id here) \n
+        scenes_occurrences (list): List of scenes occurrences for each product id \n
+        overpopulated_scenes (list): List of overpopulated scenes (more than 9 scenes for modis) \n
+        complete_scenes (list): List of complete scenes (9 scenes for modis) \n
+        incomplete_scenes (list): List of incomplete scenes (less than 9 scenes for modis) \n
+        scenes_to_process (list): List of scenes to process (complete scenes no processed) \n
+    """
+
+    def __init__(self, ndvi, evi, nbr, product_path, vector_path,
+                 ndvi_log, evi_log, nbr_log):
+        """
+        Examples:
+            >>> from hidrocl import HidroCLVariable
+            >>> from hidrocl.products import Vnp13q1
+            >>> ndvi = HidroCLVariable('ndvi', 'ndvi.db', 'ndvi_pc.db')
+            >>> evi = HidroCLVariable('evi', 'evi.db', 'evi_pc.db')
+            >>> nbr = HidroCLVariable('nbr', 'nbr.db', 'nbr_pc.db')
+            >>> product_path = '/home/user/vnp13q1'
+            >>> vector_path = '/home/user/vector.shp'
+            >>> ndvi_log = '/home/user/ndvi.log'
+            >>> evi_log = '/home/user/evi.log'
+            >>> nbr_log = '/home/user/nbr.log'
+            >>> mod13q1 = Mod13q1(ndvi, evi, nbr, product_path, vector_path,
+            ...                   ndvi_log, evi_log, nbr_log)
+            >>> mod13q1
+            "Class to extract MODIS MOD13Q1 Version 6.1"
+
+        Args:
+            ndvi (HidroCLVariable): Object with the NDVI data
+            evi (HidroCLVariable): Object with the EVI data
+            nbr (HidroCLVariable): Object with the NBR data
+            product_path (str): Path to the product folder
+            vector_path (str): Path to the vector folder
+            ndvi_log (str): Path to the log file for the NDVI extraction
+            evi_log (str): Path to the log file for the EVI extraction
+            nbr_log (str): Path to the log file for the NBR extraction
+
+        Raises:
+              TypeError: If the input is not a HidroCLVariable object
+        """
+        if t.check_instance(ndvi, evi, nbr):
+            self.ndvi = ndvi
+            self.evi = evi
+            self.nbr = nbr
+            self.ndvi_log = ndvi_log
+            self.evi_log = evi_log
+            self.nbr_log = nbr_log
+            self.productname = "VIIRS VNP13Q1 Version 2"
+            self.productpath = product_path
+            self.vectorpath = vector_path
+            self.common_elements = t.compare_indatabase(self.ndvi.indatabase,
+                                                        self.evi.indatabase,
+                                                        self.nbr.indatabase)
+            self.product_files = t.read_product_files(self.productpath, "viirs")
+            self.product_ids = t.get_product_ids(self.product_files, "viirs")
+            self.all_scenes = t.check_product_files(self.product_ids)
+            self.scenes_occurrences = t.count_scenes_occurrences(self.all_scenes, self.product_ids)
+            (self.overpopulated_scenes,
+             self.complete_scenes,
+             self.incomplete_scenes) = t.classify_occurrences(self.scenes_occurrences, "viirs")
+            self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes,
+                                                            self.common_elements, what='viirs')
+        else:
+            raise TypeError('ndvi, evi and nbr must be HidroCLVariable objects')
+
+    def __repr__(self):
+        """
+        Return a string representation of the object
+
+        Returns:
+             str: String representation of the object
+        """
+        return f'Class to extract {self.productname}'
+
+    def __str__(self):
+        """
+        Return a string representation of the object
+
+        Returns:
+            str: String representation of the object
+        """
+        return f'''
+Product: {self.productname}
+
+NDVI records: {len(self.ndvi.indatabase)}.
+NDVI database path: {self.ndvi.database}
+
+EVI records: {len(self.evi.indatabase)}.
+EVI database path: {self.evi.database}
+
+NBR records: {len(self.nbr.indatabase)}.
+NBR database path: {self.nbr.database}
+        '''
+
+    def run_extraction(self, limit=None):
+        """
+        Run the extraction of the product.
+        If limit is None, all scenes will be processed.
+        If limit is a number, only the first limit scenes will be processed.
+
+        Args:
+            limit (int): length of the scenes_to_process
+
+        Returns:
+            str: Print
+        """
+
+        with t.HiddenPrints():
+            self.ndvi.checkdatabase()
+            self.evi.checkdatabase()
+            self.nbr.checkdatabase()
+
+        self.common_elements = t.compare_indatabase(self.ndvi.indatabase,
+                                                    self.evi.indatabase,
+                                                    self.nbr.indatabase)
+
+        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.common_elements, what='viirs')
+
+        scenes_path = t.get_scenes_path(self.product_files, self.productpath)
+
+        with TemporaryDirectory() as tempdirname:
+            temp_dir = Path(tempdirname)
+
+            if limit is not None:
+                scenes_to_process = self.scenes_to_process[:limit]
+            else:
+                scenes_to_process = self.scenes_to_process
+
+            for scene in scenes_to_process:
+                if scene not in self.ndvi.indatabase:
+                    e.zonal_stats(scene, scenes_path,
+                                  temp_dir, 'ndvi_viirs',
+                                  self.ndvi.catchment_names, self.ndvi_log,
+                                  database=self.ndvi.database,
+                                  pcdatabase=self.ndvi.pcdatabase,
+                                  vector_path=self.vectorpath,
+                                  layer="500_m_16_days_NDVI", )
+
+                if scene not in self.evi.indatabase:
+                    e.zonal_stats(scene, scenes_path,
+                                  temp_dir, 'evi_viirs',
+                                  self.evi.catchment_names, self.evi_log,
+                                  database=self.evi.database,
+                                  pcdatabase=self.evi.pcdatabase,
+                                  vector_path=self.vectorpath,
+                                  layer="500_m_16_days_EVI2", )
+
+                if scene not in self.evi.indatabase:
+                    e.zonal_stats(scene, scenes_path,
+                                  temp_dir, 'nbr_viirs',
+                                  self.nbr.catchment_names, self.nbr_log,
+                                  database=self.nbr.database,
+                                  pcdatabase=self.nbr.pcdatabase,
+                                  vector_path=self.vectorpath,
+                                  layer=["500_m_16_days_NIR_reflectance",
+                                         "500_m_16_days_SWIR2_reflectance"])
+
+    def run_maintainer(self, log_file, limit=None):
+        """
+        Run file maintainer. It will remove any file with problems
+
+        Args:
+            log_file (str): log file path
+            limit (int): length of the scenes_to_process
+
+        Returns:
+            str: Print
+        """
+
+        with t.HiddenPrints():
+            self.ndvi.checkdatabase()
+            self.evi.checkdatabase()
+            self.nbr.checkdatabase()
+
+        self.common_elements = t.compare_indatabase(self.ndvi.indatabase,
+                                                    self.evi.indatabase,
+                                                    self.nbr.indatabase)
+
+        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.common_elements)
+
+        scenes_path = t.get_scenes_path(self.product_files, self.productpath)
+
+        if limit is not None:
+            scenes_to_process = self.scenes_to_process[:limit]
+        else:
+            scenes_to_process = self.scenes_to_process
+
+        for scene in scenes_to_process:
+            m.file_maintainer(scene=scene,
+                              scenes_path=scenes_path,
+                              name='viirs',
+                              log_file=log_file)
+
+
+"""
 Extraction Agr. NDVI from MODIS MOD13Q1 product:
 """
 
@@ -264,13 +480,9 @@ class Mod13q1agr:
 
         Args:
             ndvi (HidroCLVariable): Object with the NDVI data
-            evi (HidroCLVariable): Object with the EVI data
-            nbr (HidroCLVariable): Object with the NBR data
             product_path (str): Path to the product folder
             vector_path (str): Path to the vector folder
             ndvi_log (str): Path to the log file for the NDVI extraction
-            evi_log (str): Path to the log file for the EVI extraction
-            nbr_log (str): Path to the log file for the NBR extraction
 
         Raises:
               TypeError: If the input is not a HidroCLVariable object
@@ -292,7 +504,7 @@ class Mod13q1agr:
             self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes,
                                                             self.common_elements, what='modis')
         else:
-            raise TypeError('ndvi, evi and nbr must be HidroCLVariable objects')
+            raise TypeError('ndvi must be HidroCLVariable objects')
 
     def __repr__(self):
         """
@@ -388,6 +600,167 @@ NDVI database path: {self.ndvi.database}
                               name='modis',
                               log_file=log_file)
 
+
+"""
+Extraction Agr. NDVI from VIIRS VNP13Q1 product:
+"""
+
+
+class Vnp13q1agr:
+    """
+    A class to process VNP13Q1 to hidrocl variables
+
+    Attributes:
+        ndvi (HidroCLVariable): HidroCLVariable object with the NDVI data \n
+        ndvi_log (str): Path to the log file for the NDVI extraction \n
+        productname (str): Name of the remote sensing product to be processed \n
+        productpath (str): Path to the product folder where the product files are located \n
+        vectorpath (str): Path to the vector folder with Shapefile with areas to be processed \n
+        common_elements (list): List of common elements between the NDVI, EVI and NBR databases \n
+        product_files (list): List of product files in the product folder \n
+        product_ids (list): List of product ids. Each product id is str with common tag by date \n
+        all_scenes (list): List of all scenes (no matter the product id here) \n
+        scenes_occurrences (list): List of scenes occurrences for each product id \n
+        overpopulated_scenes (list): List of overpopulated scenes (more than 9 scenes for modis) \n
+        complete_scenes (list): List of complete scenes (9 scenes for modis) \n
+        incomplete_scenes (list): List of incomplete scenes (less than 9 scenes for modis) \n
+        scenes_to_process (list): List of scenes to process (complete scenes no processed) \n
+    """
+
+    def __init__(self, ndvi, product_path, vector_path, ndvi_log):
+        """
+        Examples:
+            >>> from hidrocl import HidroCLVariable
+            >>> from hidrocl.products import Mod13q1agr
+            >>> ndvi = HidroCLVariable('ndvi', 'ndvi.db', 'ndvi_pc.db')
+            >>> product_path = '/home/user/vnp13q1'
+            >>> vector_path = '/home/user/vector.shp'
+            >>> ndvi_log = '/home/user/ndvi.log'
+            >>> vnp13q1agr = Vnp13q1agr(ndvi, product_path, vector_path, ndvi_log)
+            >>> vnp13q1agr
+            "Class to extract agricultural NDVI from VIIRS VNP13Q1 Version 2"
+
+        Args:
+            ndvi (HidroCLVariable): Object with the NDVI data
+            product_path (str): Path to the product folder
+            vector_path (str): Path to the vector folder
+            ndvi_log (str): Path to the log file for the NDVI extraction
+
+        Raises:
+              TypeError: If the input is not a HidroCLVariable object
+        """
+        if t.check_instance(ndvi):
+            self.ndvi = ndvi
+            self.ndvi_log = ndvi_log
+            self.productname = "agricultural NDVI from VIIRS VNP13Q1 Version 2"
+            self.productpath = product_path
+            self.vectorpath = vector_path
+            self.common_elements = t.compare_indatabase(self.ndvi.indatabase)
+            self.product_files = t.read_product_files(self.productpath, "viirs")
+            self.product_ids = t.get_product_ids(self.product_files, "viirs")
+            self.all_scenes = t.check_product_files(self.product_ids)
+            self.scenes_occurrences = t.count_scenes_occurrences(self.all_scenes, self.product_ids)
+            (self.overpopulated_scenes,
+             self.complete_scenes,
+             self.incomplete_scenes) = t.classify_occurrences(self.scenes_occurrences, "viirs")
+            self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes,
+                                                            self.common_elements, what='viirs')
+        else:
+            raise TypeError('ndvi must be HidroCLVariable objects')
+
+    def __repr__(self):
+        """
+        Return a string representation of the object
+
+        Returns:
+             str: String representation of the object
+        """
+        return f'Class to extract {self.productname}'
+
+    def __str__(self):
+        """
+        Return a string representation of the object
+
+        Returns:
+            str: String representation of the object
+        """
+        return f'''
+Product: {self.productname}
+
+NDVI records: {len(self.ndvi.indatabase)}.
+NDVI database path: {self.ndvi.database}
+        '''
+
+    def run_extraction(self, limit=None):
+        """
+        Run the extraction of the product.
+        If limit is None, all scenes will be processed.
+        If limit is a number, only the first limit scenes will be processed.
+
+        Args:
+            limit (int): length of the scenes_to_process
+
+        Returns:
+            str: Print
+        """
+
+        with t.HiddenPrints():
+            self.ndvi.checkdatabase()
+
+        self.common_elements = t.compare_indatabase(self.ndvi.indatabase)
+
+        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.common_elements)
+
+        scenes_path = t.get_scenes_path(self.product_files, self.productpath)
+
+        with TemporaryDirectory() as tempdirname:
+            temp_dir = Path(tempdirname)
+
+            if limit is not None:
+                scenes_to_process = self.scenes_to_process[:limit]
+            else:
+                scenes_to_process = self.scenes_to_process
+
+            for scene in scenes_to_process:
+                e.zonal_stats(scene, scenes_path,
+                              temp_dir, 'ndvi_viirs',
+                              self.ndvi.catchment_names, self.ndvi_log,
+                              database=self.ndvi.database,
+                              pcdatabase=self.ndvi.pcdatabase,
+                              vector_path=self.vectorpath,
+                              layer="500_m_16_days_NDVI", )
+
+    def run_maintainer(self, log_file, limit=None):
+        """
+        Run file maintainer. It will remove any file with problems
+
+        Args:
+            log_file (str): log file path
+            limit (int): length of the scenes_to_process
+
+        Returns:
+            str: Print
+        """
+
+        with t.HiddenPrints():
+            self.ndvi.checkdatabase()
+
+        self.common_elements = t.compare_indatabase(self.ndvi.indatabase)
+
+        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.common_elements)
+
+        scenes_path = t.get_scenes_path(self.product_files, self.productpath)
+
+        if limit is not None:
+            scenes_to_process = self.scenes_to_process[:limit]
+        else:
+            scenes_to_process = self.scenes_to_process
+
+        for scene in scenes_to_process:
+            m.file_maintainer(scene=scene,
+                              scenes_path=scenes_path,
+                              name='viirs',
+                              log_file=log_file)
 
 """
 Extraction of MODIS MOD10A2 product:
@@ -570,6 +943,190 @@ South face snow database path: {self.ssnow.database}
             m.file_maintainer(scene=scene,
                               scenes_path=scenes_path,
                               name='modis',
+                              log_file=log_file)
+
+
+"""
+Extraction of VIIRS VNP10A1F product:
+"""
+
+
+class Vnp10a1:
+    """
+    A class to process VNP10A1 to hidrocl variables
+
+    Attributes:
+        nsnow (HidroCLVariable): HidroCLVariable object with north face snow data \n
+        ssnow (HidroCLVariable): HidroCLVariable object with south face snow data \n
+        snow_log (str): Path to the log file for the snow extraction \n
+        productname (str): Name of the remote sensing product to be processed \n
+        productpath (str): Path to the product folder where the product files are located \n
+        northvectorpath (str): Path to the vector folder with the north Shapefile with areas to be processed \n
+        southvectorpath (str): Path to the vector folder with the south Shapefile with areas to be processed \n
+        common_elements (list): List of common elements between the nsnow and ssnow databases \n
+        product_files (list): List of product files in the product folder \n
+        product_ids (list): List of product ids. Each product id is str with common tag by date \n
+        all_scenes (list): List of all scenes (no matter the product id here) \n
+        scenes_occurrences (list): List of scenes occurrences for each product id \n
+        overpopulated_scenes (list): List of overpopulated scenes (more than 9 scenes for modis) \n
+        complete_scenes (list): List of complete scenes (9 scenes for modis) \n
+        incomplete_scenes (list): List of incomplete scenes (less than 9 scenes for modis) \n
+        scenes_to_process (list): List of scenes to process (complete scenes no processed) \n
+    """
+
+    def __init__(self, nsnow, ssnow, product_path,
+                 north_vector_path, south_vector_path, snow_log):
+        """
+        Examples:
+            >>> from hidrocl import HidroCLVariable
+            >>> from hidrocl import Vnp10a1
+            >>> nsnow = HidroCLVariable('nsnow', 'modis', 'mod10a2', 'north')
+            >>> ssnow = HidroCLVariable('ssnow', 'modis', 'mod10a2', 'south')
+            >>> product_path = '/home/user/vnp10a1'
+            >>> north_vector_path = '/home/user/north_vector.shp'
+            >>> south_vector_path = '/home/user/south_vector.shp'
+            >>> snow_log = '/home/user/snow.log'
+            >>> vnp10a1 = Vnp10a1(nsnow, ssnow, product_path,
+            ...                   north_vector_path, south_vector_path, snow_log)
+            >>> vnp10a1
+            "Class to extract VIIRS VNP10A1F Version --"
+
+
+        Args:
+            nsnow (HidroCLVariable): HidroCLVariable object with north face snow data \n
+            ssnow (HidroCLVariable): HidroCLVariable object with south face snow data \n
+            product_path (str): Path to the product folder where the product files are located \n
+            north_vector_path (str): Path to the vector folder with the north Shapefile with areas to be processed \n
+            south_vector_path (str): Path to the vector folder with the south Shapefile with areas to be processed \n
+            snow_log (str): Path to the log file for the snow extraction \n
+
+        Raises:
+              TypeError: If nsnow or ssnow is not a HidroCLVariable object \n
+        """
+        if t.check_instance(nsnow, ssnow):
+            self.nsnow = nsnow
+            self.ssnow = ssnow
+            self.snow_log = snow_log
+            self.productname = "VIIRS VNP10A1 Version --"
+            self.productpath = product_path
+            self.northvectorpath = north_vector_path
+            self.southvectorpath = south_vector_path
+            self.common_elements = t.compare_indatabase(self.nsnow.indatabase,
+                                                        self.ssnow.indatabase)
+            self.product_files = t.read_product_files(self.productpath, "viirs")
+            self.product_ids = t.get_product_ids(self.product_files, "viirs")
+            self.all_scenes = t.check_product_files(self.product_ids)
+            self.scenes_occurrences = t.count_scenes_occurrences(self.all_scenes, self.product_ids)
+            (self.overpopulated_scenes,
+             self.complete_scenes,
+             self.incomplete_scenes) = t.classify_occurrences(self.scenes_occurrences, "viirs_snow")
+            self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes,
+                                                            self.common_elements, what='viirs')
+        else:
+            raise TypeError('nsnow and ssnow must be HidroCLVariable objects')
+
+    def __repr__(self):
+        """
+        Return a string representation of the object
+
+        Returns:
+             str: String representation of the object
+        """
+        return f'Class to extract {self.productname}'
+
+    def __str__(self):
+        """
+        Return a string representation of the object
+
+        Returns:
+            str: String representation of the object
+        """
+        return f'''
+Product: {self.productname}
+
+North face snow records: {len(self.nsnow.indatabase)}.
+North face snow path: {self.nsnow.database}
+
+South face snow records: {len(self.ssnow.indatabase)}.
+South face snow database path: {self.ssnow.database}
+                '''
+
+    def run_extraction(self, limit=None):
+        """Run the extraction of the product.
+        If limit is None, all scenes will be processed.
+        If limit is a number, only the first limit scenes will be processed.
+
+        Args:
+            limit (int): length of the scenes_to_process
+
+        Returns:
+            str: Print
+        """
+
+        with t.HiddenPrints():
+            self.nsnow.checkdatabase()
+            self.ssnow.checkdatabase()
+
+        self.common_elements = t.compare_indatabase(self.nsnow.indatabase,
+                                                    self.ssnow.indatabase)
+
+        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.common_elements)
+
+        scenes_path = t.get_scenes_path(self.product_files, self.productpath)
+
+        with TemporaryDirectory() as tempdirname:
+            temp_dir = Path(tempdirname)
+
+            if limit is not None:
+                scenes_to_process = self.scenes_to_process[:limit]
+            else:
+                scenes_to_process = self.scenes_to_process
+
+            for scene in scenes_to_process:
+                if scene not in self.nsnow.indatabase:  # so what about the south one?
+                    e.zonal_stats(scene, scenes_path,
+                                  temp_dir, 'snow_viirs',
+                                  self.nsnow.catchment_names, self.snow_log,
+                                  north_database=self.nsnow.database,
+                                  north_pcdatabase=self.nsnow.pcdatabase,
+                                  south_database=self.ssnow.database,
+                                  south_pcdatabase=self.ssnow.pcdatabase,
+                                  north_vector_path=self.northvectorpath,
+                                  south_vector_path=self.southvectorpath,
+                                  layer="CGF_NDSI_Snow_Cover")
+
+    def run_maintainer(self, log_file, limit=None):
+        """
+        Run file maintainer. It will remove any file with problems
+
+        Args:
+            log_file (str): log file path
+            limit (int): length of the scenes_to_process
+
+        Returns:
+            str: Print
+        """
+
+        with t.HiddenPrints():
+            self.nsnow.checkdatabase()
+            self.ssnow.checkdatabase()
+
+        self.common_elements = t.compare_indatabase(self.nsnow.indatabase,
+                                                    self.ssnow.indatabase)
+
+        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.common_elements)
+
+        scenes_path = t.get_scenes_path(self.product_files, self.productpath)
+
+        if limit is not None:
+            scenes_to_process = self.scenes_to_process[:limit]
+        else:
+            scenes_to_process = self.scenes_to_process
+
+        for scene in scenes_to_process:
+            m.file_maintainer(scene=scene,
+                              scenes_path=scenes_path,
+                              name='viirs',
                               log_file=log_file)
 
 
@@ -1455,6 +2012,196 @@ FPAR database path: {self.fpar.database}
             m.file_maintainer(scene=scene,
                               scenes_path=scenes_path,
                               name='modis',
+                              log_file=log_file)
+
+
+"""
+Extraction of VIIRS VNP15A2H product:
+"""
+
+
+class Vnp15a2h:
+    """
+    A class to process VNP15A2H to hidrocl variables
+
+    Attributes:
+        lai (HidroCLVariable): HidroCLVariable object with the LAI data \n
+        fpar (HidroCLVariable): HidroCLVariable object with the FPAR data \n
+        lai_log (str): Path to the log file for the LAI extraction \n
+        fpar_log (str): Path to the log file for the FPAR extraction \n
+        productname (str): Name of the remote sensing product to be processed \n
+        productpath (str): Path to the product folder where the product files are located \n
+        vectorpath (str): Path to the vector folder with Shapefile with areas to be processed \n
+        common_elements (list): List of common elements between the FPAR and LAI databases \n
+        product_files (list): List of product files in the product folder \n
+        product_ids (list): List of product ids. Each product id is str with common tag by date \n
+        all_scenes (list): List of all scenes (no matter the product id here) \n
+        scenes_occurrences (list): List of scenes occurrences for each product id \n
+        overpopulated_scenes (list): List of overpopulated scenes (more than 9 scenes for modis) \n
+        complete_scenes (list): List of complete scenes (9 scenes for modis) \n
+        incomplete_scenes (list): List of incomplete scenes (less than 9 scenes for modis) \n
+        scenes_to_process (list): List of scenes to process (complete scenes no processed) \n
+    """
+
+    def __init__(self, lai, fpar, product_path, vector_path,
+                 lai_log, fpar_log):
+        """
+        Examples:
+            >>> from hidrocl import HidroCLVariable
+            >>> from hidrocl import Vnp15a2h
+            >>> lai = HidroCLVariable('lai', 'lai.db', 'lai_pc.db')
+            >>> fpar = HidroCLVariable('fpar', 'fpar.db', 'fpar_pc.db')
+            >>> product_path = '/home/user/vnp15a2h'
+            >>> vector_path = '/home/user/vector'
+            >>> lai_log = '/home/user/lai.log'
+            >>> fpar_log = '/home/user/fpar.log'
+            >>> vnp15a2h = Vnp15a2h(lai, fpar, product_path, vector_path,
+            ...                     lai_log, fpar_log)
+            >>> vnp15a2h
+            "Class to extract VIIRS VNP15A2H Version 2.0"
+
+        Args:
+            lai (HidroCLVariable): HidroCLVariable object with the LAI data
+            fpar (HidroCLVariable): HidroCLVariable object with the FPAR data
+            product_path (str): Path to the product folder
+            vector_path (str): Path to the vector folder
+            lai_log (str): Path to the log file for the LAI extraction
+            fpar_log (str): Path to the log file for the FPAR extraction
+
+        Raises:
+            TypeError: If lai or fpar is not HidroCLVariable object
+        """
+        if t.check_instance(lai, fpar):
+            self.lai = lai
+            self.fpar = fpar
+            self.lai_log = lai_log
+            self.fpar_log = fpar_log
+            self.productname = "VIIRS VNP15A2H Version 2.0"
+            self.productpath = product_path
+            self.vectorpath = vector_path
+            self.common_elements = t.compare_indatabase(self.lai.indatabase,
+                                                        self.fpar.indatabase)
+            self.product_files = t.read_product_files(self.productpath, "viirs")
+            self.product_ids = t.get_product_ids(self.product_files, "viirs")
+            self.all_scenes = t.check_product_files(self.product_ids)
+            self.scenes_occurrences = t.count_scenes_occurrences(self.all_scenes, self.product_ids)
+            (self.overpopulated_scenes,
+             self.complete_scenes,
+             self.incomplete_scenes) = t.classify_occurrences(self.scenes_occurrences, "viirs")
+            self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes,
+                                                            self.common_elements, what='viirs')
+        else:
+            raise TypeError('lai and fpar must be HidroCLVariable objects')
+
+    def __repr__(self):
+        """
+        Return a string representation of the object
+
+        Returns:
+             str: String representation of the object
+        """
+        return f'Class to extract {self.productname}'
+
+    def __str__(self):
+        """
+        Return a string representation of the object
+
+        Returns:
+            str: String representation of the object
+        """
+        return f'''
+Product: {self.productname}
+
+LAI records: {len(self.lai.indatabase)}.
+LAI database path: {self.lai.database}
+
+FPAR records: {len(self.fpar.indatabase)}.
+FPAR database path: {self.fpar.database}
+        '''
+
+    def run_extraction(self, limit=None):
+        """
+        Run the extraction of the product.
+        If limit is None, all scenes will be processed.
+        If limit is a number, only the first limit scenes will be processed.
+
+        Args:
+            limit (int): length of the scenes_to_process
+
+        Returns:
+            str: Print
+        """
+
+        with t.HiddenPrints():
+            self.lai.checkdatabase()
+            self.fpar.checkdatabase()
+
+        self.common_elements = t.compare_indatabase(self.lai.indatabase,
+                                                    self.fpar.indatabase)
+
+        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.common_elements)
+
+        scenes_path = t.get_scenes_path(self.product_files, self.productpath)
+
+        with TemporaryDirectory() as tempdirname:
+            temp_dir = Path(tempdirname)
+
+            if limit is not None:
+                scenes_to_process = self.scenes_to_process[:limit]
+            else:
+                scenes_to_process = self.scenes_to_process
+
+            for scene in scenes_to_process:
+                if scene not in self.lai.indatabase:
+                    e.zonal_stats(scene, scenes_path,
+                                  temp_dir, 'lai_viirs',
+                                  self.lai.catchment_names, self.lai_log,
+                                  database=self.lai.database,
+                                  pcdatabase=self.lai.pcdatabase,
+                                  vector_path=self.vectorpath,
+                                  layer="Lai", )
+
+                if scene not in self.fpar.indatabase:
+                    e.zonal_stats(scene, scenes_path,
+                                  temp_dir, 'fpar_viirs',
+                                  self.fpar.catchment_names, self.fpar_log,
+                                  database=self.fpar.database,
+                                  pcdatabase=self.fpar.pcdatabase,
+                                  vector_path=self.vectorpath,
+                                  layer="Fpar")
+
+    def run_maintainer(self, log_file, limit=None):
+        """
+        Run file maintainer. It will remove any file with problems
+
+        Args:
+            log_file (str): log file path
+            limit (int): length of the scenes_to_process
+
+        Returns:
+            str: Print
+        """
+
+        with t.HiddenPrints():
+            self.lai.checkdatabase()
+            self.fpar.checkdatabase()
+
+        self.common_elements = t.compare_indatabase(self.lai.indatabase,
+                                                    self.fpar.indatabase)
+
+        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.common_elements)
+
+        scenes_path = t.get_scenes_path(self.product_files, self.productpath)
+
+        if limit is not None:
+            scenes_to_process = self.scenes_to_process[:limit]
+        else:
+            scenes_to_process = self.scenes_to_process
+
+        for scene in scenes_to_process:
+            m.file_maintainer(scene=scene,
+                              scenes_path=scenes_path,
+                              name='viirs',
                               log_file=log_file)
 
 

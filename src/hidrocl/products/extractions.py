@@ -6,6 +6,7 @@ import re
 import csv
 import time
 import xarray
+import rasterio
 import numpy as np
 import pandas as pd
 import exactextract
@@ -15,6 +16,7 @@ import geopandas as gpd
 from pathlib import Path
 from . import tools as t
 import rioxarray as rioxr
+from affine import Affine
 from datetime import datetime
 from rasterio import errors as rioe
 from rioxarray import exceptions as rxre
@@ -25,6 +27,13 @@ path = Path(__file__).parent.absolute()
 debug = False
 debug_path = ""
 
+# Constants
+MODIS_SINU_PROJ4 = "+proj=sinu +R=6371007.181 +units=m +no_defs"
+
+R = 6371007.181
+HALF_X = np.pi * R
+HALF_Y = (np.pi * R) / 2
+TILE_SIZE = (2 * np.pi * R) / 36  # meters
 
 def load_hdf5(file, var):
     """
@@ -379,6 +388,127 @@ def mosaic_nd_raster(raster_list, layer1, layer2):
     raster_mosaic = raster_mosaic.where(raster_mosaic != raster_mosaic.rio.nodata)
     return raster_mosaic
 
+# VIIRS functions
+
+def parse_hv(name: str):
+    m = re.search(r"h(\d{2})v(\d{2})", name)
+    if not m:
+        raise ValueError(f"Could not parse h??v?? from: {name}")
+    return int(m.group(1)), int(m.group(2))
+
+
+def tile_geo(filename: str, width: int, height: int):
+    h, v = parse_hv(filename)
+    ulx = -HALF_X + h * TILE_SIZE
+    uly =  HALF_Y - v * TILE_SIZE
+    xres = TILE_SIZE / width
+    yres = TILE_SIZE / height
+    transform = Affine(xres, 0.0, ulx,
+                       0.0, -yres, uly)
+    # pixel-center coordinates
+    x = ulx + (np.arange(width) + 0.5) * xres
+    y = uly - (np.arange(height) + 0.5) * yres  # decreasing (north-up)
+    return transform, x, y
+
+
+def mosaic_raster_viirs(raster_list, layer):
+    raster_single = []
+
+    for raster in raster_list:
+        with rasterio.open(raster) as src:
+            sds_list = src.subdatasets
+
+        try:
+            matches = [s for s in sds_list if s.endswith(layer)]
+        except RuntimeError as e:
+            matches = [s for s in sds_list if s.endswith(layer[:-1])]
+
+        if not matches:
+            preview = "\n".join(sds_list[:20]) + ("\n..." if len(sds_list) > 20 else "")
+            raise RuntimeError(
+                f"Could not find a subdataset ending with '{layer}' in:\n{raster}\n\n"
+                f"First SDS entries:\n{preview}"
+            )
+
+        sds = matches[0]
+        da = rioxr.open_rasterio(sds, masked=True).squeeze("band", drop=True)
+
+        transform, x, y = tile_geo(raster, da.sizes["x"], da.sizes["y"])
+
+        da = da.assign_coords(x=("x", x), y=("y", y))
+
+        da = da.rio.write_crs(MODIS_SINU_PROJ4, inplace=False)
+        da = da.rio.write_transform(transform, inplace=False)
+        da = da.rio.set_spatial_dims(x_dim="x", y_dim="y", inplace=False)
+
+        raster_single.append(da)
+
+    raster_mosaic = merge_arrays(raster_single)
+    return raster_mosaic
+
+
+def _open_layer_sds(h5_file: str, layer_suffix: str):
+    with rasterio.open(h5_file) as src:
+        sds_list = src.subdatasets
+
+    matches = [s for s in sds_list if s.endswith(layer_suffix)]
+    if not matches:
+        preview = "\n".join(sds_list[:20]) + ("\n..." if len(sds_list) > 20 else "")
+        raise RuntimeError(
+            f"Could not find a subdataset ending with '{layer_suffix}' in:\n{h5_file}\n\n"
+            f"First SDS entries:\n{preview}"
+        )
+
+    sds = matches[0]
+    da = rioxr.open_rasterio(sds, masked=True)
+    if "band" in da.dims and da.sizes["band"] == 1:
+        da = da.squeeze("band", drop=True)
+    return da
+
+
+def mosaic_nd_raster_viirs(raster_list, layer1, layer2, nodata=-32768):
+    """
+    normalized_difference = 1000 * (layer1 - layer2) / (layer1 + layer2)
+    Returns a sinusoidal CRS mosaic.
+    """
+    raster_single = []
+
+    for raster in raster_list:
+        lyr1 = _open_layer_sds(raster, layer1).astype("float32")
+        lyr2 = _open_layer_sds(raster, layer2).astype("float32")
+
+        if lyr1.shape != lyr2.shape:
+            raise ValueError(f"Layer shapes differ in {raster}: {lyr1.shape} vs {lyr2.shape}")
+
+        transform, x, y = tile_geo(raster, lyr1.sizes["x"], lyr1.sizes["y"])
+
+        lyr1 = lyr1.assign_coords(x=("x", x), y=("y", y))
+        lyr2 = lyr2.assign_coords(x=("x", x), y=("y", y))
+
+        lyr1 = lyr1.rio.write_crs(MODIS_SINU_PROJ4, inplace=False).rio.write_transform(transform, inplace=False)
+        lyr2 = lyr2.rio.write_crs(MODIS_SINU_PROJ4, inplace=False).rio.write_transform(transform, inplace=False)
+
+        denom = (lyr1 + lyr2)
+        nd = 1000.0 * (lyr1 - lyr2) / denom
+
+        nd = nd.where(np.isfinite(nd))
+        nd = nd.where(denom != 0)
+
+        nd = nd.assign_coords(x=("x", x), y=("y", y))
+        nd = nd.rio.write_crs(MODIS_SINU_PROJ4, inplace=False)
+        nd = nd.rio.write_transform(transform, inplace=False)
+        nd = nd.rio.set_spatial_dims(x_dim="x", y_dim="y", inplace=False)
+        nd = nd.rio.write_nodata(nodata, inplace=False)
+
+        raster_single.append(nd)
+
+    raster_mosaic = merge_arrays(raster_single)
+
+    raster_mosaic = raster_mosaic.where((raster_mosaic <= 1000) & (raster_mosaic >= -1000))
+    raster_mosaic = raster_mosaic.where(raster_mosaic != raster_mosaic.rio.nodata)
+
+    return raster_mosaic
+
 
 def write_line(database, result, catchment_names, file_id, file_date, ncol=1):
     """
@@ -569,6 +699,23 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
             else:
                 "layer argument must be a list"
 
+        case 'nbr_viirs':
+            if isinstance(kwargs.get("layer"), list):
+                lyrs = kwargs.get("layer")
+                try:
+                    mos = mosaic_nd_raster_viirs(selected_files, lyrs[0], lyrs[1])
+                except (rxre.RioXarrayError, rioe.RasterioIOError):
+                    return print(f"Error in scene {scene}")
+            else:
+                "layer argument must be a list"
+
+        case 'ndvi_viirs' | 'evi_viirs':
+            try:
+                mos = mosaic_raster_viirs(selected_files, kwargs.get("layer"))
+                mos = mos * 0.1
+            except (rxre.RioXarrayError, rioe.RasterioIOError):
+                return print(f"Error in scene {scene}")
+
         case 'snow':
             try:
                 mos = mosaic_raster(selected_files, kwargs.get("layer"))
@@ -580,13 +727,35 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
             except (rxre.RioXarrayError, rioe.RasterioIOError):
                 return print(f"Error in scene {scene}")
 
-        case name if ("fpar" in name) or ("lai" in name):
+        case 'snow_viirs':
             try:
-                mos = mosaic_raster(selected_files, kwargs.get("layer"))
-                mos = (mos.where(mos <= 100)).fillna(0)
-                mos = mos * 10
+                mos = mosaic_raster_viirs(selected_files, kwargs.get("layer"))
+                # filter values from 70 to 100
+                mos = xarray.where(mos >=100, np.nan, mos)
+                mos = xarray.where(mos <= 75, 0, mos)
+                #mos = xarray.where(mos > 0, 1, mos)
+                #mos = xarray.where(mos == 200, 1, mos)
+                #mos = xarray.where(mos == 0, np.nan, mos)
+                #mos = xarray.where((mos == 25) | (mos == 37) | (mos == 39), 0, mos)
+                #mos = xarray.where((mos == 0) | (mos == 1), mos, np.nan)
+                #mos = mos * 100
             except (rxre.RioXarrayError, rioe.RasterioIOError):
                 return print(f"Error in scene {scene}")
+
+        case name if ("fpar" in name) or ("lai" in name):
+            if 'viirs' in name:
+                try:
+                    mos = mosaic_raster_viirs(selected_files, kwargs.get("layer"))
+                    mos = mos * 0.1
+                except (rxre.RioXarrayError, rioe.RasterioIOError):
+                    return print(f"Error in scene {scene}")
+            else:
+                try:
+                    mos = mosaic_raster(selected_files, kwargs.get("layer"))
+                    mos = (mos.where(mos <= 100)).fillna(0)
+                    mos = mos * 10
+                except (rxre.RioXarrayError, rioe.RasterioIOError):
+                    return print(f"Error in scene {scene}")
 
         case 'et' | 'pet':
             try:
@@ -805,7 +974,7 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
         mos.rio.to_raster(temporal_raster, compress="LZW")
 
     match name:
-        case 'snow':
+        case 'snow' | 'snow_viirs':
             result_df = extract_data(kwargs.get("north_vector_path"), mos, 'mean', debug=debug,
                                      debug_path=debug_path, name='n_' + result_file)
 
