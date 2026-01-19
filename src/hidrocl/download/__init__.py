@@ -459,8 +459,6 @@ def download_gfs(date, product_path, days=5, temp_files_folder=None):
             parts.append(ds_part)
         
         ds_gfs = xr.merge(parts, compat='override')
-        
-        ds_gfs = xr.merge(parts, compat='override')
         ds_gfs = ds_gfs.sortby(['valid_time', 'latitude', 'longitude'])
         
         ds_gfs = ds_gfs.drop_vars(['step', 'heightAboveGround', 'surface', 'isothermZero'])
@@ -469,7 +467,7 @@ def download_gfs(date, product_path, days=5, temp_files_folder=None):
                     valid_time=slice(ds_gfs.valid_time[0].values,
                                      ds_gfs.valid_time[0].values + pd.to_timedelta(24 * 5, unit='H')))
         
-        ds_gfs = ds_gfs.assign_coords({'time': ds_gfs.valid_time.values[0]})
+        ds_gfs = ds_gfs.expand_dims(time=[ds_gfs.valid_time.values[0]])
 
         date_name = date.replace('-', '') + '00'
         year = date.split('-')[0]
