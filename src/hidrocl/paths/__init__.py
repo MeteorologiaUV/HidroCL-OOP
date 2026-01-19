@@ -2,6 +2,38 @@ import os
 
 from .. import project_path, observed_products_path, forecasted_products_path, processing_path
 
+
+#############
+### New paths
+#############
+# Product paths
+mod10a1f_path = os.path.join(processing_path, observed_products_path, 'MOD10A1_F/')  # daily snow
+vnp10a1f_path = os.path.join(processing_path, observed_products_path, 'VNP10A1_F/')  # daily snow
+vnp13q1_path = os.path.join(processing_path, observed_products_path, 'VNP13Q1/')  # vegetation
+vnp15a2h_path = os.path.join(processing_path, observed_products_path, 'VNP15A2H/')  # lai/fpar
+# Observed database paths
+veg_o_viirs_ndvi_mean = os.path.join(project_path, 'databases/observed/veg_o_viirs_ndvi_mean_b_none_d1_p0d.csv')
+veg_o_viirs_evi_mean = os.path.join(project_path, 'databases/observed/veg_o_viirs_evi_mean_b_none_d1_p0d.csv')
+veg_o_viirs_nbr2_mean = os.path.join(project_path, 'databases/observed/veg_o_viirs_nbr_mean_b_none_d1_p0d.csv')
+snw_o_modis_scaf_cum_n = os.path.join(project_path, 'databases/observed/snw_o_modis_scaf_tot_n_none_d1_p0d.csv')
+snw_o_modis_scaf_cum_s = os.path.join(project_path, 'databases/observed/snw_o_modis_scaf_tot_s_none_d1_p0d.csv')
+snw_o_viirs_scaf_cum_n = os.path.join(project_path, 'databases/observed/snw_o_viirs_scaf_tot_n_none_d1_p0d.csv')
+snw_o_viirs_scaf_cum_s = os.path.join(project_path, 'databases/observed/snw_o_viirs_scaf_tot_s_none_d1_p0d.csv')
+veg_o_viirs_lai_mean = os.path.join(project_path, 'databases/observed/veg_o_viirs_lai_mean_b_none_d8_p0d.csv')
+veg_o_viirs_fpar_mean = os.path.join(project_path, 'databases/observed/veg_o_viirs_fpar_mean_b_none_d8_p0d.csv')
+
+# Pixel-count databases
+veg_o_viirs_ndvi_mean_pc = os.path.join(project_path, 'pcdatabases/observed/veg_o_viirs_ndvi_mean_b_pc.csv')
+veg_o_viirs_evi_mean_pc = os.path.join(project_path, 'pcdatabases/observed/veg_o_viirs_evi_mean_b_pc.csv')
+veg_o_viirs_nbr2_mean_pc = os.path.join(project_path, 'pcdatabases/observed/veg_o_viirs_nbr_mean_b_pc.csv')
+snw_o_modis_scaf_cum_n_pc = os.path.join(project_path, 'pcdatabases/observed/snw_o_modis_scaf_tot_n_pc.csv')
+snw_o_modis_scaf_cum_s_pc = os.path.join(project_path, 'pcdatabases/observed/snw_o_modis_scaf_tot_s_pc.csv')
+snw_o_viirs_scaf_cum_n_pc = os.path.join(project_path, 'pcdatabases/observed/snw_o_viirs_scaf_tot_n_pc.csv')
+snw_o_viirs_scaf_cum_s_pc = os.path.join(project_path, 'pcdatabases/observed/snw_o_viirs_scaf_tot_s_pc.csv')
+veg_o_viirs_lai_mean_pc = os.path.join(project_path, 'pcdatabases/observed/veg_o_viirs_lai_mean_b_pc.csv')
+veg_o_viirs_fpar_mean_pc = os.path.join(project_path, 'pcdatabases/observed/veg_o_viirs_fpar_mean_b_pc.csv')
+
+# ----
 mcd12q1_path = os.path.join(processing_path, observed_products_path, 'MCD12Q1/')  # lulc
 mcd15a2h_path = os.path.join(processing_path, observed_products_path, 'MCD15A2H/')  # lai/fpar
 mcd43a3_path = os.path.join(processing_path, observed_products_path, 'MCD43A3/')  # albedo

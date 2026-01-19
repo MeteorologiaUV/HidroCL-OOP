@@ -9,8 +9,6 @@ import time
 import shutil
 import ftplib
 import cdsapi
-import tarfile
-import logging
 import zipfile
 import requests
 import tempfile
@@ -517,7 +515,7 @@ def earthdata_download(what, product_path, start, end):
         'albedo': 'MCD43A3',
         'lulc': 'MCD12Q1',
         'et0': 'MOD16A2',
-        'snow': 'MOD10A2',
+        'snow': 'MOD10A1F',
         'precipitation': 'GPM_3IMERGHHL',
         'landdata': 'GLDAS_NOAH025_3H',
     }

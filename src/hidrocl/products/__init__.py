@@ -947,13 +947,13 @@ South face snow database path: {self.ssnow.database}
 
 
 """
-Extraction of VIIRS VNP10A1F product:
+Extraction of MODIS MOD10A1F product:
 """
 
 
-class Vnp10a1:
+class Mod10a1f:
     """
-    A class to process VNP10A1 to hidrocl variables
+    A class to process MOD10A1F to hidrocl variables
 
     Attributes:
         nsnow (HidroCLVariable): HidroCLVariable object with north face snow data \n
@@ -979,16 +979,200 @@ class Vnp10a1:
         """
         Examples:
             >>> from hidrocl import HidroCLVariable
-            >>> from hidrocl import Vnp10a1
-            >>> nsnow = HidroCLVariable('nsnow', 'modis', 'mod10a2', 'north')
-            >>> ssnow = HidroCLVariable('ssnow', 'modis', 'mod10a2', 'south')
-            >>> product_path = '/home/user/vnp10a1'
+            >>> from hidrocl import Mod10a1f
+            >>> nsnow = HidroCLVariable('nsnow', 'modis', 'mod10a1f', 'north')
+            >>> ssnow = HidroCLVariable('ssnow', 'modis', 'mod10a1f', 'south')
+            >>> product_path = '/home/user/mod10a1f'
             >>> north_vector_path = '/home/user/north_vector.shp'
             >>> south_vector_path = '/home/user/south_vector.shp'
             >>> snow_log = '/home/user/snow.log'
-            >>> vnp10a1 = Vnp10a1(nsnow, ssnow, product_path,
+            >>> mod10a1f = Mod10a1f(nsnow, ssnow, product_path,
             ...                   north_vector_path, south_vector_path, snow_log)
-            >>> vnp10a1
+            >>> mod10a1f
+            "Class to extract MODIS MOD10A1F Version 6.1"
+
+
+        Args:
+            nsnow (HidroCLVariable): HidroCLVariable object with north face snow data \n
+            ssnow (HidroCLVariable): HidroCLVariable object with south face snow data \n
+            product_path (str): Path to the product folder where the product files are located \n
+            north_vector_path (str): Path to the vector folder with the north Shapefile with areas to be processed \n
+            south_vector_path (str): Path to the vector folder with the south Shapefile with areas to be processed \n
+            snow_log (str): Path to the log file for the snow extraction \n
+
+        Raises:
+              TypeError: If nsnow or ssnow is not a HidroCLVariable object \n
+        """
+        if t.check_instance(nsnow, ssnow):
+            self.nsnow = nsnow
+            self.ssnow = ssnow
+            self.snow_log = snow_log
+            self.productname = "MODIS MOD10A1F Version 6.1"
+            self.productpath = product_path
+            self.northvectorpath = north_vector_path
+            self.southvectorpath = south_vector_path
+            self.common_elements = t.compare_indatabase(self.nsnow.indatabase,
+                                                        self.ssnow.indatabase)
+            self.product_files = t.read_product_files(self.productpath, "modis")
+            self.product_ids = t.get_product_ids(self.product_files, "modis")
+            self.all_scenes = t.check_product_files(self.product_ids)
+            self.scenes_occurrences = t.count_scenes_occurrences(self.all_scenes, self.product_ids)
+            (self.overpopulated_scenes,
+             self.complete_scenes,
+             self.incomplete_scenes) = t.classify_occurrences(self.scenes_occurrences, "modis")
+            self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes,
+                                                            self.common_elements, what='modis')
+        else:
+            raise TypeError('nsnow and ssnow must be HidroCLVariable objects')
+
+    def __repr__(self):
+        """
+        Return a string representation of the object
+
+        Returns:
+             str: String representation of the object
+        """
+        return f'Class to extract {self.productname}'
+
+    def __str__(self):
+        """
+        Return a string representation of the object
+
+        Returns:
+            str: String representation of the object
+        """
+        return f'''
+Product: {self.productname}
+
+North face snow records: {len(self.nsnow.indatabase)}.
+North face snow path: {self.nsnow.database}
+
+South face snow records: {len(self.ssnow.indatabase)}.
+South face snow database path: {self.ssnow.database}
+                '''
+
+    def run_extraction(self, limit=None):
+        """Run the extraction of the product.
+        If limit is None, all scenes will be processed.
+        If limit is a number, only the first limit scenes will be processed.
+
+        Args:
+            limit (int): length of the scenes_to_process
+
+        Returns:
+            str: Print
+        """
+
+        with t.HiddenPrints():
+            self.nsnow.checkdatabase()
+            self.ssnow.checkdatabase()
+
+        self.common_elements = t.compare_indatabase(self.nsnow.indatabase,
+                                                    self.ssnow.indatabase)
+
+        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.common_elements)
+
+        scenes_path = t.get_scenes_path(self.product_files, self.productpath)
+
+        with TemporaryDirectory() as tempdirname:
+            temp_dir = Path(tempdirname)
+
+            if limit is not None:
+                scenes_to_process = self.scenes_to_process[:limit]
+            else:
+                scenes_to_process = self.scenes_to_process
+
+            for scene in scenes_to_process:
+                if scene not in self.nsnow.indatabase:  # so what about the south one?
+                    e.zonal_stats(scene, scenes_path,
+                                  temp_dir, 'snow',
+                                  self.nsnow.catchment_names, self.snow_log,
+                                  north_database=self.nsnow.database,
+                                  north_pcdatabase=self.nsnow.pcdatabase,
+                                  south_database=self.ssnow.database,
+                                  south_pcdatabase=self.ssnow.pcdatabase,
+                                  north_vector_path=self.northvectorpath,
+                                  south_vector_path=self.southvectorpath,
+                                  layer="CGF_NDSI_Snow_Cover")
+
+    def run_maintainer(self, log_file, limit=None):
+        """
+        Run file maintainer. It will remove any file with problems
+
+        Args:
+            log_file (str): log file path
+            limit (int): length of the scenes_to_process
+
+        Returns:
+            str: Print
+        """
+
+        with t.HiddenPrints():
+            self.nsnow.checkdatabase()
+            self.ssnow.checkdatabase()
+
+        self.common_elements = t.compare_indatabase(self.nsnow.indatabase,
+                                                    self.ssnow.indatabase)
+
+        self.scenes_to_process = t.get_scenes_out_of_db(self.complete_scenes, self.common_elements)
+
+        scenes_path = t.get_scenes_path(self.product_files, self.productpath)
+
+        if limit is not None:
+            scenes_to_process = self.scenes_to_process[:limit]
+        else:
+            scenes_to_process = self.scenes_to_process
+
+        for scene in scenes_to_process:
+            m.file_maintainer(scene=scene,
+                              scenes_path=scenes_path,
+                              name='modis',
+                              log_file=log_file)
+
+
+"""
+Extraction of VIIRS VNP10A1F product:
+"""
+
+
+class Vnp10a1f:
+    """
+    A class to process VNP10A1F to hidrocl variables
+
+    Attributes:
+        nsnow (HidroCLVariable): HidroCLVariable object with north face snow data \n
+        ssnow (HidroCLVariable): HidroCLVariable object with south face snow data \n
+        snow_log (str): Path to the log file for the snow extraction \n
+        productname (str): Name of the remote sensing product to be processed \n
+        productpath (str): Path to the product folder where the product files are located \n
+        northvectorpath (str): Path to the vector folder with the north Shapefile with areas to be processed \n
+        southvectorpath (str): Path to the vector folder with the south Shapefile with areas to be processed \n
+        common_elements (list): List of common elements between the nsnow and ssnow databases \n
+        product_files (list): List of product files in the product folder \n
+        product_ids (list): List of product ids. Each product id is str with common tag by date \n
+        all_scenes (list): List of all scenes (no matter the product id here) \n
+        scenes_occurrences (list): List of scenes occurrences for each product id \n
+        overpopulated_scenes (list): List of overpopulated scenes (more than 9 scenes for modis) \n
+        complete_scenes (list): List of complete scenes (9 scenes for modis) \n
+        incomplete_scenes (list): List of incomplete scenes (less than 9 scenes for modis) \n
+        scenes_to_process (list): List of scenes to process (complete scenes no processed) \n
+    """
+
+    def __init__(self, nsnow, ssnow, product_path,
+                 north_vector_path, south_vector_path, snow_log):
+        """
+        Examples:
+            >>> from hidrocl import HidroCLVariable
+            >>> from hidrocl import Vnp10a1f
+            >>> nsnow = HidroCLVariable('nsnow', 'modis', 'mod10a2', 'north')
+            >>> ssnow = HidroCLVariable('ssnow', 'modis', 'mod10a2', 'south')
+            >>> product_path = '/home/user/vnp10a1f'
+            >>> north_vector_path = '/home/user/north_vector.shp'
+            >>> south_vector_path = '/home/user/south_vector.shp'
+            >>> snow_log = '/home/user/snow.log'
+            >>> vnp10a1f = Vnp10a1f(nsnow, ssnow, product_path,
+            ...                     north_vector_path, south_vector_path, snow_log)
+            >>> vnp10a1f
             "Class to extract VIIRS VNP10A1F Version --"
 
 
