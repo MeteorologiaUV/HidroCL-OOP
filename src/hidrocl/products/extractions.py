@@ -214,11 +214,17 @@ def load_gfs(file, var, day=0):
     """
 
     with t.HiddenPrints():
-        da = xarray.open_dataset(file, mask_and_scale=True)
-        da = da[var]
-        da.load()
-        da = da.sel(valid_time=slice(da.time + pd.to_timedelta(24 * day + 3, unit='H'),
-                                     da.time + pd.to_timedelta(24 * day + 26, unit='H'))) \
+        ds = xarray.open_dataset(file, mask_and_scale=True)
+        ds.load()
+        file_time = pd.to_datetime(ds["time"].values)
+        if "time" in ds.dims:
+            ds = ds.isel(time=0).squeeze(drop=True)
+        else:
+            ds = ds.squeeze(drop=True)
+        ds = ds.assign_coords(time=file_time)
+        da = ds[var]
+        da = da.sel(valid_time=slice(file_time[0] + pd.to_timedelta(24 * day + 3, unit='H'),
+                                     file_time[0] + pd.to_timedelta(24 * day + 26, unit='H'))) \
             .transpose('valid_time', 'latitude', 'longitude')
         da.coords['longitude'] = (da.coords['longitude'] + 180) % 360 - 180
         return da
