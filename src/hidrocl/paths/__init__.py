@@ -15,12 +15,13 @@ vnp15a2h_path = os.path.join(processing_path, observed_products_path, 'VNP15A2H/
 veg_o_viirs_ndvi_mean = os.path.join(project_path, 'databases/observed/veg_o_viirs_ndvi_mean_b_none_d1_p0d.csv')
 veg_o_viirs_evi_mean = os.path.join(project_path, 'databases/observed/veg_o_viirs_evi_mean_b_none_d1_p0d.csv')
 veg_o_viirs_nbr2_mean = os.path.join(project_path, 'databases/observed/veg_o_viirs_nbr_mean_b_none_d1_p0d.csv')
+veg_o_viirs_agr_mean = os.path.join(project_path, 'databases/observed/veg_o_viirs_agr_mean_b_none_d1_p0d.csv')
 snw_o_modis_scaf_cum_n = os.path.join(project_path, 'databases/observed/snw_o_modis_scaf_tot_n_none_d1_p0d.csv')
 snw_o_modis_scaf_cum_s = os.path.join(project_path, 'databases/observed/snw_o_modis_scaf_tot_s_none_d1_p0d.csv')
 snw_o_viirs_scaf_cum_n = os.path.join(project_path, 'databases/observed/snw_o_viirs_scaf_tot_n_none_d1_p0d.csv')
 snw_o_viirs_scaf_cum_s = os.path.join(project_path, 'databases/observed/snw_o_viirs_scaf_tot_s_none_d1_p0d.csv')
-veg_o_viirs_lai_mean = os.path.join(project_path, 'databases/observed/veg_o_viirs_lai_mean_b_none_d8_p0d.csv')
-veg_o_viirs_fpar_mean = os.path.join(project_path, 'databases/observed/veg_o_viirs_fpar_mean_b_none_d8_p0d.csv')
+veg_o_viirs_lai_mean = os.path.join(project_path, 'databases/observed/veg_o_viirs_lai_mean_b_none_d1_p0d.csv') # change
+veg_o_viirs_fpar_mean = os.path.join(project_path, 'databases/observed/veg_o_viirs_fpar_mean_b_none_d1_p0d.csv') # change
 
 # Pixel-count databases
 veg_o_viirs_ndvi_mean_pc = os.path.join(project_path, 'pcdatabases/observed/veg_o_viirs_ndvi_mean_b_pc.csv')
@@ -32,6 +33,16 @@ snw_o_viirs_scaf_cum_n_pc = os.path.join(project_path, 'pcdatabases/observed/snw
 snw_o_viirs_scaf_cum_s_pc = os.path.join(project_path, 'pcdatabases/observed/snw_o_viirs_scaf_tot_s_pc.csv')
 veg_o_viirs_lai_mean_pc = os.path.join(project_path, 'pcdatabases/observed/veg_o_viirs_lai_mean_b_pc.csv')
 veg_o_viirs_fpar_mean_pc = os.path.join(project_path, 'pcdatabases/observed/veg_o_viirs_fpar_mean_b_pc.csv')
+veg_o_viirs_agr_mean_b_pc = os.path.join(project_path, 'pcdatabases/observed/veg_o_viirs_agr_mean_b_pc.csv')
+
+# log files
+log_snw_o_modis_sca_cum = os.path.join(project_path, 'logs/log_snw_o_modis_sca_cum.txt')
+log_snw_o_viirs_sca_cum = os.path.join(project_path, 'logs/log_snw_o_viirs_sca_cum.txt')
+log_veg_o_viirs_lai_mean = os.path.join(project_path, 'logs/log_veg_o_viirs_lai_mean.txt')
+log_veg_o_viirs_fpar_mean = os.path.join(project_path, 'logs/log_veg_o_viirs_fpar_mean.txt')
+log_veg_o_viirs_indices_mean = os.path.join(project_path, 'logs/log_veg_o_viirs_indices_mean.txt')
+log_veg_o_modis_agr_mean = os.path.join(project_path, 'logs/log_veg_o_modis_agr_mean.txt')
+
 
 # ----
 mcd12q1_path = os.path.join(processing_path, observed_products_path, 'MCD12Q1/')  # lulc

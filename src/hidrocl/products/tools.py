@@ -202,7 +202,7 @@ def get_scenes_out_of_db(complete_scenes, common_elements, what='modis'):
         case "modis":
             idlenght = 7
         case "viirs":
-            idlenght = 7
+            idlenght = 8
         case "imerg":
             idlenght = 8
         case "imgis":

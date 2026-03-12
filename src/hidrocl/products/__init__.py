@@ -176,7 +176,7 @@ NBR database path: {self.nbr.database}
                                   vector_path=self.vectorpath,
                                   layer="250m 16 days EVI", )
 
-                if scene not in self.evi.indatabase:
+                if scene not in self.nbr.indatabase:
                     e.zonal_stats(scene, scenes_path,
                                   temp_dir, 'nbr',
                                   self.nbr.catchment_names, self.nbr_log,
@@ -392,7 +392,7 @@ NBR database path: {self.nbr.database}
                                   vector_path=self.vectorpath,
                                   layer="500_m_16_days_EVI2", )
 
-                if scene not in self.evi.indatabase:
+                if scene not in self.nbr.indatabase:
                     e.zonal_stats(scene, scenes_path,
                                   temp_dir, 'nbr_viirs',
                                   self.nbr.catchment_names, self.nbr_log,
@@ -400,7 +400,7 @@ NBR database path: {self.nbr.database}
                                   pcdatabase=self.nbr.pcdatabase,
                                   vector_path=self.vectorpath,
                                   layer=["500_m_16_days_NIR_reflectance",
-                                         "500_m_16_days_SWIR2_reflectance"])
+                                         "500_m_16_days_SWIR3_reflectance"])
 
     def run_maintainer(self, log_file, limit=None):
         """
@@ -901,7 +901,7 @@ South face snow database path: {self.ssnow.database}
             for scene in scenes_to_process:
                 if scene not in self.nsnow.indatabase:  # so what about the south one?
                     e.zonal_stats(scene, scenes_path,
-                                  temp_dir, 'snow',
+                                  temp_dir, 'snow_old',
                                   self.nsnow.catchment_names, self.snow_log,
                                   north_database=self.nsnow.database,
                                   north_pcdatabase=self.nsnow.pcdatabase,
@@ -1085,7 +1085,7 @@ South face snow database path: {self.ssnow.database}
             for scene in scenes_to_process:
                 if scene not in self.nsnow.indatabase:  # so what about the south one?
                     e.zonal_stats(scene, scenes_path,
-                                  temp_dir, 'snow',
+                                  temp_dir, 'snow_modis',
                                   self.nsnow.catchment_names, self.snow_log,
                                   north_database=self.nsnow.database,
                                   north_pcdatabase=self.nsnow.pcdatabase,

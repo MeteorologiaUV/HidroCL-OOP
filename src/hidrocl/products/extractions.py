@@ -344,6 +344,40 @@ def len_era5(dataset, limit=1):
     return da.sum('valid_time') * 3
 
 
+def auto_nodata_for_dtype(dtype, prefer_nan_for_float=True):
+    dt = np.dtype(dtype)
+    if dt.kind == "f":
+        return np.nan if prefer_nan_for_float else -9999.0
+
+    if dt.kind in ("i", "u"):
+        info = np.iinfo(dt)
+        return info.min
+
+    return None
+
+def ensure_integer_nodata(da: xarray.DataArray, preferred=None):
+    da = da.copy()
+    da.attrs.pop("_FillValue", None)
+    da.attrs.pop("missing_value", None)
+
+    dt = np.dtype(da.dtype)
+    if dt.kind not in ("i", "u"):
+        return da
+
+    if preferred is not None:
+        nodata = np.array(preferred, dtype=da.dtype).item()
+    else:
+        if dt == np.uint8:
+            nodata = np.uint8(255)
+        else:
+            nodata = np.iinfo(dt).min
+
+    data = da.data
+    da = da.where(~xarray.ufuncs.isnan(da), other=nodata)
+
+    da.encoding["_FillValue"] = nodata
+    return da
+
 def mosaic_raster(raster_list, layer):
     """
     Function to compute mosaic files with rioxarray library
@@ -357,13 +391,15 @@ def mosaic_raster(raster_list, layer):
     """
     raster_single = []
 
-    for raster in raster_list:
-        with rioxr.open_rasterio(raster, masked=True) as src:
-            # raster_single.append(getattr(src, layer))
-            raster_single.append(src[layer])
+    with t.HiddenPrints():
+        for raster in raster_list:
+            with rioxr.open_rasterio(raster, masked=True) as src:
+                # raster_single.append(getattr(src, layer))
+                raster_single.append(src[layer])
 
-    raster_mosaic = merge_arrays(raster_single)
-    return raster_mosaic
+        raster_mosaic = merge_arrays(raster_single)
+        raster_mosaic = raster_mosaic.rio.write_crs(MODIS_SINU_PROJ4, inplace=False)
+    return ensure_integer_nodata(raster_mosaic)
 
 
 def mosaic_nd_raster(raster_list, layer1, layer2):
@@ -382,17 +418,19 @@ def mosaic_nd_raster(raster_list, layer1, layer2):
     """
     raster_single = []
 
-    for raster in raster_list:
-        with rioxr.open_rasterio(raster, masked=True) as src:
-            lyr1 = getattr(src, layer1)
-            lyr2 = getattr(src, layer2)
-            nd = 1000 * (lyr1 - lyr2) / (lyr1 + lyr2)
-            nd.rio.set_nodata(-32768)
-            raster_single.append(nd)
-    raster_mosaic = merge_arrays(raster_single)
-    raster_mosaic = raster_mosaic.where((raster_mosaic <= 1000) & (raster_mosaic >= -1000))
-    raster_mosaic = raster_mosaic.where(raster_mosaic != raster_mosaic.rio.nodata)
-    return raster_mosaic
+    with t.HiddenPrints():
+        for raster in raster_list:
+            with rioxr.open_rasterio(raster, masked=True) as src:
+                lyr1 = getattr(src, layer1)
+                lyr2 = getattr(src, layer2)
+                nd = 1000 * (lyr1 - lyr2) / (lyr1 + lyr2)
+                nd.rio.set_nodata(-32768)
+                raster_single.append(nd)
+        raster_mosaic = merge_arrays(raster_single)
+        raster_mosaic = raster_mosaic.where((raster_mosaic <= 1000) & (raster_mosaic >= -1000))
+        raster_mosaic = raster_mosaic.where(raster_mosaic != raster_mosaic.rio.nodata)
+        raster_mosaic = raster_mosaic.rio.write_crs(MODIS_SINU_PROJ4, inplace=False)
+    return ensure_integer_nodata(raster_mosaic)
 
 # VIIRS functions
 
@@ -450,7 +488,7 @@ def mosaic_raster_viirs(raster_list, layer):
         raster_single.append(da)
 
     raster_mosaic = merge_arrays(raster_single)
-    return raster_mosaic
+    return ensure_integer_nodata(raster_mosaic)
 
 
 def _open_layer_sds(h5_file: str, layer_suffix: str):
@@ -513,7 +551,7 @@ def mosaic_nd_raster_viirs(raster_list, layer1, layer2, nodata=-32768):
     raster_mosaic = raster_mosaic.where((raster_mosaic <= 1000) & (raster_mosaic >= -1000))
     raster_mosaic = raster_mosaic.where(raster_mosaic != raster_mosaic.rio.nodata)
 
-    return raster_mosaic
+    return ensure_integer_nodata(raster_mosaic)
 
 
 def write_line(database, result, catchment_names, file_id, file_date, ncol=1):
@@ -722,7 +760,7 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
             except (rxre.RioXarrayError, rioe.RasterioIOError):
                 return print(f"Error in scene {scene}")
 
-        case 'snow':
+        case 'snow_old':
             try:
                 mos = mosaic_raster(selected_files, kwargs.get("layer"))
                 mos = xarray.where(mos == 200, 1, mos)
@@ -733,18 +771,21 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
             except (rxre.RioXarrayError, rioe.RasterioIOError):
                 return print(f"Error in scene {scene}")
 
+        case 'snow_modis':
+            try:
+                mos = mosaic_raster(selected_files, kwargs.get("layer"))
+                mos = xarray.where(mos >= 100, np.nan, mos)
+                mos = xarray.where(mos <= 20, 0, mos)
+                mos = mos * 10
+            except (rxre.RioXarrayError, rioe.RasterioIOError):
+                return print(f"Error in scene {scene}")
+
         case 'snow_viirs':
             try:
                 mos = mosaic_raster_viirs(selected_files, kwargs.get("layer"))
-                # filter values from 70 to 100
                 mos = xarray.where(mos >=100, np.nan, mos)
-                mos = xarray.where(mos <= 75, 0, mos)
-                #mos = xarray.where(mos > 0, 1, mos)
-                #mos = xarray.where(mos == 200, 1, mos)
-                #mos = xarray.where(mos == 0, np.nan, mos)
-                #mos = xarray.where((mos == 25) | (mos == 37) | (mos == 39), 0, mos)
-                #mos = xarray.where((mos == 0) | (mos == 1), mos, np.nan)
-                #mos = mos * 100
+                mos = xarray.where(mos <= 20, 0, mos)
+                mos = mos * 10
             except (rxre.RioXarrayError, rioe.RasterioIOError):
                 return print(f"Error in scene {scene}")
 
@@ -752,7 +793,9 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
             if 'viirs' in name:
                 try:
                     mos = mosaic_raster_viirs(selected_files, kwargs.get("layer"))
-                    mos = mos * 0.1
+                    mos = (mos.where(mos <= 200)).fillna(0)
+                    mos = mos * 10
+                    mos = mos.rio.write_crs(MODIS_SINU_PROJ4, inplace=False)
                 except (rxre.RioXarrayError, rioe.RasterioIOError):
                     return print(f"Error in scene {scene}")
             else:
@@ -980,22 +1023,25 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
         mos.rio.to_raster(temporal_raster, compress="LZW")
 
     match name:
-        case 'snow' | 'snow_viirs':
-            result_df = extract_data(kwargs.get("north_vector_path"), mos, 'mean', debug=debug,
-                                     debug_path=debug_path, name='n_' + result_file)
+        case 'snow_old' | 'snow_modis' | 'snow_viirs':
+            with t.HiddenPrints():
+                result_df = extract_data(kwargs.get("north_vector_path"), mos, 'mean', debug=debug,
+                                         debug_path=debug_path, name='n_' + result_file)
 
             write_line2(kwargs.get("north_database"), result_df, catchment_names, scene, file_date, ncol=1)
             write_line2(kwargs.get("north_pcdatabase"), result_df, catchment_names, scene, file_date, ncol=2)
 
-            result_df = extract_data(kwargs.get("south_vector_path"), mos, 'mean', debug=debug,
-                                     debug_path=debug_path, name='s_' + result_file)
+            with t.HiddenPrints():
+                result_df = extract_data(kwargs.get("south_vector_path"), mos, 'mean', debug=debug,
+                                         debug_path=debug_path, name='s_' + result_file)
 
             write_line2(kwargs.get("south_database"), result_df, catchment_names, scene, file_date, ncol=1)
             write_line2(kwargs.get("south_pcdatabase"), result_df, catchment_names, scene, file_date, ncol=2)
 
         case 'gfs':
-            result_df = extract_data(kwargs.get("vector_path"), mos, 'mean', debug=debug,
-                                     debug_path=debug_path, name='n_' + result_file)
+            with t.HiddenPrints():
+                result_df = extract_data(kwargs.get("vector_path"), mos, 'mean', debug=debug,
+                                         debug_path=debug_path, name='n_' + result_file)
 
             days = kwargs.get("days")
 
@@ -1033,8 +1079,9 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
             write_line2(kwargs.get("pcdatabase"), result_df, catchment_names, scene, file_date, ncol=2)
 
         case _:
-            result_df = extract_data(kwargs.get("vector_path"), mos, 'mean', debug=debug,
-                                     debug_path=debug_path, name=result_file)
+            with t.HiddenPrints():
+                result_df = extract_data(kwargs.get("vector_path"), mos, 'mean', debug=debug,
+                                         debug_path=debug_path, name=result_file)
 
             write_line2(kwargs.get("database"), result_df, catchment_names, scene, file_date, ncol=1)
             write_line2(kwargs.get("pcdatabase"), result_df, catchment_names, scene, file_date, ncol=2)

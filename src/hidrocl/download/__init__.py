@@ -613,7 +613,7 @@ def viirs_download(what, product_path, start, end,
         "reflectance": ["VNP09A1"],
         "vegetation": ["VNP13A1"],
         "lai": ["VNP15A2H"],
-        "snow": ["VNP10A1"],
+        "snow": ["VNP10A1F"],
     }
 
 
