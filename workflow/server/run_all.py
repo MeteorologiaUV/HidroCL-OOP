@@ -56,23 +56,29 @@ def run_stuff(file, alias=None):
     return code
 
 
-era5 = run_stuff('era5.py', alias='ERA5')
-era5land = run_stuff('era5land.py', alias='ERA5LAND')
-era5pl = run_stuff('era5pl.py', alias='ERA5PL')
 mcd15a2h = run_stuff('mcd15a2h.py', alias='MCD15A2H')
-mod10a2 = run_stuff('mod10a2.py', alias='MOD10A2')
+#mod10a2 = run_stuff('mod10a2.py', alias='MOD10A2')
 mod13q1 = run_stuff('mod13q1.py', alias='MOD13Q1')
 pdirnow = run_stuff('pdirnow.py', alias='PDIRNOW')
 imerggis = run_stuff('imerggis.py', alias='IMERGGIS')
+era5 = run_stuff('era5.py', alias='ERA5')
+era5land = run_stuff('era5land.py', alias='ERA5LAND')
+era5pl = run_stuff('era5pl.py', alias='ERA5PL')
+vnp10a1f = run_stuff('vnp10a1f.py', alias='VNP10A1F')
+vnp13q1 = run_stuff('vnp13q1.py', alias='VNP13Q1')
+vnp15a2h = run_stuff('vnp15a2h.py', alias='VNP15A2H')
 
 pd.DataFrame({'era5': [era5],
               'era5land': [era5land],
               'era5pl': [era5pl],
               'mcd15a2h': [mcd15a2h],
-              'mod10a2': [mod10a2],
+              #'mod10a2': [mod10a2],
               'mod13q1': [mod13q1],
               'pdirnow': [pdirnow],
-              'imerggis': [imerggis]}).to_csv(f'{log_folder}/log_{today}.csv',
+              'imerggis': [imerggis],
+              'vnp10a1f': [vnp10a1f],
+              'vnp13q1': [vnp13q1],
+              'vnp15a2h': [vnp15a2h]}).to_csv(f'{log_folder}/log_{today}.csv',
                                               index=False)
 sys.exit(exit_code)
 
