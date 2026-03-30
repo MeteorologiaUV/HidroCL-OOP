@@ -92,6 +92,7 @@ mod10 = hidrocl.Mod10a2(nsnow, ssnow,
                         south_vector_path=hcl.hidrocl_south,
                         snow_log=hcl.log_snw_o_modis_sca_cum)
 
+mod10.run_maintainer()
 mod10.run_extraction()
 
 if 'tempdir' in locals():

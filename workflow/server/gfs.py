@@ -381,6 +381,7 @@ gfs = hidrocl.products.Gfs(db0=gfs_d0,
                            product_path=hcl.gfs,
                            vectorpath=hcl.hidrocl_wgs84)
 
+gfs.run_maintainer()
 gfs.run_extraction()
 
 del gfs
@@ -412,6 +413,7 @@ gfs = hidrocl.products.Gfs(db0=gfs_d0,
                            product_path=hcl.gfs,
                            vectorpath=hcl.hidrocl_wgs84)
 
+gfs.run_maintainer()
 gfs.run_extraction()
 
 del gfs
@@ -443,6 +445,7 @@ gfs = hidrocl.products.Gfs(db0=gfs_d0,
                            product_path=hcl.gfs,
                            vectorpath=hcl.hidrocl_wgs84)
 
+gfs.run_maintainer()
 gfs.run_extraction()
 
 del gfs
@@ -474,6 +477,7 @@ gfs = hidrocl.products.Gfs(db0=gfs_d0,
                            product_path=hcl.gfs,
                            vectorpath=hcl.hidrocl_wgs84)
 
+gfs.run_maintainer()
 gfs.run_extraction()
 
 del gfs
@@ -505,6 +509,7 @@ gfs = hidrocl.products.Gfs(db0=gfs_d0,
                            product_path=hcl.gfs,
                            vectorpath=hcl.hidrocl_wgs84)
 
+gfs.run_maintainer()
 gfs.run_extraction()
 
 del gfs
@@ -536,6 +541,7 @@ gfs = hidrocl.products.Gfs(db0=gfs_d0,
                            product_path=hcl.gfs,
                            vectorpath=hcl.hidrocl_wgs84)
 
+gfs.run_maintainer()
 gfs.run_extraction()
 
 del gfs
@@ -567,6 +573,7 @@ gfs = hidrocl.products.Gfs(db0=gfs_d0,
                            product_path=hcl.gfs,
                            vectorpath=hcl.hidrocl_wgs84)
 
+gfs.run_maintainer()
 gfs.run_extraction()
 
 del gfs
@@ -598,6 +605,7 @@ gfs = hidrocl.products.Gfs(db0=gfs_d0,
                            product_path=hcl.gfs,
                            vectorpath=hcl.hidrocl_wgs84)
 
+gfs.run_maintainer()
 gfs.run_extraction()
 
 del gfs
@@ -629,6 +637,7 @@ gfs = hidrocl.products.Gfs(db0=gfs_d0,
                            product_path=hcl.gfs,
                            vectorpath=hcl.hidrocl_wgs84)
 
+gfs.run_maintainer()
 gfs.run_extraction()
 
 del gfs
@@ -660,6 +669,7 @@ gfs = hidrocl.products.Gfs(db0=gfs_d0,
                            product_path=hcl.gfs,
                            vectorpath=hcl.hidrocl_wgs84)
 
+gfs.run_maintainer()
 gfs.run_extraction()
 
 if 'tempdir' in locals():

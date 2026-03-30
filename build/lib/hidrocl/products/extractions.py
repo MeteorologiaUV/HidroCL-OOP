@@ -25,6 +25,7 @@ from rioxarray.merge import merge_arrays
 path = Path(__file__).parent.absolute()
 
 debug = False
+hide = False
 debug_path = ""
 
 # Constants
@@ -47,7 +48,7 @@ def load_hdf5(file, var):
         xarray.DataArray: variable data
     """
 
-    with t.HiddenPrints():
+    with t.HiddenPrints(hide):
         da = rioxr.open_rasterio(file, engine='h5netcdf')
         da = da[0][var]
         return da.assign_coords({"x": (da.x / 10) - 90}) \
@@ -70,7 +71,7 @@ def load_nc(file, var):
         xarray.DataArray: xarray DataArray
     """
 
-    with t.HiddenPrints():
+    with t.HiddenPrints(hide):
         da = xarray.open_dataset(file, engine="netcdf4")
         da = da[var]
         return da.sel(lat=slice(-55, -15), lon=slice(-75, -65))
@@ -89,7 +90,7 @@ def load_era5(file, var, reducer='mean'):
         xarray.DataArray: xarray.DataArray with the variable
     """
 
-    with t.HiddenPrints():
+    with t.HiddenPrints(hide):
         da = xarray.open_dataset(file, mask_and_scale=True)
         da = da[var]
         match var:
@@ -127,7 +128,7 @@ def load_era5acc(file, var, reducer='max'):
         xarray.DataArray: xarray.DataArray with the variable
     """
 
-    with t.HiddenPrints():
+    with t.HiddenPrints(hide):
         da = xarray.open_dataset(file, mask_and_scale=True)
         da = da[var]
         # check if "expver" is in the file
@@ -161,7 +162,7 @@ def load_persiann(file):
     Returns:
         xarray.DataArray: xarray.DataArray with the variable
     """
-    with t.HiddenPrints():
+    with t.HiddenPrints(hide):
         da = open(file, 'rb')
 
         nlon = 9000
@@ -213,7 +214,7 @@ def load_gfs(file, var, day=0):
         xarray.DataArray: xarray.DataArray with the variable
     """
 
-    with t.HiddenPrints():
+    with t.HiddenPrints(hide):
         ds = xarray.open_dataset(file, mask_and_scale=True)
         ds.load()
         file_time = pd.to_datetime(ds["time"].values)
@@ -242,7 +243,7 @@ def load_imerggis(file, nodata=29999):
         xarray.DataArray: xarray.DataArray with the variable
     """
 
-    with t.HiddenPrints():
+    with t.HiddenPrints(hide):
         da = rioxr.open_rasterio(file)
         da = da.sel(x=slice(-75, -65), y=slice(-15, -55))
         return da.where(da != nodata)
@@ -389,16 +390,37 @@ def mosaic_raster(raster_list, layer):
     Returns:
         xarray.DataArray: xarray DataArray with the mosaic
     """
+    from osgeo import gdal
+
     raster_single = []
 
-    with t.HiddenPrints():
-        for raster in raster_list:
-            with rioxr.open_rasterio(raster, masked=True) as src:
-                # raster_single.append(getattr(src, layer))
-                raster_single.append(src[layer])
+    for raster in raster_list:
+        ds = gdal.Open(raster)
+        if ds is None:
+            raise rioe.RasterioIOError(f"Cannot open {raster}")
+        subdatasets = ds.GetSubDatasets()
+        matches = [s[0] for s in subdatasets if s[0].split(':')[-1] == layer]
+        if not matches:
+            raise rioe.RasterioIOError(f"Layer '{layer}' not found in {raster}")
+        sds = gdal.Open(matches[0])
+        band = sds.GetRasterBand(1)
+        data = band.ReadAsArray().astype(np.float32)
+        nodata = band.GetNoDataValue()
+        if nodata is not None:
+            data[data == nodata] = np.nan
+        gt = sds.GetGeoTransform()
+        nrows, ncols = data.shape
+        x = gt[0] + (np.arange(ncols) + 0.5) * gt[1]
+        y = gt[3] + (np.arange(nrows) + 0.5) * gt[5]
+        transform = Affine(gt[1], gt[2], gt[0], gt[4], gt[5], gt[3])
+        da = xarray.DataArray(data, dims=["y", "x"], coords={"x": x, "y": y})
+        da = da.rio.write_crs(MODIS_SINU_PROJ4, inplace=False)
+        da = da.rio.write_transform(transform, inplace=False)
+        da = da.rio.set_spatial_dims(x_dim="x", y_dim="y", inplace=False)
+        raster_single.append(da)
 
-        raster_mosaic = merge_arrays(raster_single)
-        raster_mosaic = raster_mosaic.rio.write_crs(MODIS_SINU_PROJ4, inplace=False)
+    raster_mosaic = merge_arrays(raster_single)
+    raster_mosaic = raster_mosaic.rio.write_crs(MODIS_SINU_PROJ4, inplace=False)
     return ensure_integer_nodata(raster_mosaic)
 
 
@@ -418,7 +440,7 @@ def mosaic_nd_raster(raster_list, layer1, layer2):
     """
     raster_single = []
 
-    with t.HiddenPrints():
+    with t.HiddenPrints(hide):
         for raster in raster_list:
             with rioxr.open_rasterio(raster, masked=True) as src:
                 lyr1 = getattr(src, layer1)
@@ -1024,14 +1046,14 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
 
     match name:
         case 'snow_old' | 'snow_modis' | 'snow_viirs':
-            with t.HiddenPrints():
+            with t.HiddenPrints(hide):
                 result_df = extract_data(kwargs.get("north_vector_path"), mos, 'mean', debug=debug,
                                          debug_path=debug_path, name='n_' + result_file)
 
             write_line2(kwargs.get("north_database"), result_df, catchment_names, scene, file_date, ncol=1)
             write_line2(kwargs.get("north_pcdatabase"), result_df, catchment_names, scene, file_date, ncol=2)
 
-            with t.HiddenPrints():
+            with t.HiddenPrints(hide):
                 result_df = extract_data(kwargs.get("south_vector_path"), mos, 'mean', debug=debug,
                                          debug_path=debug_path, name='s_' + result_file)
 
@@ -1039,7 +1061,7 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
             write_line2(kwargs.get("south_pcdatabase"), result_df, catchment_names, scene, file_date, ncol=2)
 
         case 'gfs':
-            with t.HiddenPrints():
+            with t.HiddenPrints(hide):
                 result_df = extract_data(kwargs.get("vector_path"), mos, 'mean', debug=debug,
                                          debug_path=debug_path, name='n_' + result_file)
 
@@ -1079,7 +1101,7 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
             write_line2(kwargs.get("pcdatabase"), result_df, catchment_names, scene, file_date, ncol=2)
 
         case _:
-            with t.HiddenPrints():
+            with t.HiddenPrints(hide):
                 result_df = extract_data(kwargs.get("vector_path"), mos, 'mean', debug=debug,
                                          debug_path=debug_path, name=result_file)
 

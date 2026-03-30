@@ -87,6 +87,7 @@ vnp10f = hidrocl.Vnp10a1f(nsnow, ssnow,
                         south_vector_path=hcl.hidrocl_south,
                         snow_log=hcl.log_snw_o_modis_sca_cum)
 
+vnp10f.run_maintainer()
 vnp10f.run_extraction()
 
 if 'tempdir' in locals():

@@ -186,7 +186,7 @@ NBR database path: {self.nbr.database}
                                   layer=["250m 16 days NIR reflectance",
                                          "250m 16 days MIR reflectance"])
 
-    def run_maintainer(self, log_file, limit=None):
+    def run_maintainer(self, log_file=None, limit=None):
         """
         Run file maintainer. It will remove any file with problems
 
@@ -221,6 +221,7 @@ NBR database path: {self.nbr.database}
                               scenes_path=scenes_path,
                               name='modis',
                               log_file=log_file)
+        m.mod13q1_db_maintainer(self)
 
 
 """
@@ -402,7 +403,7 @@ NBR database path: {self.nbr.database}
                                   layer=["500_m_16_days_NIR_reflectance",
                                          "500_m_16_days_SWIR3_reflectance"])
 
-    def run_maintainer(self, log_file, limit=None):
+    def run_maintainer(self, log_file=None, limit=None):
         """
         Run file maintainer. It will remove any file with problems
 
@@ -437,6 +438,7 @@ NBR database path: {self.nbr.database}
                               scenes_path=scenes_path,
                               name='viirs',
                               log_file=log_file)
+        m.vnp13q1_db_maintainer(self)
 
 
 """
@@ -568,7 +570,7 @@ NDVI database path: {self.ndvi.database}
                               vector_path=self.vectorpath,
                               layer="250m 16 days NDVI", )
 
-    def run_maintainer(self, log_file, limit=None):
+    def run_maintainer(self, log_file=None, limit=None):
         """
         Run file maintainer. It will remove any file with problems
 
@@ -599,6 +601,7 @@ NDVI database path: {self.ndvi.database}
                               scenes_path=scenes_path,
                               name='modis',
                               log_file=log_file)
+        m.mod13q1agr_db_maintainer(self)
 
 
 """
@@ -730,7 +733,7 @@ NDVI database path: {self.ndvi.database}
                               vector_path=self.vectorpath,
                               layer="500_m_16_days_NDVI", )
 
-    def run_maintainer(self, log_file, limit=None):
+    def run_maintainer(self, log_file=None, limit=None):
         """
         Run file maintainer. It will remove any file with problems
 
@@ -761,6 +764,7 @@ NDVI database path: {self.ndvi.database}
                               scenes_path=scenes_path,
                               name='viirs',
                               log_file=log_file)
+        m.vnp13q1agr_db_maintainer(self)
 
 """
 Extraction of MODIS MOD10A2 product:
@@ -911,7 +915,7 @@ South face snow database path: {self.ssnow.database}
                                   south_vector_path=self.southvectorpath,
                                   layer="Maximum_Snow_Extent")
 
-    def run_maintainer(self, log_file, limit=None):
+    def run_maintainer(self, log_file=None, limit=None):
         """
         Run file maintainer. It will remove any file with problems
 
@@ -944,6 +948,7 @@ South face snow database path: {self.ssnow.database}
                               scenes_path=scenes_path,
                               name='modis',
                               log_file=log_file)
+        m.mod10a2_db_maintainer(self)
 
 
 """
@@ -1095,7 +1100,7 @@ South face snow database path: {self.ssnow.database}
                                   south_vector_path=self.southvectorpath,
                                   layer="CGF_NDSI_Snow_Cover")
 
-    def run_maintainer(self, log_file, limit=None):
+    def run_maintainer(self, log_file=None, limit=None):
         """
         Run file maintainer. It will remove any file with problems
 
@@ -1128,6 +1133,7 @@ South face snow database path: {self.ssnow.database}
                               scenes_path=scenes_path,
                               name='modis',
                               log_file=log_file)
+        m.mod10a1f_db_maintainer(self)
 
 
 """
@@ -1279,7 +1285,7 @@ South face snow database path: {self.ssnow.database}
                                   south_vector_path=self.southvectorpath,
                                   layer="CGF_NDSI_Snow_Cover")
 
-    def run_maintainer(self, log_file, limit=None):
+    def run_maintainer(self, log_file=None, limit=None):
         """
         Run file maintainer. It will remove any file with problems
 
@@ -1312,6 +1318,7 @@ South face snow database path: {self.ssnow.database}
                               scenes_path=scenes_path,
                               name='viirs',
                               log_file=log_file)
+        m.vnp10a1f_db_maintainer(self)
 
 
 """
@@ -1467,7 +1474,7 @@ ET database path: {self.et.database}
                                   vector_path=self.vectorpath,
                                   layer="ET_500m", )
 
-    def run_maintainer(self, log_file, limit=None):
+    def run_maintainer(self, log_file=None, limit=None):
         """
         Run file maintainer. It will remove any file with problems
 
@@ -1496,6 +1503,7 @@ ET database path: {self.et.database}
                               scenes_path=scenes_path,
                               name='modis',
                               log_file=log_file)
+        m.mod16a2_db_maintainer(self)
 
 
 """
@@ -1962,7 +1970,7 @@ Woody savannas database path: {self.wsv.database}
                                   layer="LC_Type1",
                                   aggregation=self.agg, value=8)
 
-    def run_maintainer(self, log_file, limit=None):
+    def run_maintainer(self, log_file=None, limit=None):
         """
         Run file maintainer. It will remove any file with problems
 
@@ -2007,6 +2015,7 @@ Woody savannas database path: {self.wsv.database}
                               scenes_path=scenes_path,
                               name='modis',
                               log_file=log_file)
+        m.mod12q1_db_maintainer(self)
 
 
 """
@@ -2164,7 +2173,7 @@ FPAR database path: {self.fpar.database}
                                   vector_path=self.vectorpath,
                                   layer="Fpar_500m")
 
-    def run_maintainer(self, log_file, limit=None):
+    def run_maintainer(self, log_file=None, limit=None):
         """
         Run file maintainer. It will remove any file with problems
 
@@ -2197,6 +2206,7 @@ FPAR database path: {self.fpar.database}
                               scenes_path=scenes_path,
                               name='modis',
                               log_file=log_file)
+        m.mcd15a2h_db_maintainer(self)
 
 
 """
@@ -2354,7 +2364,7 @@ FPAR database path: {self.fpar.database}
                                   vector_path=self.vectorpath,
                                   layer="Fpar")
 
-    def run_maintainer(self, log_file, limit=None):
+    def run_maintainer(self, log_file=None, limit=None):
         """
         Run file maintainer. It will remove any file with problems
 
@@ -2387,6 +2397,7 @@ FPAR database path: {self.fpar.database}
                               scenes_path=scenes_path,
                               name='viirs',
                               log_file=log_file)
+        m.vnp15a2h_db_maintainer(self)
 
 
 """
@@ -2514,7 +2525,7 @@ IMERG precipitation database path: {self.pp.database}
                                   vector_path=self.vectorpath,
                                   layer="Grid_precipitationCal")
 
-    def run_maintainer(self, log_file, limit=None):
+    def run_maintainer(self, log_file=None, limit=None):
         """
         Run file maintainer. It will remove any file with problems
 
@@ -2543,6 +2554,7 @@ IMERG precipitation database path: {self.pp.database}
                               scenes_path=scenes_path,
                               name='imerg',
                               log_file=log_file)
+        m.gpm_3imrghhl_db_maintainer(self)
 
 
 """
@@ -2671,7 +2683,7 @@ IMERG GIS precipitation database path: {self.pp.database}
                                   pcdatabase=self.pp.pcdatabase,
                                   vector_path=self.vectorpath)
 
-    def run_maintainer(self, log_file, limit=None):
+    def run_maintainer(self, log_file=None, limit=None):
         """
         Run file maintainer. It will remove any file with problems
 
@@ -2700,6 +2712,7 @@ IMERG GIS precipitation database path: {self.pp.database}
                               scenes_path=scenes_path,
                               name='imgis',
                               log_file=log_file)
+        m.imerggis_db_maintainer(self)
 
 
 """
@@ -2906,7 +2919,7 @@ Soil moisture path: {self.soilm.database}
                                          "SoilMoi40_100cm_inst",
                                          "SoilMoi100_200cm_inst"])
 
-    def run_maintainer(self, log_file, limit=None):
+    def run_maintainer(self, log_file=None, limit=None):
         """
         Run file maintainer. It will remove any file with problems
 
@@ -2943,6 +2956,7 @@ Soil moisture path: {self.soilm.database}
                               scenes_path=scenes_path,
                               name='gldas',
                               log_file=log_file)
+        m.gldas_noah_db_maintainer(self)
 
 
 # """
@@ -3388,7 +3402,7 @@ PDIR-Now precipitation database path: {self.pp.database}
                                   pcdatabase=self.pp.pcdatabase,
                                   vector_path=self.vectorpath)
 
-    def run_maintainer(self, log_file, limit=None):
+    def run_maintainer(self, log_file=None, limit=None):
         """
         Run file maintainer. It will remove any file with problems
 
@@ -3417,6 +3431,7 @@ PDIR-Now precipitation database path: {self.pp.database}
                               scenes_path=scenes_path,
                               name='persiann',
                               log_file=log_file)
+        m.pdirnow_db_maintainer(self)
 
 
 """
@@ -3717,7 +3732,7 @@ Volumetric soil water path: {self.soilm.database}
                                   vector_path=self.vectorpath,
                                   layer=["swvl1", "swvl2", "swvl3", "swvl4"])
 
-    def run_maintainer(self, log_file, limit=None):
+    def run_maintainer(self, log_file=None, limit=None):
         """
         Run file maintainer. It will remove any file with problems
 
@@ -3760,6 +3775,7 @@ Volumetric soil water path: {self.soilm.database}
                               scenes_path=scenes_path,
                               name='era5',
                               log_file=log_file)
+        m.era5_land_db_maintainer(self)
 
 
 """
@@ -4081,7 +4097,7 @@ V wind component path: {self.v.database}
                                   vector_path=self.vectorpath,
                                   layer="v10")
 
-    def run_maintainer(self, log_file, limit=None):
+    def run_maintainer(self, log_file=None, limit=None):
         """
         Run file maintainer. It will remove any file with problems
 
@@ -4126,6 +4142,7 @@ V wind component path: {self.v.database}
                               scenes_path=scenes_path,
                               name='era5',
                               log_file=log_file)
+        m.era5_db_maintainer(self)
 
 
 """
@@ -4274,7 +4291,7 @@ Maximum precipitation path: {self.ppmax.database}
                                   aggregation='max',
                                   layer="tp")
 
-    def run_maintainer(self, log_file, limit=None):
+    def run_maintainer(self, log_file=None, limit=None):
         """
         Run file maintainer. It will remove any file with problems
 
@@ -4305,6 +4322,7 @@ Maximum precipitation path: {self.ppmax.database}
                               scenes_path=scenes_path,
                               name='era5',
                               log_file=log_file)
+        m.era5ppmax_db_maintainer(self)
 
 
 """
@@ -4454,7 +4472,7 @@ Precipitation length path: {self.pplen.database}
                                   layer="tp",
                                   prec_threshold=1)
 
-    def run_maintainer(self, log_file, limit=None):
+    def run_maintainer(self, log_file=None, limit=None):
         """
         Run file maintainer. It will remove any file with problems
 
@@ -4485,6 +4503,7 @@ Precipitation length path: {self.pplen.database}
                               scenes_path=scenes_path,
                               name='era5',
                               log_file=log_file)
+        m.era5pplen_db_maintainer(self)
 
 
 """
@@ -4631,7 +4650,7 @@ Geo potential height path: {self.z.database}
                                   vector_path=self.vectorpath,
                                   layer="z")
 
-    def run_maintainer(self, log_file, limit=None):
+    def run_maintainer(self, log_file=None, limit=None):
         """
         Run file maintainer. It will remove any file with problems
 
@@ -4662,6 +4681,7 @@ Geo potential height path: {self.z.database}
                               scenes_path=scenes_path,
                               name='era5',
                               log_file=log_file)
+        m.era5_pressure_db_maintainer(self)
 
 
 """
@@ -4808,7 +4828,7 @@ Relative humidity path: {self.rh.database}
                                   vector_path=self.vectorpath,
                                   layer="rh")
 
-    def run_maintainer(self, log_file, limit=None):
+    def run_maintainer(self, log_file=None, limit=None):
         """
         Run file maintainer. It will remove any file with problems
 
@@ -4839,6 +4859,7 @@ Relative humidity path: {self.rh.database}
                               scenes_path=scenes_path,
                               name='era5',
                               log_file=log_file)
+        m.era5_rh_db_maintainer(self)
 
 
 """
@@ -5029,7 +5050,7 @@ Database path day 4: {self.db4.database}
                               days=days,
                               prec_threshold=self.prec_threshold)
 
-    def run_maintainer(self, log_file, limit=None):
+    def run_maintainer(self, log_file=None, limit=None):
         """
         Run file maintainer. It will remove any file with problems
 
@@ -5068,6 +5089,7 @@ Database path day 4: {self.db4.database}
                               scenes_path=scenes_path,
                               name='gfs',
                               log_file=log_file)
+        m.gfs_db_maintainer(self)
 
 # """
 # Extraction of CSR GRACE and GRACE-FO MASCON RL06Mv2 data product:

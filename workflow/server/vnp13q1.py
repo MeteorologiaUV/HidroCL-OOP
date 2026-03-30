@@ -116,7 +116,9 @@ agrndvi = hidrocl.Vnp13q1agr(ndvi=agr, product_path=hcl.vnp13q1_path,
                              vector_path=hcl.hidrocl_agr_sinu,
                              ndvi_log=hcl.log_veg_o_agr_ndvi_mean)
 
+vnp13.run_maintainer()
 vnp13.run_extraction()
+agrndvi.run_maintainer()
 agrndvi.run_extraction()
 
 if 'tempdir' in locals():

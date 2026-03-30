@@ -132,6 +132,7 @@ imerg = hidrocl.ImergGIS(pp,
                          vector_path=hcl.hidrocl_wgs84,
                          pp_log=hcl.log_pp_o_imerg_pp_mean)
 
+imerg.run_maintainer()
 imerg.run_extraction()
 
 if 'tempdir' in locals():

@@ -171,6 +171,7 @@ era5 = hidrocl.Era5_land(et=et, pet=eto,
 
 exit_code = 0
 
+era5.run_maintainer()
 scenes = era5.scenes_to_process
 
 for scene in scenes:

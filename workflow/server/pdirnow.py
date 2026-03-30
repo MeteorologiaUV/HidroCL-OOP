@@ -82,6 +82,7 @@ pdirnow = hidrocl.Pdirnow(pp, product_path=hcl.pdirnow,
                           vector_path=hcl.hidrocl_wgs84,
                           pp_log=hcl.log_pp_o_pdir_pp_mean)
 
+pdirnow.run_maintainer()
 pdirnow.run_extraction()
 
 if 'tempdir' in locals():

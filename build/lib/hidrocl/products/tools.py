@@ -239,17 +239,26 @@ class HiddenPrints:
     """
     Context manager to suppress stdout and stderr.
     """
+    def __init__(self, hide=True):
+        self.hide = hide
+
     def __enter__(self):
-        self._original_stdout = sys.stdout
-        self._original_stderr = sys.stderr
-        sys.stdout = open(os.devnull, 'w')
-        sys.stderr = open(os.devnull, 'w')
+        if not self.hide:
+            return self
+        else:
+            self._original_stdout = sys.stdout
+            self._original_stderr = sys.stderr
+            sys.stdout = open(os.devnull, 'w')
+            sys.stderr = open(os.devnull, 'w')
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        sys.stdout.close()
-        sys.stderr.close()
-        sys.stdout = self._original_stdout
-        sys.stderr = self._original_stderr
+        if not self.hide:
+            return None
+        else:
+            sys.stdout.close()
+            sys.stderr.close()
+            sys.stdout = self._original_stdout
+            sys.stderr = self._original_stderr
 
 
 def get_scenes_path(product_files, productpath):

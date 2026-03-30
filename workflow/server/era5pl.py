@@ -128,6 +128,7 @@ era5 = hidrocl.Era5_pressure(z=gh,
 
 exit_code = 0
 
+era5.run_maintainer()
 scenes = era5.scenes_to_process
 
 for scene in scenes:

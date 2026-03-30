@@ -92,6 +92,7 @@ vnp15 = hidrocl.Vnp15a2h(lai, fpar,
                          vector_path=hcl.hidrocl_sinusoidal,
                          lai_log=hcl.log_veg_o_modis_lai_mean,
                          fpar_log=hcl.log_veg_o_modis_fpar_mean)
+vnp15.run_maintainer()
 vnp15.run_extraction()
 
 if 'tempdir' in locals():

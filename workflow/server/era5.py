@@ -214,6 +214,7 @@ era5rh = hidrocl.Era5_rh(rh=rh,
 
 exit_code = 0
 
+era5.run_maintainer()
 scenes = era5.scenes_to_process
 
 for scene in scenes:
@@ -223,6 +224,7 @@ for scene in scenes:
         exit_code = 1
         continue
 
+era5pplen.run_maintainer()
 scenes = era5pplen.scenes_to_process
 
 for scene in scenes:
@@ -232,6 +234,7 @@ for scene in scenes:
         exit_code = 1
         continue
 
+era5maxpp.run_maintainer()
 scenes = era5maxpp.scenes_to_process
 
 for scene in scenes:
@@ -241,6 +244,7 @@ for scene in scenes:
         exit_code = 1
         continue
 
+era5rh.run_maintainer()
 scenes = era5rh.scenes_to_process
 
 for scene in scenes:
