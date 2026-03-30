@@ -1,5 +1,92 @@
 # Changelog
 
+### [0.0.37] - 2026-03-30
+#### Added
+- **VIIRS products**: Added full support for VNP13Q1 (vegetation indices + agricultural NDVI), VNP10A1F (snow cover), and VNP15A2H (LAI/FPAR) through `Vnp13q1`, `Vnp13q1agr`, `Vnp10a1f`, and `Vnp15a2h` classes
+- **VIIRS server scripts**: Added operational workflow scripts `vnp13q1.py`, `vnp10a1f.py`, and `vnp15a2h.py` in `workflow/server/`, integrated into `run_all.py`
+- **ERA5-Land B variant**: Added `server_era5landB.py` processing script
+
+#### Changed
+- **Dependencies**: Updated `cdsapi>=0.7.3`, `requests>=2.32`, added `ecCodes>=2.44.0` and `cfgrib~=0.9.15.1`
+
+### [0.0.36] - 2026-03-29
+#### Changed
+- **Maintainer**: Module heavily expanded with full maintainer logic for all product classes (`vnp13q1_db_maintainer`, `vnp10a1f_db_maintainer`, `vnp15a2h_db_maintainer`, and others)
+- **Products**: `extractions.py` and `tools.py` refactored for improved VIIRS and MODIS handling
+- **Products**: `__init__.py` updated with refined class logic
+- **Workflow**: ERA5, ERA5-Land, and ERA5-PL server scripts updated
+
+### [0.0.33] - 2026-03-11
+#### Fixed
+- **GFS**: Fully working after fixes to GFS extraction and download flow
+#### Changed
+- **Download**: Minor update to download module
+
+### [0.0.31] - 2026-01-18
+#### Added
+- **VIIRS download**: `viirs_download()` function incorporated into `hidrocl.download`, supporting snow, vegetation, LAI, and reflectance products
+
+### [0.0.30] - 2026-01-15
+#### Added
+- **VIIRS products**: Added `Vnp13q1`, `Vnp13q1agr`, `Vnp10a1f`, `Vnp15a2h` product classes
+- **Dependencies**: Added `ecCodes>=2.44.0` and `cfgrib~=0.9.15.1` for GRIB support
+- **Paths**: Added VIIRS-specific database and log paths to `hidrocl.paths`
+
+### [0.0.29] - 2026-01-12
+#### Changed
+- **GFS download**: Revamped from OpenDAP to GRIB-based download for improved reliability and compatibility
+
+### [0.0.28] - 2025-11-27
+#### Fixed
+- **MODIS download**: Fixed file reading in `products/tools.py` that caused failures in the MODIS downloading process
+
+### [0.0.27] - 2025-03-10
+#### Added
+- **Scene selector**: Added ability to process a specific subset of scenes
+- **Corrupt scene handling**: Products now detect and skip corrupt scenes during extraction
+
+### [0.0.26] - 2024-12-01
+#### Fixed
+- **ERA5 download**: Fixed ERA5 download function
+
+### [0.0.25] - 2024-10-16
+#### Changed
+- **Download**: Updated download functions with improved logic and PEP formatting adjustments
+
+### [0.0.23] - 2024-09-15
+#### Changed
+- **Dependencies**: Updated `requests>=2.32`, `netcdf4>=1.7` for new cdsapi compatibility
+- **cdsapi**: Multiple fixes for compatibility with the new Copernicus CDS API
+
+### [0.0.22] - 2024-09-05
+#### Changed
+- **cdsapi**: Updated code to work with the new cdsapi authentication and endpoint format
+
+### [0.0.21] - 2024-06-19
+#### Fixed
+- **GFS**: Fixed GFS extraction errors
+- **Paths**: Updated path references
+
+### [0.0.19] - 2024-04-09
+#### Changed
+- **Refactor**: Removed `__conf__.py`, configuration merged into `__init__.py`
+- **Variables**: Improved `HidroCLVariable` methods (`checkdatabase`, `checkpcdatabase`, `valid_data`)
+- **Paths**: Simplified path module
+
+### [0.0.18] - 2024-04-08
+#### Added
+- **MCD12Q1**: Added land cover (LULC) product support via `Mod12q1` class
+
+### [0.0.17] - 2024-04-07
+#### Changed
+- **Package structure**: Merged `__conf__.py` configuration into `__init__.py`, streamlining package layout
+
+### [0.0.16] - 2024-04-05
+#### Added
+- **exactextract**: First implementation of `exactextract` for zonal statistics extraction
+- **dotenv**: Added `python-dotenv` support for project path configuration via `.env` files
+- **Workflow scripts**: Added complete workflow scripts for all products in `workflow/server/`
+
 ### [0.0.13] - 2023-11-16
 #### Added
 - **ERA5**: Added ERA5 product
