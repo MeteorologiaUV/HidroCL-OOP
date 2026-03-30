@@ -20,3 +20,4 @@ pdirnow = hidrocl.Pdirnow(pp, product_path=hcl.pdirnow,
                           pp_log=hcl.log_pp_o_pdir_pp_mean)
 
 pdirnow.run_extraction()
+pdirnow.run_maintainer()

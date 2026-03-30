@@ -19,3 +19,4 @@ era5 = hidrocl.Era5ppmax(ppmax=maxpp, ppmax_log=hcl.log_pp_o_era5_maxpp_mean,
                          product_path=hcl.era5_hourly_path,
                          vector_path=hcl.hidrocl_wgs84)
 era5.run_extraction()
+era5.run_maintainer()

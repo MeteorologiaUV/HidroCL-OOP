@@ -17,3 +17,4 @@ mod10 = hidrocl.Mod10a2(nsnow, ssnow,
                         snow_log=hcl.log_snw_o_modis_sca_cum)
 
 mod10.run_extraction()
+mod10.run_maintainer()

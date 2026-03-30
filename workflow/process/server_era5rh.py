@@ -21,3 +21,4 @@ era5 = hidrocl.Era5_rh(rh=rh,
                        vector_path=hcl.hidrocl_wgs84)
 
 era5.run_extraction()
+era5.run_maintainer()

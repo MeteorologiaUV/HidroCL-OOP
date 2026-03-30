@@ -76,3 +76,4 @@ era5 = hidrocl.Era5_land(et=et, pet=eto,
                          vector_path='/Users/aldotapia/Documents/Fondef/2000_2022/HidroCL_boundaries/HidroCL_boundaries.shp')
 
 era5.run_extraction()
+era5.run_maintainer()

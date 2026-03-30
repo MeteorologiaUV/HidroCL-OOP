@@ -26,7 +26,7 @@ tempdir = hidrocl.temporal_directory()
 
 hidrocl.set_processing_path(tempdir.name)
 
-hidrocl.prepare_path(hcl.mcd15a2h_path)
+hidrocl.prepare_path(hcl.vnp15a2h_path)
 
 product_path = hcl.vnp15a2h_path
 
@@ -90,9 +90,8 @@ print('Extracting data')
 vnp15 = hidrocl.Vnp15a2h(lai, fpar,
                          product_path=product_path,
                          vector_path=hcl.hidrocl_sinusoidal,
-                         lai_log=hcl.log_veg_o_modis_lai_mean,
-                         fpar_log=hcl.log_veg_o_modis_fpar_mean)
-vnp15.run_maintainer()
+                         lai_log=hcl.log_veg_o_viirs_lai_mean,
+                         fpar_log=hcl.log_veg_o_viirs_fpar_mean)
 vnp15.run_extraction()
 
 if 'tempdir' in locals():

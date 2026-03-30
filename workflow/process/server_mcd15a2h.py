@@ -28,3 +28,4 @@ mcd15 = hidrocl.Mcd15a2h(lai, fpar,
                          fpar_log=hcl.log_veg_o_modis_fpar_mean)
 
 mcd15.run_extraction()
+mcd15.run_maintainer()

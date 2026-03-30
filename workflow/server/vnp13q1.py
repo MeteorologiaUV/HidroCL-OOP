@@ -26,7 +26,7 @@ tempdir = hidrocl.temporal_directory()
 
 hidrocl.set_processing_path(tempdir.name)
 
-hidrocl.prepare_path(hcl.mcd15a2h_path)
+hidrocl.prepare_path(hcl.vnp13q1_path)
 
 product_path = hcl.vnp13q1_path
 """
@@ -43,8 +43,8 @@ evi = hidrocl.HidroCLVariable("evi",
                               hcl.veg_o_viirs_evi_mean_pc)
 
 nbr = hidrocl.HidroCLVariable("nbr",
-                              hcl.veg_o_viirs_evi_mean,
-                              hcl.veg_o_viirs_evi_mean_pc)
+                              hcl.veg_o_viirs_nbr2_mean,
+                              hcl.veg_o_viirs_nbr2_mean_pc)
 
 agr = hidrocl.HidroCLVariable('agr NDVI',
                               hcl.veg_o_viirs_agr_mean,
@@ -94,31 +94,18 @@ Extract data
 """
 print('Extracting data')
 
-vnp15 = hidrocl.Vnp15a2h(lai, fpar,
-                         product_path=product_path,
-                         vector_path=hcl.hidrocl_sinusoidal,
-                         lai_log=hcl.log_veg_o_modis_lai_mean,
-                         fpar_log=hcl.log_veg_o_modis_fpar_mean)
-
-"""
-Extract data
-"""
-print('Extracting data')
-
 vnp13 = hidrocl.Vnp13q1(ndvi, evi, nbr,
                         product_path=hcl.vnp13q1_path,
                         vector_path=hcl.hidrocl_sinusoidal,
-                        ndvi_log=hcl.log_veg_o_modis_ndvi_mean,
-                        evi_log=hcl.log_veg_o_modis_evi_mean,
-                        nbr_log=hcl.log_veg_o_int_nbr_mean)
+                        ndvi_log=hcl.log_veg_o_viirs_indices_mean,
+                        evi_log=hcl.log_veg_o_viirs_indices_mean,
+                        nbr_log=hcl.log_veg_o_viirs_indices_mean)
 
 agrndvi = hidrocl.Vnp13q1agr(ndvi=agr, product_path=hcl.vnp13q1_path,
                              vector_path=hcl.hidrocl_agr_sinu,
-                             ndvi_log=hcl.log_veg_o_agr_ndvi_mean)
+                             ndvi_log=hcl.log_veg_o_viirs_indices_mean)
 
-vnp13.run_maintainer()
 vnp13.run_extraction()
-agrndvi.run_maintainer()
 agrndvi.run_extraction()
 
 if 'tempdir' in locals():

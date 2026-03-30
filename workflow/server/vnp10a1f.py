@@ -26,7 +26,7 @@ tempdir = hidrocl.temporal_directory()
 
 hidrocl.set_processing_path(tempdir.name)
 
-hidrocl.prepare_path(hcl.mcd15a2h_path)
+hidrocl.prepare_path(hcl.vnp10a1f_path)
 
 product_path = hcl.vnp10a1f_path
 """
@@ -85,9 +85,8 @@ vnp10f = hidrocl.Vnp10a1f(nsnow, ssnow,
                         product_path=hcl.vnp10a1f_path,
                         north_vector_path=hcl.hidrocl_north,
                         south_vector_path=hcl.hidrocl_south,
-                        snow_log=hcl.log_snw_o_modis_sca_cum)
+                        snow_log=hcl.log_snw_o_viirs_sca_cum)
 
-vnp10f.run_maintainer()
 vnp10f.run_extraction()
 
 if 'tempdir' in locals():

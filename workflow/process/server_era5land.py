@@ -71,3 +71,4 @@ era5 = hidrocl.Era5_land(et=et, pet=eto,
                          vector_path=hcl.hidrocl_wgs84)
 
 era5.run_extraction()
+era5.run_maintainer()

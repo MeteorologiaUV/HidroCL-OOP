@@ -22,3 +22,4 @@ mod13 = hidrocl.Mod13q1(ndvi, evi, nbr,
                         nbr_log=hcl.log_veg_o_int_nbr_mean)
 
 mod13.run_extraction()
+mod13.run_maintainer()

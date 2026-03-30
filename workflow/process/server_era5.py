@@ -77,3 +77,4 @@ era5 = hidrocl.Era5(pp=pp,
                     product_path=hcl.era5_hourly_path,
                     vector_path=hcl.hidrocl_wgs84)
 era5.run_extraction()
+era5.run_maintainer()

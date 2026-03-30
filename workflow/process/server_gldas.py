@@ -20,3 +20,4 @@ gldas = hidrocl.Gldas_noah(snow, temp, et, soilm,
                            soilm_log=hcl.log_sm_o_gldas_sm_mean)
 
 gldas.run_extraction()
+gldas.run_maintainer()

@@ -20,3 +20,4 @@ agrndvi = hidrocl.Mod13q1agr(ndvi = agr, product_path=hcl.mod13q1_path,
                              ndvi_log=hcl.log_veg_o_agr_ndvi_mean)
 
 agrndvi.run_extraction()
+agrndvi.run_maintainer()

@@ -12,3 +12,4 @@ imerg = hidrocl.Gpm_3imrghhl(pp,
                              pp_log=hcl.log_pp_o_imerg_pp_mean)
 
 imerg.run_extraction()
+imerg.run_maintainer()

@@ -21,3 +21,4 @@ imerg = hidrocl.ImergGIS(pp,
                          pp_log="/Users/aldotapia/hidrocl_test/rain/imerg_log.txt")
 
 imerg.run_extraction()
+imerg.run_maintainer()

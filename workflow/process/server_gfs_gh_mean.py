@@ -52,3 +52,4 @@ gfs = hidrocl.products.Gfs(db0=gfs_d0,
                            vectorpath=hcl.hidrocl_wgs84)
 
 gfs.run_extraction()
+gfs.run_maintainer()

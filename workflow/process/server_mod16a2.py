@@ -30,3 +30,4 @@ mod16 = hidrocl.Mod16a2(pet,
                         et_log=hcl.log_et_o_modis_eta_cum_b_d8_p0d)
 
 mod16.run_extraction()
+mod16.run_maintainer()

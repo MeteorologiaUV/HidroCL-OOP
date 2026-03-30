@@ -22,3 +22,4 @@ era5 = hidrocl.Era5pplen(pplen=pp,
                          pplen_log=hcl.log_pp_o_era5_plen_mean)
 
 era5.run_extraction()
+era5.run_maintainer()
