@@ -3,6 +3,7 @@ import os
 import shutil
 import sys
 from pathlib import Path
+import numpy as np
 
 import pandas as pd
 
@@ -13,6 +14,9 @@ import dotenv
 
 dotenv.load_dotenv()
 project_path = os.getenv('PROJECT_PATH')
+
+hidrocl.products.tools.hide = True
+hidrocl.products.t.hide = True
 
 """
 Set the project path and the processing path
@@ -152,7 +156,15 @@ print('Moving files to subfolders')
 
 os.chdir(product_path)
 
-nfiles = len(os.listdir(product_path))
+years = list(p.year.unique())
+
+l_nfiles = []
+
+for year in years:
+    nfiles = len(os.listdir(os.path.join(product_path, str(year))))
+    l_nfiles.append(nfiles)
+
+nfiles = np.sum(l_nfiles)
 
 if nfiles == 0:
     print('No new files to process')
@@ -214,45 +226,10 @@ era5rh = hidrocl.Era5_rh(rh=rh,
 
 exit_code = 0
 
-era5.run_maintainer()
-scenes = era5.scenes_to_process
-
-for scene in scenes:
-    try:
-        era5.run_extraction(scene = scene)
-    except:
-        exit_code = 1
-        continue
-
-era5pplen.run_maintainer()
-scenes = era5pplen.scenes_to_process
-
-for scene in scenes:
-    try:
-        era5pplen.run_extraction(scene = scene)
-    except:
-        exit_code = 1
-        continue
-
-era5maxpp.run_maintainer()
-scenes = era5maxpp.scenes_to_process
-
-for scene in scenes:
-    try:
-        era5maxpp.run_extraction(scene = scene)
-    except:
-        exit_code = 1
-        continue
-
-era5rh.run_maintainer()
-scenes = era5rh.scenes_to_process
-
-for scene in scenes:
-    try:
-        era5rh.run_extraction(scene = scene)
-    except:
-        exit_code = 1
-        continue
+era5.run_extraction()
+era5pplen.run_extraction()
+era5maxpp.run_extraction()
+era5rh.run_extraction()
 
 if 'tempdir' in locals():
     if tempdir.name == hidrocl.processing_path:
