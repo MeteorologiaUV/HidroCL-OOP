@@ -91,7 +91,7 @@ def load_era5(file, var, reducer='mean'):
     """
 
     with t.HiddenPrints(hide):
-        da = xarray.open_dataset(file, mask_and_scale=True)
+        da = xarray.open_dataset(file, mask_and_scale=True, engine="netcdf4")
         da = da[var]
         match var:
             case ('e' | 'pev' | 'swvl1' | 'swvl2' | 'swvl3' | 'swvl4'):
@@ -129,7 +129,7 @@ def load_era5acc(file, var, reducer='max'):
     """
 
     with t.HiddenPrints(hide):
-        da = xarray.open_dataset(file, mask_and_scale=True)
+        da = xarray.open_dataset(file, mask_and_scale=True, engine="netcdf4")
         da = da[var]
         # check if "expver" is in the file
         # if 'expver' in da.coords:
@@ -760,8 +760,8 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
                 lyrs = kwargs.get("layer")
                 try:
                     mos = mosaic_nd_raster(selected_files, lyrs[0], lyrs[1])
-                except (rxre.RioXarrayError, rioe.RasterioIOError):
-                    return print(f"Error in scene {scene}")
+                except (rxre.RioXarrayError, rioe.RasterioIOError) as e:
+                    raise RuntimeError(f"Error in scene {scene}: {e}") from e
             else:
                 "layer argument must be a list"
 
@@ -770,8 +770,8 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
                 lyrs = kwargs.get("layer")
                 try:
                     mos = mosaic_nd_raster_viirs(selected_files, lyrs[0], lyrs[1])
-                except (rxre.RioXarrayError, rioe.RasterioIOError):
-                    return print(f"Error in scene {scene}")
+                except (rxre.RioXarrayError, rioe.RasterioIOError) as e:
+                    raise RuntimeError(f"Error in scene {scene}: {e}") from e
             else:
                 "layer argument must be a list"
 
@@ -779,8 +779,8 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
             try:
                 mos = mosaic_raster_viirs(selected_files, kwargs.get("layer"))
                 mos = mos * 0.1
-            except (rxre.RioXarrayError, rioe.RasterioIOError):
-                return print(f"Error in scene {scene}")
+            except (rxre.RioXarrayError, rioe.RasterioIOError) as e:
+                raise RuntimeError(f"Error in scene {scene}: {e}") from e
 
         case 'snow_old':
             try:
@@ -790,8 +790,8 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
                 mos = xarray.where((mos == 25) | (mos == 37) | (mos == 39), 0, mos)
                 mos = xarray.where((mos == 0) | (mos == 1), mos, np.nan)
                 mos = mos * 100
-            except (rxre.RioXarrayError, rioe.RasterioIOError):
-                return print(f"Error in scene {scene}")
+            except (rxre.RioXarrayError, rioe.RasterioIOError) as e:
+                raise RuntimeError(f"Error in scene {scene}: {e}") from e
 
         case 'snow_modis':
             try:
@@ -799,8 +799,8 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
                 mos = xarray.where(mos >= 100, np.nan, mos)
                 mos = xarray.where(mos <= 20, 0, mos)
                 mos = mos * 10
-            except (rxre.RioXarrayError, rioe.RasterioIOError):
-                return print(f"Error in scene {scene}")
+            except (rxre.RioXarrayError, rioe.RasterioIOError) as e:
+                raise RuntimeError(f"Error in scene {scene}: {e}") from e
 
         case 'snow_viirs':
             try:
@@ -808,8 +808,8 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
                 mos = xarray.where(mos >=100, np.nan, mos)
                 mos = xarray.where(mos <= 20, 0, mos)
                 mos = mos * 10
-            except (rxre.RioXarrayError, rioe.RasterioIOError):
-                return print(f"Error in scene {scene}")
+            except (rxre.RioXarrayError, rioe.RasterioIOError) as e:
+                raise RuntimeError(f"Error in scene {scene}: {e}") from e
 
         case name if ("fpar" in name) or ("lai" in name):
             if 'viirs' in name:
@@ -818,23 +818,23 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
                     mos = (mos.where(mos <= 200)).fillna(0)
                     mos = mos * 10
                     mos = mos.rio.write_crs(MODIS_SINU_PROJ4, inplace=False)
-                except (rxre.RioXarrayError, rioe.RasterioIOError):
-                    return print(f"Error in scene {scene}")
+                except (rxre.RioXarrayError, rioe.RasterioIOError) as e:
+                    raise RuntimeError(f"Error in scene {scene}: {e}") from e
             else:
                 try:
                     mos = mosaic_raster(selected_files, kwargs.get("layer"))
                     mos = (mos.where(mos <= 100)).fillna(0)
                     mos = mos * 10
-                except (rxre.RioXarrayError, rioe.RasterioIOError):
-                    return print(f"Error in scene {scene}")
+                except (rxre.RioXarrayError, rioe.RasterioIOError) as e:
+                    raise RuntimeError(f"Error in scene {scene}: {e}") from e
 
         case 'et' | 'pet':
             try:
                 mos = mosaic_raster(selected_files, kwargs.get("layer"))
                 mos = mos.where(mos < 3200)
                 mos = mos * 10
-            except (rxre.RioXarrayError, rioe.RasterioIOError):
-                return print(f"Error in scene {scene}")
+            except (rxre.RioXarrayError, rioe.RasterioIOError) as e:
+                raise RuntimeError(f"Error in scene {scene}: {e}") from e
 
         case name if "lulc" in name:
             try:
@@ -845,22 +845,22 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
                 if agg == "mean":
                     mos = mos * 1000
 
-            except (rxre.RioXarrayError, rioe.RasterioIOError):
-                return print(f"Error in scene {scene}")
+            except (rxre.RioXarrayError, rioe.RasterioIOError) as e:
+                raise RuntimeError(f"Error in scene {scene}: {e}") from e
 
         case 'imerg':
             try:
                 datasets_list = [load_hdf5(ds, kwargs.get("layer")) for ds in selected_files]
                 mos = sum_datasets(datasets_list)
-            except OSError:
-                return print(f"Error in scene {scene}")
+            except OSError as e:
+                raise RuntimeError(f"Error in scene {scene}: {e}") from e
 
         case 'imgis':
             try:
                 datasets_list = [load_imerggis(ds) for ds in selected_files]
                 mos = sum_datasets(datasets_list)
-            except (rxre.RioXarrayError, rioe.RasterioIOError, ValueError):
-                return print(f"Error in scene {scene}")
+            except (rxre.RioXarrayError, rioe.RasterioIOError, ValueError) as e:
+                raise RuntimeError(f"Error in scene {scene}: {e}") from e
 
         case 'gfs':
             try:
@@ -902,8 +902,8 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
 
                 mos = mos.to_array(dim='day')
 
-            except (rxre.RioXarrayError, rioe.RasterioIOError, ValueError, IndexError, KeyError):
-                return print(f"Error in scene {scene}")
+            except (rxre.RioXarrayError, rioe.RasterioIOError, ValueError, IndexError, KeyError) as e:
+                raise RuntimeError(f"Error in scene {scene}: {e}") from e
 
         case name if "gldas" in name:
             match name:
@@ -913,8 +913,8 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
                             datasets_list = [load_nc(ds, kwargs.get("layer")) for ds in selected_files]
                             mos = mean_datasets(datasets_list)
                             mos = mos * 100
-                        except OSError:
-                            return print(f"Error in scene {scene}")
+                        except OSError as e:
+                            raise RuntimeError(f"Error in scene {scene}: {e}") from e
                     else:
                         return print("layer argument must be a string")
 
@@ -928,8 +928,8 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
                                 layers_list.append(mean_datasets(datasets_list))
                             mos = sum_datasets(layers_list)
                             mos = mos * 100
-                        except OSError:
-                            return print(f"Error in scene {scene}")
+                        except OSError as e:
+                            raise RuntimeError(f"Error in scene {scene}: {e}") from e
                     else:
                         return print("layer argument must be a list")
         case name if "era5" in name:
@@ -940,8 +940,8 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
                             file = selected_files[0]
                             mos = load_era5(file, kwargs.get("layer"), kwargs.get("aggregation"))
                             mos = mos * 10
-                        except (OSError, ValueError):
-                            return print(f"Error in scene {scene}")
+                        except (OSError, ValueError) as e:
+                            raise RuntimeError(f"Error in scene {scene}: {e}") from e
                 case name if ("et" in name) or ("pp" in name):
                     if isinstance(kwargs.get("layer"), str):
                         agg = kwargs.get("aggregation")
@@ -950,15 +950,15 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
                                 file = selected_files[0]
                                 mos = len_era5(file, limit=kwargs.get("prec_threshold"))
                                 mos = mos * 10
-                            except (OSError, ValueError):
-                                return print(f"Error in scene {scene}")
+                            except (OSError, ValueError) as e:
+                                raise RuntimeError(f"Error in scene {scene}: {e}") from e
                         else:
                             try:
                                 file = selected_files[0]
                                 mos = load_era5(file, kwargs.get("layer"), kwargs.get("aggregation"))
                                 mos = mos * 10000
-                            except (OSError, ValueError):
-                                return print(f"Error in scene {scene}")
+                            except (OSError, ValueError) as e:
+                                raise RuntimeError(f"Error in scene {scene}: {e}") from e
                     else:
                         return print("layer argument must be a string")
                 case name if ("snw" in name):
@@ -971,8 +971,8 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
                                     mos = mos * 10
                                 case _:
                                     mos = mos * 10000
-                        except (OSError, ValueError):
-                            return print(f"Error in scene {scene}")
+                        except (OSError, ValueError) as e:
+                            raise RuntimeError(f"Error in scene {scene}: {e}") from e
                 case name if ("dew" in name) or ("pres" in name) or \
                              ("u10" in name) or ("v10" in name) or \
                              ("z" in name) or ("rh" in name):
@@ -985,8 +985,8 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
                                 mos = mos * 10
                             else:
                                 mos = mos * 10
-                        except (OSError, ValueError):
-                            return print(f"Error in scene {scene}")
+                        except (OSError, ValueError) as e:
+                            raise RuntimeError(f"Error in scene {scene}: {e}") from e
                 case name if "soilm" in name:
                     if isinstance(kwargs.get("layer"), list):
                         lyrs = kwargs.get("layer")
@@ -998,8 +998,8 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
                                 layers_list.append(dataset)
                             mos = sum_datasets(layers_list)
                             mos = mos * 1000
-                        except (OSError, ValueError):
-                            return print(f"Error in scene {scene}")
+                        except (OSError, ValueError) as e:
+                            raise RuntimeError(f"Error in scene {scene}: {e}") from e
                     else:
                         return print("layer argument must be a list")
         case name if "eraacc" in name:
@@ -1010,16 +1010,16 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
                             file = selected_files[0]
                             mos = load_era5acc(file, kwargs.get("layer"), kwargs.get("aggregation"))
                             mos = mos * 10000
-                        except (OSError, ValueError):
-                            return print(f"Error in scene {scene}")
+                        except (OSError, ValueError) as e:
+                            raise RuntimeError(f"Error in scene {scene}: {e}") from e
         case name if "persiann" in name:
             if len(selected_files) == 1:
                 try:
                     file = selected_files[0]
                     mos = load_persiann(file)
                     mos = mos * 10
-                except (OSError, ValueError):
-                    return print(f"Error in scene {scene}")
+                except (OSError, ValueError) as e:
+                    raise RuntimeError(f"Error in scene {scene}: {e}") from e
             else:
                 print('More than one file for scene, please check files')
         case "pdirnow":
@@ -1028,16 +1028,16 @@ def zonal_stats(scene, scenes_path, tempfolder, name,
                     file = selected_files[0]
                     mos = load_persiann(file)
                     mos = mos * 10
-                except (OSError, ValueError):
-                    return print(f"Error in scene {scene}")
+                except (OSError, ValueError) as e:
+                    raise RuntimeError(f"Error in scene {scene}: {e}") from e
             else:
                 print('More than one file for scene, please check files')
         case _:
             try:
                 mos = mosaic_raster(selected_files, kwargs.get("layer"))
                 mos = mos * 0.1
-            except (rxre.RioXarrayError, rioe.RasterioIOError):
-                return print(f"Error in scene {scene}")
+            except (rxre.RioXarrayError, rioe.RasterioIOError) as e:
+                raise RuntimeError(f"Error in scene {scene}: {e}") from e
 
     result_file = f"{name}_{scene}.csv"
     if debug:
