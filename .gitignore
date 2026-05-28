@@ -18,3 +18,5 @@ local_tests.ipynb
 tests*
 src/hidrocl.egg-info/*
 build/*
+other/*
+data/*

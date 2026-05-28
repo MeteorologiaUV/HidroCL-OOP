@@ -1,5 +1,6 @@
 cdsapi~=0.7.3
 requests>=2.32
+charset-normalizer>=2.0.0
 pandas~=1.4.3
 xarray~=0.20.1
 beautifulsoup4~=4.11.1

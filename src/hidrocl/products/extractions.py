@@ -137,7 +137,7 @@ def load_era5acc(file, var, reducer='max'):
         #     # drop "expver" coordinate
         #     da = da.drop('expver')
         # aggregate to 3-hourly
-        da = da.resample(valid_time='3H')
+        da = da.resample(valid_time='3h')
         match reducer:
             case 'mean':
                 da = da.mean(dim='valid_time')
@@ -341,7 +341,7 @@ def len_era5(dataset, limit=1):
     """
     da = xarray.open_dataset(dataset, mask_and_scale=True)
     da = da['tp']
-    da = da.resample(valid_time='3H').sum('valid_time') > 0.001 * limit
+    da = da.resample(valid_time='3h').sum('valid_time') > 0.001 * limit
     return da.sum('valid_time') * 3
 
 
@@ -374,7 +374,7 @@ def ensure_integer_nodata(da: xarray.DataArray, preferred=None):
             nodata = np.iinfo(dt).min
 
     data = da.data
-    da = da.where(~xarray.ufuncs.isnan(da), other=nodata)
+    da = da.where(~np.isnan(da), other=nodata)
 
     da.encoding["_FillValue"] = nodata
     return da
