@@ -53,7 +53,7 @@ start = start + pd.Timedelta(days=1)
 
 end = today
 
-if start == end:
+if start >= end:
     print('No new data to download')
     sys.exit(4)
 

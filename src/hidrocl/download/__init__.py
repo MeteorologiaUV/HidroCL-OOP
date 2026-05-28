@@ -175,7 +175,7 @@ def download_era5(year, month, day, path):
     ds0 = xr.open_dataset(os.path.join(pth, 'data_stream-oper_stepType-instant.nc'))
     ds1 = xr.open_dataset(os.path.join(pth, 'data_stream-oper_stepType-accum.nc'))
 
-    ds = xr.merge([ds0, ds1], join='override')
+    ds = xr.merge([ds0, ds1], join='override', compat='override')
     ds = ds.drop_vars(['number', 'expver'])
     ds.to_netcdf(fnameout)
 

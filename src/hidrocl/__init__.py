@@ -24,6 +24,12 @@ hidrocl_root_path = ''
 report_emails = ''
 
 try:
+    from osgeo import gdal as _gdal
+    _gdal.UseExceptions()
+except ImportError:
+    pass
+
+try:
     from . import download, paths, preprocess
     from .variables import HidroCLVariable
     from .products import Mod13q1, Mod10a2, Mod16a2, Mcd15a2h, Mod12q1, \

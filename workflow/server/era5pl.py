@@ -54,7 +54,7 @@ end = today
 # minus 5 days to account for the delay in the ERA5 data
 end = end - pd.Timedelta(days=5)
 
-if start == end:
+if start >= end:
     print('No new data to download')
     sys.exit(0)
 

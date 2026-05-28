@@ -391,6 +391,7 @@ def mosaic_raster(raster_list, layer):
         xarray.DataArray: xarray DataArray with the mosaic
     """
     from osgeo import gdal
+    gdal.UseExceptions()
 
     raster_single = []
 
@@ -399,9 +400,13 @@ def mosaic_raster(raster_list, layer):
         if ds is None:
             raise rioe.RasterioIOError(f"Cannot open {raster}")
         subdatasets = ds.GetSubDatasets()
-        matches = [s[0] for s in subdatasets if s[0].split(':')[-1] == layer]
+        matches = [s[0] for s in subdatasets
+                   if s[0].split(':')[-1] == layer or layer in s[1]]
         if not matches:
-            raise rioe.RasterioIOError(f"Layer '{layer}' not found in {raster}")
+            available = [s[0].split(':')[-1] for s in subdatasets]
+            raise rioe.RasterioIOError(
+                f"Layer '{layer}' not found in {raster}. Available: {available}"
+            )
         sds = gdal.Open(matches[0])
         band = sds.GetRasterBand(1)
         data = band.ReadAsArray().astype(np.float32)
