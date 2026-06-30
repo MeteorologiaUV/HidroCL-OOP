@@ -1,35 +1,45 @@
 site_name: HidroCL-OOP documentation
+site_description: Python library for downloading, pre-processing and extracting hydrometeorological variables from satellite and reanalysis products at the catchment scale.
+site_author: Universidad de Valparaíso / Universidad de La Serena
+repo_url: https://github.com/MeteorologiaUV/HidroCL-OOP
+repo_name: MeteorologiaUV/HidroCL-OOP
+
 theme:
   name: material
   logo: assets/logo_reverse.svg
   favicon: assets/favicon.png
   palette:
-    # Palette toggle for light mode
     - scheme: default
       toggle:
         icon: material/toggle-switch
         name: Switch to dark mode
-
-    # Palette toggle for dark mode
     - scheme: slate
       toggle:
         icon: material/toggle-switch-off-outline
         name: Switch to light mode
   features:
     - navigation.instant
+    - navigation.top
+    - search.highlight
+
 plugins:
   - search
   - mkdocstrings:
       handlers:
         python:
           paths: [..]
+
 nav:
   - Home: 'index.md'
+  - How-to guides: 'how-to.md'
   - Reference:
       - 'Reference index': 'reference.md'
       - 'Base variable': 'variable.md'
       - 'Product processors': 'products.md'
       - 'Download functions': 'download.md'
+      - 'Preprocessing': 'preprocess.md'
+
 markdown_extensions:
   - attr_list
   - md_in_html
+  - tables

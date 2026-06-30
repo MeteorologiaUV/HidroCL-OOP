@@ -101,6 +101,10 @@ def download_era5land(year, month, day, path, timeout=60, retry_max=10, sleep_ma
     ds = ds.drop_vars(['number', 'expver'])
     ds.to_netcdf(fnameout)
 
+    ds0.close()
+    ds1.close()
+    ds2.close()
+
     shutil.rmtree(pth)
 
 
@@ -178,6 +182,9 @@ def download_era5(year, month, day, path):
     ds = xr.merge([ds0, ds1], join='override', compat='override')
     ds = ds.drop_vars(['number', 'expver'])
     ds.to_netcdf(fnameout)
+
+    ds0.close()
+    ds1.close()
 
     shutil.rmtree(pth)
 
